@@ -17,6 +17,10 @@ jobs:
           gradle-version: '8.8'
       - name: Compile Forge 1.20.1
         run: gradle --no-daemon build --stacktrace
+      - name: Verify resource pack metadata is packaged
+        run: |
+          unzip -p build/libs/simple-boat-engine-forge-1.20.1-0.1.1.jar pack.mcmeta
+          unzip -l build/libs/simple-boat-engine-forge-1.20.1-0.1.1.jar | grep -E 'assets/simpleboatengine/models/item/engine.json|assets/simpleboatengine/sounds/motor_loop.ogg'
       - name: Upload standalone JAR
         uses: actions/upload-artifact@v4
         with:
