@@ -58,16 +58,17 @@ public final class MotorAmbience {
             double yaw = Math.toRadians(180.0 - boat.getYRot());
 
             if (game.level.random.nextInt(4) == 0) {
-                // Pixel-space top of our original cowling / air intake.
-                Vec3 outlet = position(boat, yaw, (9f-8f)/16f*1.5,
-                    attachment + 14.8/16.0*1.5, stern + (10.8-8)/16.0*1.5);
+                // Centre of the Blockbench "smoke particle here" marker.
+                Vec3 outlet = position(boat, yaw, (9.22f-8f)/16f*1.5,
+                    attachment + 7.94/16.0*1.5, stern + (12.19-8)/16.0*1.5);
                 game.level.addParticle(ParticleTypes.SMOKE, outlet.x, outlet.y, outlet.z,
                     0, 0.009 + game.level.random.nextDouble() * 0.014, 0);
             }
 
             if (throttle > 0 && boat.isInWaterOrBubble()) {
+                // The new propeller hub is centered at pixel (8,-4,8.3).
                 Vec3 prop = position(boat, yaw, 0,
-                    attachment - 5.4/16.0*1.5, stern + (5.9-8)/16.0*1.5);
+                    attachment - 4.0/16.0*1.5, stern + (8.3-8)/16.0*1.5);
                 if (game.level.random.nextInt(5) != 0) {
                     for (int i = 0; i < 2 + throttle / 2; i++) {
                         double dx = (game.level.random.nextDouble()-0.5)*0.27;

@@ -4,7 +4,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-/** Converts a view ray into boat coordinates and tests our original motor's shape. */
+/** Converts a view ray into boat coordinates and tests the fitted outboard's shape. */
 public final class MotorTarget {
     private MotorTarget() {}
 
@@ -20,8 +20,10 @@ public final class MotorTarget {
             height = boat.getBbHeight() * 0.7;
             stern = 1.12;
         }
-        return new AABB(-0.90, height - 0.83, stern - 0.66,
-            0.52, height + 1.48, stern + 0.74).clip(a, b).isPresent();
+        // New Blockbench model bounds: x 4.98..11.02, y -8..8, z 3..12.24;
+        // the world renderer scales those pixel coordinates by 1.5.
+        return new AABB(-0.43, height - 0.83, stern - 0.57,
+            0.43, height + 0.83, stern + 0.50).clip(a, b).isPresent();
     }
 
     private static Vec3 local(Boat boat, Vec3 world, double yaw) {

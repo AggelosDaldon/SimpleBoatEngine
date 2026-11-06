@@ -103,9 +103,9 @@ public final class MotorControls {
         CompoundTag data = ClientMotorState.get(boat);
         if (data == null || !data.getBoolean("Running") || data.getFloat("Fuel") <= 0) return;
         int throttle = Math.max(0, Math.min(10, data.getInt("Throttle")));
-        if (throttle <= 0 || !boat.isInWaterOrBubble() || !game.options.keyUp.isDown()) return;
-        // Press forward to apply thrust. Releasing the key does not keep accelerating.
-        // Vanilla player-controlled boats are simulated on the client.
+        if (throttle <= 0 || !boat.isInWaterOrBubble()) return;
+        // Throttle is a cruise-control lever: it applies thrust while the driver is
+        // aboard, even without W. Vanilla player-controlled boats are client-simulated.
         Vec3 motion = boat.getDeltaMovement();
         double yaw = Math.toRadians(boat.getYRot());
         double acceleration = throttle * 0.006;

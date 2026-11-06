@@ -127,7 +127,8 @@ public final class ServerMotorEvents {
                     }
                 }
 
-                // No unattended cruise: propulsion requires the rider's forward input.
+                // Auto-cruise is applied by the player controlling the boat on the client.
+                // This server tick measures the actual distance for fuel consumption.
             }
 
             if (level.getGameTime() % 5L == 0L) {

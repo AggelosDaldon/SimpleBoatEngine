@@ -17,7 +17,7 @@ public final class EngineItems {
         DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SimpleBoatEngine.ID);
 
     public static final RegistryObject<Item> ENGINE = ITEMS.register("engine",
-        () -> new Item(new Item.Properties().stacksTo(1)));
+        () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket",
         () -> new Item(new Item.Properties().stacksTo(1)));
 
