@@ -44,6 +44,15 @@ this project. It does not require other vehicle mods or use their source/assets.
   Paint, name and the exact existing item are preserved when retrieving the
   boat, placing it in water, and picking it up again. The customized colors
   also render on the boat item in your inventory and on the station preview.
+- **v0.2.7 painting flow:** the workshop now includes a dedicated real dye
+  inventory slot. Place any vanilla dye in this slot, choose the specific boat
+  component and click **Apply dye**. Exactly one dye is consumed per actual
+  color change in survival mode; it is not taken automatically from other
+  inventory slots. For antifouling, choose one of five preset marine colors
+  before applying the dye. A named boat displays its name in the inventory
+  tooltip as well as on the closed bow deck and both outer bow sides. The
+  workbench has a new wood/copper model with small pigment trays, and the
+  motor has been shifted further aft while the corner pole light sits higher.
 - The v0.2.6 update also places the hull deeper in the water, lowers and moves
   the outboard motor closer to the transom, lowers its propeller, and seats
   the pole light on the gunwale. The separate walking support surfaces cover

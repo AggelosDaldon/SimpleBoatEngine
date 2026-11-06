@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -15,9 +14,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-/** A single real inventory slot for the boat being customized. */
+/** Persistent boat and dye slots for the customization workbench. */
 public final class BoatCustomizerBlockEntity extends BlockEntity implements Container, MenuProvider {
     private ItemStack boat = ItemStack.EMPTY;
+    private ItemStack dye = ItemStack.EMPTY;
 
     public BoatCustomizerBlockEntity(BlockPos pos, BlockState state) {
         super(EngineBlockEntities.CUSTOMIZER.get(), pos, state);
@@ -32,34 +32,48 @@ public final class BoatCustomizerBlockEntity extends BlockEntity implements Cont
         return new BoatCustomizerMenu(id, inventory, this);
     }
 
-    @Override public int getContainerSize() { return 1; }
-    @Override public boolean isEmpty() { return boat.isEmpty(); }
-    @Override public ItemStack getItem(int index) { return index == 0 ? boat : ItemStack.EMPTY; }
+    @Override public int getContainerSize() { return 2; }
+    @Override public boolean isEmpty() { return boat.isEmpty() && dye.isEmpty(); }
+    @Override public ItemStack getItem(int index) {
+        return index == 0 ? boat : index == 1 ? dye : ItemStack.EMPTY;
+    }
     @Override public ItemStack removeItem(int index, int count) {
-        if (index != 0 || boat.isEmpty()) return ItemStack.EMPTY;
-        ItemStack extracted = boat.split(count);
+        if (index < 0 || index > 1) return ItemStack.EMPTY;
+        ItemStack extracted = (index == 0 ? boat : dye).split(count);
         if (!extracted.isEmpty()) setChanged();
         return extracted;
     }
     @Override public ItemStack removeItemNoUpdate(int index) {
-        if (index != 0) return ItemStack.EMPTY;
-        ItemStack old = boat;
-        boat = ItemStack.EMPTY;
+        if (index < 0 || index > 1) return ItemStack.EMPTY;
+        ItemStack old = index == 0 ? boat : dye;
+        if (index == 0) boat = ItemStack.EMPTY;
+        else dye = ItemStack.EMPTY;
         setChanged();
         return old;
     }
     @Override public void setItem(int index, ItemStack stack) {
-        if (index != 0) return;
-        boat = stack.copy();
-        if (boat.getCount() > 1) boat.setCount(1);
+        if (index == 0) {
+            boat = stack.copy();
+            if (boat.getCount() > 1) boat.setCount(1);
+        } else if (index == 1) {
+            dye = stack.copy();
+        } else return;
         setChanged();
+    }
+    @Override public boolean canPlaceItem(int index, ItemStack stack) {
+        return index == 0 && stack.getItem() instanceof SkiffBoatItem
+            || index == 1 && stack.getItem() instanceof net.minecraft.world.item.DyeItem;
     }
     @Override public boolean stillValid(Player player) {
         return level != null && level.getBlockEntity(worldPosition) == this
             && player.distanceToSqr(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5,
                 worldPosition.getZ() + 0.5) <= 64;
     }
-    @Override public void clearContent() { boat = ItemStack.EMPTY; setChanged(); }
+    @Override public void clearContent() {
+        boat = ItemStack.EMPTY;
+        dye = ItemStack.EMPTY;
+        setChanged();
+    }
 
     @Override
     public void setChanged() {
@@ -72,12 +86,14 @@ public final class BoatCustomizerBlockEntity extends BlockEntity implements Cont
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if (!boat.isEmpty()) tag.put("BoatItem", boat.save(new CompoundTag()));
+        if (!dye.isEmpty()) tag.put("DyeItem", dye.save(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         boat = tag.contains("BoatItem") ? ItemStack.of(tag.getCompound("BoatItem")) : ItemStack.EMPTY;
+        dye = tag.contains("DyeItem") ? ItemStack.of(tag.getCompound("DyeItem")) : ItemStack.EMPTY;
     }
 
     @Override

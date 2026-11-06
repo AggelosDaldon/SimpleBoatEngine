@@ -35,12 +35,21 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
         else SkiffMesh.draw(pose, buffers, light);
         if (boat instanceof BlueFishingBoat blue && !blue.getBoatName().isBlank()) {
             String label = blue.getBoatName();
-            // Small painted lettering on both bow sides, rotated with the hull.
+            // Keep a readable decal on the top of the closed bow deck as well as
+            // both exterior sides. The old x=.82 decals were buried in the hull.
+            pose.pushPose();
+            pose.translate(0f, 13.78f / 16f + 0.018f, -1.65f);
+            pose.mulPose(Axis.XP.rotationDegrees(90f));
+            pose.scale(0.012f, -0.012f, 0.012f);
+            font.drawInBatch(Component.literal(label), -font.width(label) / 2f, 0f,
+                0xFFF5E1, false, pose.last().pose(), buffers, Font.DisplayMode.NORMAL,
+                0, light);
+            pose.popPose();
             for (int side : new int[]{-1, 1}) {
                 pose.pushPose();
-                pose.translate(side * 0.82, 0.55, -1.15);
+                pose.translate(side * 1.09, 0.52, -1.20);
                 pose.mulPose(Axis.YP.rotationDegrees(side < 0 ? -90f : 90f));
-                pose.scale(0.008f, -0.008f, 0.008f);
+                pose.scale(0.012f, -0.012f, 0.012f);
                 font.drawInBatch(Component.literal(label), -font.width(label) / 2f, 0f,
                     0xFFF5E1, false, pose.last().pose(), buffers, Font.DisplayMode.NORMAL,
                     0, light);

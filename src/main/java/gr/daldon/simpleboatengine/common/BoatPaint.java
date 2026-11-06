@@ -2,6 +2,7 @@ package gr.daldon.simpleboatengine.common;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 
 /** Seven independent boat-surface paints and an optional painted bow name. */
 public final class BoatPaint {
@@ -57,6 +58,10 @@ public final class BoatPaint {
 
     public static void setName(ItemStack item, String name) {
         String safe = name == null ? "" : name.replace('§', ' ').trim();
-        item.getOrCreateTag().putString(NAME, safe.substring(0, Math.min(safe.length(), 20)));
+        safe = safe.substring(0, Math.min(safe.length(), 20));
+        item.getOrCreateTag().putString(NAME, safe);
+        // Display the registered boat name directly in inventory/tooltips, too.
+        if (safe.isBlank()) item.resetHoverName();
+        else item.setHoverName(Component.literal(safe));
     }
 }

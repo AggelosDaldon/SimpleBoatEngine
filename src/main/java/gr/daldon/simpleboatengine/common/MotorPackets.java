@@ -154,28 +154,31 @@ public final class MotorPackets {
                     BoatPaint.setName(item, msg.name);
                 } else {
                     if (msg.channel < 0 || msg.channel >= BoatPaint.CHANNELS) return;
-                    int count = msg.channel == BoatPaint.ANTIFOUL ? 5 : 16;
-                    if (msg.color < 0 || msg.color >= count) return;
-                    if (msg.channel != BoatPaint.ANTIFOUL && !player.getAbilities().instabuild) {
-                        boolean spent = false;
-                        for (int index = 0; index < player.getInventory().getContainerSize(); index++) {
-                            ItemStack dye = player.getInventory().getItem(index);
-                            if (dye.getItem() instanceof DyeItem dyeItem
-                                && dyeItem.getDyeColor().getId() == msg.color) {
-                                dye.shrink(1);
-                                spent = true;
-                                break;
-                            }
-                        }
-                        if (!spent) {
-                            player.displayClientMessage(Component.literal("You need the matching dye."), true);
-                            return;
-                        }
+                    // Dyes must now be placed in the actual station slot.
+                    // Normal paints inherit the placed dye's exact vanilla color.
+                    ItemStack dye = workshop.getItem(1);
+                    if (!(dye.getItem() instanceof DyeItem dyeItem)) {
+                        player.displayClientMessage(Component.literal("Put a dye into the station first."), true);
+                        return;
                     }
-                    BoatPaint.set(item, msg.channel, msg.color);
+                    int selectedColor;
+                    if (msg.channel == BoatPaint.ANTIFOUL) {
+                        if (msg.color < 0 || msg.color >= 5) return;
+                        selectedColor = msg.color;
+                    } else {
+                        selectedColor = dyeItem.getDyeColor().getId();
+                    }
+                    if (BoatPaint.get(item, msg.channel) == selectedColor) return;
+                    BoatPaint.set(item, msg.channel, selectedColor);
+                    if (!player.getAbilities().instabuild) {
+                        dye.shrink(1);
+                        workshop.setItem(1, dye);
+                    }
                 }
                 workshop.setItem(0, item);
                 menu.broadcastChanges();
+                player.displayClientMessage(Component.literal(msg.channel == -1
+                    ? "Boat name saved: " + BoatPaint.name(item) : "Boat paint applied!"), true);
             });
             ctx.get().setPacketHandled(true);
         }
