@@ -1,6 +1,8 @@
 package gr.daldon.simpleboatengine.common;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -12,55 +14,73 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 
 /**
- * A temporary, server-authoritative light level 14 source at the top of the pole.
+ * Temporary, server-authoritative light level 14 sources at each fitted lamp.
  * Unlike render-only glow, this illuminates surrounding blocks and nearby players.
  * Every block self-expires if its owning boat leaves, even after a server restart.
  */
 public final class BoatPoleLights {
-    private static final Map<Boat, BlockPos> POSITIONS = new WeakHashMap<>();
+    private static final Map<Boat, Set<BlockPos>> POSITIONS = new WeakHashMap<>();
 
     private BoatPoleLights() {}
 
     public static void update(ServerLevel level, Boat boat, CompoundTag data) {
-        BlockPos old = POSITIONS.get(boat);
-        boolean active = data.getBoolean("PoleLightInstalled") && MotorData.isDark(level.getDayTime());
-        BlockPos wanted = active ? position(boat) : null;
+        Set<BlockPos> old = POSITIONS.getOrDefault(boat, Set.of());
+        Set<BlockPos> wanted = MotorData.isDark(level.getDayTime())
+            ? positions(boat, data) : Set.of();
 
-        if (old != null && !old.equals(wanted)) {
-            POSITIONS.remove(boat);
-            if (!shouldKeep(level, old)) restore(level, old);
-        }
-        if (wanted == null) return;
-
-        BlockState existing = level.getBlockState(wanted);
-        if (existing.is(EngineBlocks.BOAT_LIGHT.get())) {
-            POSITIONS.put(boat, wanted);
-            return;
+        for (BlockPos previous : old) {
+            if (!wanted.contains(previous) && !shouldKeep(level, previous)) {
+                restore(level, previous);
+            }
         }
 
-        // Never overwrite player builds, other mod blocks, or flowing water.
-        boolean air = existing.isAir();
-        boolean waterSource = existing.getFluidState().isSource()
-            && existing.getFluidState().getType() == Fluids.WATER
-            && existing.getBlock() == Blocks.WATER;
-        if (!air && !waterSource) {
-            POSITIONS.remove(boat);
-            return;
-        }
+        Set<BlockPos> placed = new HashSet<>();
+        for (BlockPos target : wanted) {
+            BlockState existing = level.getBlockState(target);
+            if (existing.is(EngineBlocks.BOAT_LIGHT.get())) {
+                placed.add(target);
+                continue;
+            }
 
-        level.setBlock(wanted, EngineBlocks.BOAT_LIGHT.get().defaultBlockState()
-            .setValue(BoatGlowBlock.WATERLOGGED, waterSource), 3);
-        POSITIONS.put(boat, wanted);
+            // Never overwrite player builds, other mod blocks, or flowing water.
+            boolean air = existing.isAir();
+            boolean waterSource = existing.getFluidState().isSource()
+                && existing.getFluidState().getType() == Fluids.WATER
+                && existing.getBlock() == Blocks.WATER;
+            if (!air && !waterSource) continue;
+
+            level.setBlock(target, EngineBlocks.BOAT_LIGHT.get().defaultBlockState()
+                .setValue(BoatGlowBlock.WATERLOGGED, waterSource), 3);
+            placed.add(target);
+        }
+        if (placed.isEmpty()) POSITIONS.remove(boat);
+        else POSITIONS.put(boat, placed);
     }
 
-    public static BlockPos position(Boat boat) {
-        // Match the exact pole placement and scale in MotorWorldRenderer.
+    /** Exact model-space lamps after their attachment transform in MotorWorldRenderer. */
+    private static Set<BlockPos> positions(Boat boat, CompoundTag data) {
+        if (data.getBoolean("PoleLightInstalled")) {
+            return Set.of(position(boat, -0.73, 0.34, 0.55, 8.17));
+        }
+        if (!data.getBoolean("RollbarInstalled")) return Set.of();
+
+        Set<BlockPos> result = new HashSet<>();
+        // Four individual lenses along the crossbar, projected to block cells.
+        for (double modelX : new double[] {2.2, 6.05, 9.95, 13.8}) {
+            double localX = (modelX - 8.0) / 16.0 * 1.3;
+            double localZ = 0.08 + (6.85 - 8.0) / 16.0 * 1.3;
+            result.add(position(boat, localX, 0.34, localZ, 11.1));
+        }
+        return result;
+    }
+
+    private static BlockPos position(Boat boat, double x, double heightFraction,
+                                     double z, double modelTopY) {
         double yaw = Math.toRadians(180f - boat.getYRot());
-        double x = -0.73;
-        double z = 0.55;
         double worldX = boat.getX() + x * Math.cos(yaw) + z * Math.sin(yaw);
         double worldZ = boat.getZ() - x * Math.sin(yaw) + z * Math.cos(yaw);
-        double worldY = boat.getY() + boat.getBbHeight() * 0.34 + (8.17 / 16.0) * 1.3;
+        double worldY = boat.getY() + boat.getBbHeight() * heightFraction
+            + modelTopY / 16.0 * 1.3;
         return BlockPos.containing(worldX, worldY, worldZ);
     }
 
@@ -70,8 +90,7 @@ public final class BoatPoleLights {
         AABB nearby = new AABB(pos).inflate(3.0);
         return !level.getEntitiesOfClass(Boat.class, nearby, boat ->
             MotorData.installed(boat)
-                && MotorData.read(boat).getBoolean("PoleLightInstalled")
-                && position(boat).equals(pos)).isEmpty();
+                && positions(boat, MotorData.read(boat)).contains(pos)).isEmpty();
     }
 
     /** Only touches our own invisible light block, restoring its previous air/water. */

@@ -57,6 +57,7 @@ public final class MotorData {
         output.putFloat("Fuel", stored.getFloat("Fuel"));
         output.putBoolean("CanisterInstalled", stored.getBoolean("CanisterInstalled"));
         output.putBoolean("PoleLightInstalled", stored.getBoolean("PoleLightInstalled"));
+        output.putBoolean("RollbarInstalled", stored.getBoolean("RollbarInstalled"));
         return output;
     }
 }

@@ -1,0 +1,1291 @@
+{
+  "meta": {
+    "format_version": "5.0",
+    "model_format": "java_block_sequence",
+    "box_uv": false
+  },
+  "name": "Boat Roll Bar with Spotlights - ON",
+  "resolution": {
+    "width": 128,
+    "height": 128
+  },
+  "elements": [
+    {
+      "name": "left compact black mounting plate",
+      "type": "cube",
+      "uuid": "ba6e77be-a453-49f3-9306-10abe29f75b9",
+      "from": [
+        -0.53,
+        0.0,
+        7.12
+      ],
+      "to": [
+        0.53,
+        0.22,
+        8.18
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            0,
+            96,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "left slim straight silver post",
+      "type": "cube",
+      "uuid": "d0cdef89-a468-43df-a0f4-84e5cc216391",
+      "from": [
+        -0.3,
+        0.2,
+        7.35
+      ],
+      "to": [
+        0.3,
+        10.33,
+        7.95
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            32,
+            0,
+            48,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "left square top joint",
+      "type": "cube",
+      "uuid": "bb8dea40-7b28-4702-a8ab-e51fa34de182",
+      "from": [
+        -0.43,
+        10.02,
+        7.25
+      ],
+      "to": [
+        0.43,
+        10.55,
+        8.05
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "right compact black mounting plate",
+      "type": "cube",
+      "uuid": "64e5544b-0150-4f8d-9217-420ca127dd57",
+      "from": [
+        15.47,
+        0.0,
+        7.12
+      ],
+      "to": [
+        16.53,
+        0.22,
+        8.18
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            0,
+            96,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "right slim straight silver post",
+      "type": "cube",
+      "uuid": "02fb3cce-9a3d-4544-97fe-b9ba3f4a1520",
+      "from": [
+        15.7,
+        0.2,
+        7.35
+      ],
+      "to": [
+        16.3,
+        10.33,
+        7.95
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            32,
+            0,
+            48,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "right square top joint",
+      "type": "cube",
+      "uuid": "07ea98c7-8e1f-437e-ba8e-daa6a2b57e54",
+      "from": [
+        15.57,
+        10.02,
+        7.25
+      ],
+      "to": [
+        16.43,
+        10.55,
+        8.05
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Single simple horizontal overhead bar",
+      "type": "cube",
+      "uuid": "b1a900e0-dc75-494d-9fc1-8bf7d8195524",
+      "from": [
+        -0.1,
+        10.1,
+        7.35
+      ],
+      "to": [
+        16.1,
+        10.59,
+        7.95
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            32,
+            0,
+            48,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            0,
+            32,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 1 black enclosure",
+      "type": "cube",
+      "uuid": "36eca3f2-a61c-4df1-a87e-67d0e0081bf6",
+      "from": [
+        1.6700000000000002,
+        10.59,
+        6.93
+      ],
+      "to": [
+        2.7300000000000004,
+        11.19,
+        7.64
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            0,
+            96,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 1 glowing face",
+      "type": "cube",
+      "uuid": "de6b2580-4a30-42ee-a588-84c254fab383",
+      "from": [
+        1.7800000000000002,
+        10.69,
+        6.83
+      ],
+      "to": [
+        2.62,
+        11.07,
+        6.94
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 2 black enclosure",
+      "type": "cube",
+      "uuid": "d5f4e575-9659-48ae-903f-1dd413e65718",
+      "from": [
+        5.52,
+        10.59,
+        6.93
+      ],
+      "to": [
+        6.58,
+        11.19,
+        7.64
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            0,
+            96,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 2 glowing face",
+      "type": "cube",
+      "uuid": "86628933-439b-4379-a3dc-9e909384ec09",
+      "from": [
+        5.63,
+        10.69,
+        6.83
+      ],
+      "to": [
+        6.47,
+        11.07,
+        6.94
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 3 black enclosure",
+      "type": "cube",
+      "uuid": "1351241b-a221-4346-9e9e-a3668e78eabd",
+      "from": [
+        9.42,
+        10.59,
+        6.93
+      ],
+      "to": [
+        10.479999999999999,
+        11.19,
+        7.64
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            0,
+            96,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 3 glowing face",
+      "type": "cube",
+      "uuid": "eb4eab52-1f97-41c2-add6-14fcdfe5f81f",
+      "from": [
+        9.53,
+        10.69,
+        6.83
+      ],
+      "to": [
+        10.37,
+        11.07,
+        6.94
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 4 black enclosure",
+      "type": "cube",
+      "uuid": "a1ec099e-4b45-4293-89c2-4fb219de9d50",
+      "from": [
+        13.270000000000001,
+        10.59,
+        6.93
+      ],
+      "to": [
+        14.33,
+        11.19,
+        7.64
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            0,
+            96,
+            16
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            64,
+            0,
+            80,
+            16
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "name": "Light 4 glowing face",
+      "type": "cube",
+      "uuid": "7e8e7f14-5e34-410e-bd48-c1b38d8adf32",
+      "from": [
+        13.38,
+        10.69,
+        6.83
+      ],
+      "to": [
+        14.22,
+        11.07,
+        6.94
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            16,
+            16,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    }
+  ],
+  "outliner": [
+    {
+      "name": "boat_rollbar_lights",
+      "uuid": "5363aade-c8f0-487c-afff-860758747fc8",
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "isOpen": true,
+      "children": [
+        {
+          "name": "silver_rollbar",
+          "uuid": "f05d704f-2a3f-439d-bee7-3631977c6bbd",
+          "origin": [
+            8,
+            0,
+            8
+          ],
+          "isOpen": true,
+          "children": [
+            "ba6e77be-a453-49f3-9306-10abe29f75b9",
+            "d0cdef89-a468-43df-a0f4-84e5cc216391",
+            "bb8dea40-7b28-4702-a8ab-e51fa34de182",
+            "64e5544b-0150-4f8d-9217-420ca127dd57",
+            "02fb3cce-9a3d-4544-97fe-b9ba3f4a1520",
+            "07ea98c7-8e1f-437e-ba8e-daa6a2b57e54",
+            "b1a900e0-dc75-494d-9fc1-8bf7d8195524"
+          ]
+        },
+        {
+          "name": "roof_spotlights",
+          "uuid": "79c5e561-c2d3-44eb-865d-c5244203d9b1",
+          "origin": [
+            8,
+            0,
+            8
+          ],
+          "isOpen": true,
+          "children": [
+            "36eca3f2-a61c-4df1-a87e-67d0e0081bf6",
+            "de6b2580-4a30-42ee-a588-84c254fab383",
+            "d5f4e575-9659-48ae-903f-1dd413e65718",
+            "86628933-439b-4379-a3dc-9e909384ec09",
+            "1351241b-a221-4346-9e9e-a3668e78eabd",
+            "eb4eab52-1f97-41c2-add6-14fcdfe5f81f",
+            "a1ec099e-4b45-4293-89c2-4fb219de9d50",
+            "7e8e7f14-5e34-410e-bd48-c1b38d8adf32"
+          ]
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "silver_rollbar",
+      "uuid": "f05d704f-2a3f-439d-bee7-3631977c6bbd",
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "visibility": true,
+      "export": true,
+      "children": [],
+      "isOpen": true
+    },
+    {
+      "name": "roof_spotlights",
+      "uuid": "79c5e561-c2d3-44eb-865d-c5244203d9b1",
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "visibility": true,
+      "export": true,
+      "children": [],
+      "isOpen": true
+    },
+    {
+      "name": "boat_rollbar_lights",
+      "uuid": "5363aade-c8f0-487c-afff-860758747fc8",
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "visibility": true,
+      "export": true,
+      "children": [],
+      "isOpen": true
+    }
+  ],
+  "ambientocclusion": true,
+  "textures": [
+    {
+      "name": "boat_arch_light_texture.png",
+      "id": "0",
+      "uuid": "ef41dae9-eb6b-42e1-8c5e-953c98dce69d",
+      "width": 128,
+      "height": 128,
+      "uv_width": 128,
+      "uv_height": 128,
+      "source": "data:image/png;base64,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"
+    }
+  ]
+}

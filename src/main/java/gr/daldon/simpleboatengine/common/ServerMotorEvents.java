@@ -37,12 +37,34 @@ public final class ServerMotorEvents {
                 CompoundTag data = MotorData.writable(boat);
                 if (!MotorData.installed(boat)) {
                     notify(event.getEntity(), "Install a boat engine before fitting the pole light.");
+                } else if (data.getBoolean("RollbarInstalled")) {
+                    notify(event.getEntity(), "Remove the roll bar before fitting a pole light.");
                 } else if (data.getBoolean("PoleLightInstalled")) {
                     notify(event.getEntity(), "This boat already has a pole light.");
                 } else {
                     data.putBoolean("PoleLightInstalled", true);
                     if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
                     notify(event.getEntity(), "Automatic boat light fitted to the rear left corner.");
+                    click(boat);
+                }
+            }
+            event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
+            event.setCanceled(true);
+            return;
+        }
+        if (held.is(EngineItems.ROLLBAR_LIGHT.get())) {
+            if (!boat.level().isClientSide) {
+                CompoundTag data = MotorData.writable(boat);
+                if (!MotorData.installed(boat)) {
+                    notify(event.getEntity(), "Install a boat engine before fitting the roll bar.");
+                } else if (data.getBoolean("PoleLightInstalled")) {
+                    notify(event.getEntity(), "This boat already has a pole light; choose one lighting setup.");
+                } else if (data.getBoolean("RollbarInstalled")) {
+                    notify(event.getEntity(), "This boat already has a roll bar.");
+                } else {
+                    data.putBoolean("RollbarInstalled", true);
+                    if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
+                    notify(event.getEntity(), "Four-spotlight roll bar mounted across the boat.");
                     click(boat);
                 }
             }
@@ -77,6 +99,7 @@ public final class ServerMotorEvents {
             data.putFloat("Fuel", 0f);
             data.putBoolean("CanisterInstalled", false);
             data.putBoolean("PoleLightInstalled", false);
+            data.putBoolean("RollbarInstalled", false);
             if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
             notify(event.getEntity(), "Motor installed! Point at the motor to refuel and switch it on.");
             click(boat);

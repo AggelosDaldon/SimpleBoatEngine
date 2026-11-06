@@ -26,6 +26,10 @@ public final class MotorItemRenderer extends BlockEntityWithoutLevelRenderer {
         } else if (item.is(EngineItems.POLE_LIGHT.get())) {
             pose.translate(0.5, 0.28, 0.5);
             PoleLightMesh.draw(pose, buffers, false, packedLight);
+        } else if (item.is(EngineItems.ROLLBAR_LIGHT.get())) {
+            pose.translate(0.5, 0.12, 0.5);
+            pose.scale(0.9f, 0.9f, 0.9f);
+            RollbarMesh.draw(pose, buffers, false, packedLight);
         } else {
             pose.translate(0.5, 0.5, 0.5);
             MotorMesh.draw(pose, buffers, 0f, packedLight);

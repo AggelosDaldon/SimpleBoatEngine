@@ -78,6 +78,17 @@ public final class MotorWorldRenderer {
                     LevelRenderer.getLightColor(game.level, boat.blockPosition()));
                 pose.popPose();
             }
+            if (status.getBoolean("RollbarInstalled") && !status.getBoolean("PoleLightInstalled")) {
+                pose.pushPose();
+                // Match the vanilla boat hull: feet straddle the side gunwales,
+                // bridge stays upright, and all four lenses face the bow (-Z).
+                pose.translate(0f, boat.getBbHeight() * 0.34f, 0.08f);
+                pose.scale(1.3f, 1.3f, 1.3f);
+                RollbarMesh.draw(pose, buffers,
+                    MotorData.isDark(game.level.getDayTime()),
+                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+                pose.popPose();
+            }
             pose.popPose();
         }
         buffers.endBatch();
