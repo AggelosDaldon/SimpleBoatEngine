@@ -53,10 +53,10 @@ public final class MotorAmbience {
             }
 
             int throttle = Math.max(0, Math.min(10, data.getInt("Throttle")));
-            float attachment = boat instanceof SkiffBoat ? 0.35f
+            float attachment = boat instanceof SkiffBoat ? 0.78f
                 : boat.getVariant() == Boat.Type.BAMBOO
                     ? boat.getBbHeight() * 0.7f : boat.getBbHeight() / 3.0f;
-            double stern = boat instanceof SkiffBoat ? 2.40
+            double stern = boat instanceof SkiffBoat ? 2.70
                 : boat.getVariant() == Boat.Type.BAMBOO ? 1.12 : 1.24;
             double yaw = Math.toRadians(180.0 - boat.getYRot());
 

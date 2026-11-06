@@ -20,8 +20,10 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
                        MultiBufferSource buffers, int light) {
         pose.pushPose();
         pose.mulPose(Axis.YP.rotationDegrees(180f - yaw));
-        // Hull keel goes below the waterline, with both gunwales above it.
-        pose.translate(0f, -0.35f, 0f);
+        // Raise the hull so its 4.95px-high walking floor is at the
+        // skiff's collision-box top (0.39 blocks above its origin).
+        // The lower keel still sits in the water, while the deck is dry.
+        pose.translate(0f, 0.08f, 0f);
         SkiffMesh.draw(pose, buffers, light);
         pose.popPose();
         super.render(boat, yaw, partialTick, pose, buffers, light);

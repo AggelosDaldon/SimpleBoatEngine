@@ -14,7 +14,8 @@ public final class EngineEntities {
     public static final RegistryObject<EntityType<SkiffBoat>> LARGE_SKIFF =
         ENTITIES.register("large_fishing_skiff", () ->
             EntityType.Builder.<SkiffBoat>of(SkiffBoat::new, MobCategory.MISC)
-                .sized(2.2f, 0.9f)
+                // Match the deck's top surface, rather than the gunwale.
+                .sized(2.2f, 0.39f)
                 .clientTrackingRange(10)
                 .updateInterval(3)
                 .build(SimpleBoatEngine.ID + ":large_fishing_skiff"));

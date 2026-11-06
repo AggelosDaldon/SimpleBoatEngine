@@ -61,9 +61,9 @@ public final class BoatPoleLights {
     private static Set<BlockPos> positions(Boat boat, CompoundTag data) {
         if (!data.getBoolean("PoleLightInstalled")) return Set.of();
         if (boat instanceof SkiffBoat) {
-            return Set.of(position(boat, -0.74, 0, 2.10, 8.17, 0.53));
+            return Set.of(position(boat, -0.74, 0, 2.10, 8.17, 0.96));
         }
-        return Set.of(position(boat, -0.32, 0.98, 0.96, 8.17));
+        return Set.of(position(boat, -0.32, 0.98, 0.83, 8.17));
     }
 
     private static BlockPos position(Boat boat, double x, double fraction,

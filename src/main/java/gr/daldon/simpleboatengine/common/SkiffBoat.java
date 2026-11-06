@@ -40,7 +40,9 @@ public final class SkiffBoat extends Boat {
             int seat = getPassengers().indexOf(passenger);
             double along = (seat == 0 ? 27.05 : -24.05) / 16.0;
             double yaw = Math.toRadians(180.0 - getYRot());
-            move.accept(entity, getX() + along * Math.sin(yaw), y + 0.12,
+            // Raise riders with the visible hull, retaining their existing
+            // seating height relative to the actual bench tops.
+            move.accept(entity, getX() + along * Math.sin(yaw), y + 0.55,
                 getZ() + along * Math.cos(yaw));
         });
     }

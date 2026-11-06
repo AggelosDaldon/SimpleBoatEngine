@@ -17,11 +17,16 @@ this project. It does not require other vehicle mods or use their source/assets.
   installed version.
   It uses the supplied 73-cuboid, 128px Blockbench model, has a driver seat
   toward the stern and a second seat near the bow, and retains vanilla boat
-  buoyancy and steering. Vanilla boats remain available and unchanged.
+  buoyancy and steering. The hull is raised so its interior floor coincides
+  with the skiff collision surface, while both seated riders keep their
+  previous position relative to their benches. Vanilla boats remain available
+  and unchanged.
 - All three fitted accessories use separate attachment positions on the skiff:
   motor at the transom, fuel canister on starboard aft, and automatic pole light
-  at the port stern corner. Engine targeting and the light's actual illumination
-  position follow the custom mounts.
+  at the port stern corner. The motor sits farther aft, and all skiff mounts
+  follow the raised hull. On vanilla boats, the pole light sits slightly farther
+  forward. Engine targeting and the light's actual illumination position follow
+  the custom mounts.
 - Equip a vanilla boat with the engine by right-clicking the **boat** while holding
   the engine item. Installation is the only operation performed on the boat hull.
 - After installing, point the crosshair at the visible **motor** at the stern and

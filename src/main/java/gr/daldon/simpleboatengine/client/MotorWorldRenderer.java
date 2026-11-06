@@ -44,8 +44,8 @@ public final class MotorWorldRenderer {
             float height = boat.getBbHeight() / 3f;
             float stern = 1.24f;
             if (skiff) {
-                height = 0.35f;
-                stern = 2.40f;
+                height = 0.78f;
+                stern = 2.70f;
             } else if (boat.getVariant() == Boat.Type.BAMBOO) {
                 height = boat.getBbHeight() * 0.7f;
                 stern = 1.12f;
@@ -66,7 +66,7 @@ public final class MotorWorldRenderer {
                 // +X is the boat's right side in our stern-relative rendering space.
                 // Pull the canister 0.28 blocks forward along the starboard side.
                 pose.translate(skiff ? 0.90f : 0.73f,
-                    skiff ? 0.48f : boat.getBbHeight() * 0.34f,
+                    skiff ? 0.91f : boat.getBbHeight() * 0.34f,
                     skiff ? 1.48f : 0.55f);
                 // Turn the cap towards the bow without changing the mesh UVs.
                 pose.mulPose(Axis.YP.rotationDegrees(-90f));
@@ -80,8 +80,8 @@ public final class MotorWorldRenderer {
                 // Bring the pole base inboard so the mount rests fully on the rail.
                 // The skiff keeps its own longer-hull attachment coordinates.
                 pose.translate(skiff ? -0.74f : -0.32f,
-                    skiff ? 0.53f : boat.getBbHeight() * 0.98f,
-                    skiff ? 2.10f : 0.96f);
+                    skiff ? 0.96f : boat.getBbHeight() * 0.98f,
+                    skiff ? 2.10f : 0.83f);
                 pose.scale(1.3f, 1.3f, 1.3f);
                 PoleLightMesh.draw(pose, buffers,
                     MotorData.isDark(game.level.getDayTime()),
