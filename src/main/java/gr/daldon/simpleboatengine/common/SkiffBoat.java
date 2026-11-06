@@ -20,12 +20,12 @@ public class SkiffBoat extends Boat {
 
     @Override
     public Item getDropItem() {
-        return EngineItems.LARGE_SKIFF.get();
+        return EngineItems.BLUE_FISHING_BOAT.get();
     }
 
     @Override
     public ItemStack getPickResult() {
-        return new ItemStack(EngineItems.LARGE_SKIFF.get());
+        return new ItemStack(EngineItems.BLUE_FISHING_BOAT.get());
     }
 
     @Override
@@ -45,11 +45,11 @@ public class SkiffBoat extends Boat {
             int seat = getPassengers().indexOf(passenger);
             Vec3 local = seatPosition(seat);
             double yaw = Math.toRadians(180.0 - getYRot());
-            // Keep both passengers aligned with the hull after lifting it above water.
+            // Keep both passengers aligned with the lower floating hull.
             // BlueFishingBoat overrides the two local positions for its side seat.
             move.accept(entity,
                 getX() + local.x * Math.cos(yaw) + local.z * Math.sin(yaw),
-                y + 0.95,
+                y + 0.71,
                 getZ() - local.x * Math.sin(yaw) + local.z * Math.cos(yaw));
         });
     }

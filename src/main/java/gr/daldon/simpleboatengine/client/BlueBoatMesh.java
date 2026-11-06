@@ -13,6 +13,17 @@ public final class BlueBoatMesh {
     private BlueBoatMesh() {}
 
     public static void draw(PoseStack stack, MultiBufferSource buffers, int light) {
-        SkiffMesh.drawParts(stack, buffers, light, TEXTURE, BlueBoatMeshData.PARTS);
+        draw(stack, buffers, light, 0);
+    }
+
+    public static ResourceLocation texture(int style) {
+        if (style < 1 || style > 9) return TEXTURE;
+        return new ResourceLocation(SimpleBoatEngine.ID,
+            "textures/entity/" + gr.daldon.simpleboatengine.common.EngineItems.WOODS[style - 1]
+                + "_fishing_boat.png");
+    }
+
+    public static void draw(PoseStack stack, MultiBufferSource buffers, int light, int style) {
+        SkiffMesh.drawParts(stack, buffers, light, texture(style), BlueBoatMeshData.PARTS);
     }
 }

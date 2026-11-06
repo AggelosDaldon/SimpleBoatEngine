@@ -13,6 +13,8 @@ import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = SimpleBoatEngine.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class EngineItems {
@@ -29,10 +31,28 @@ public final class EngineItems {
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> LARGE_SKIFF = ITEMS.register("large_fishing_skiff",
-        () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.LARGE_SKIFF));
     public static final RegistryObject<Item> BLUE_FISHING_BOAT = ITEMS.register("aggelos_blue_fishing_boat",
         () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.BLUE_FISHING_BOAT));
+    public static final String[] WOODS = {
+        "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo"
+    };
+    public static final List<RegistryObject<Item>> WOOD_BOATS = registerWoodBoats();
+
+    private static List<RegistryObject<Item>> registerWoodBoats() {
+        List<RegistryObject<Item>> boats = new ArrayList<>();
+        for (int index = 0; index < WOODS.length; index++) {
+            final int style = index + 1;
+            boats.add(ITEMS.register(WOODS[index] + "_fishing_boat",
+                () -> new SkiffBoatItem(new Item.Properties().stacksTo(1),
+                    EngineEntities.BLUE_FISHING_BOAT, style)));
+        }
+        return List.copyOf(boats);
+    }
+
+    public static Item boatForStyle(int style) {
+        return style > 0 && style <= WOOD_BOATS.size()
+            ? WOOD_BOATS.get(style - 1).get() : BLUE_FISHING_BOAT.get();
+    }
 
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = TABS.register("main",
         () -> CreativeModeTab.builder()
@@ -43,16 +63,16 @@ public final class EngineItems {
                 output.accept(FUEL_BUCKET.get());
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
-                output.accept(LARGE_SKIFF.get());
                 output.accept(BLUE_FISHING_BOAT.get());
+                for (RegistryObject<Item> boat : WOOD_BOATS) output.accept(boat.get());
             }).build());
 
     /** Show the skiff in a vanilla tab as well as in Simple Boat Engine's tab. */
     @SubscribeEvent
     public static void populateVanillaTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(LARGE_SKIFF.get());
             event.accept(BLUE_FISHING_BOAT.get());
+            for (RegistryObject<Item> boat : WOOD_BOATS) event.accept(boat.get());
         }
     }
 

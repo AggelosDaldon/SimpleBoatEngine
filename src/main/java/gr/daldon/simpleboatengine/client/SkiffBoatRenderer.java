@@ -25,7 +25,7 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
         // The original renderer was placing the entire deck below the waterline.
         // Both authored hulls use the same 4.95px floor height.
         pose.translate(0f, BoatMounts.HULL_Y, 0f);
-        if (boat instanceof BlueFishingBoat) BlueBoatMesh.draw(pose, buffers, light);
+        if (boat instanceof BlueFishingBoat blue) BlueBoatMesh.draw(pose, buffers, light, blue.getHullStyle());
         else SkiffMesh.draw(pose, buffers, light);
         pose.popPose();
         super.render(boat, yaw, partialTick, pose, buffers, light);
@@ -33,6 +33,7 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
 
     @Override
     public ResourceLocation getTextureLocation(SkiffBoat boat) {
-        return boat instanceof BlueFishingBoat ? BlueBoatMesh.TEXTURE : SkiffMesh.TEXTURE;
+        return boat instanceof BlueFishingBoat blue
+            ? BlueBoatMesh.texture(blue.getHullStyle()) : SkiffMesh.TEXTURE;
     }
 }

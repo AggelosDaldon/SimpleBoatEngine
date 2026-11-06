@@ -16,12 +16,21 @@ import java.util.function.Supplier;
 /** Places the larger test hull on water without replacing vanilla boat items. */
 public final class SkiffBoatItem extends EngineItem {
     private final Supplier<? extends EntityType<? extends SkiffBoat>> type;
+    private final int style;
 
     public SkiffBoatItem(Properties properties,
                          Supplier<? extends EntityType<? extends SkiffBoat>> type) {
+        this(properties, type, 0);
+    }
+
+    public SkiffBoatItem(Properties properties,
+                         Supplier<? extends EntityType<? extends SkiffBoat>> type, int style) {
         super(properties);
         this.type = type;
+        this.style = style;
     }
+
+    public int getHullStyle() { return style; }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -36,6 +45,7 @@ public final class SkiffBoatItem extends EngineItem {
         Vec3 location = hit.getLocation();
         SkiffBoat boat = type.get().create(level);
         if (boat == null) return InteractionResultHolder.fail(held);
+        if (boat instanceof BlueFishingBoat blue) blue.setHullStyle(style);
         boat.setPos(location.x, location.y, location.z);
         boat.setYRot(player.getYRot());
         if (!level.noCollision(boat, boat.getBoundingBox().inflate(-0.1))) {

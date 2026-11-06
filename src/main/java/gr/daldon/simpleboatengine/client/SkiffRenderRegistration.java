@@ -14,7 +14,6 @@ public final class SkiffRenderRegistration {
 
     @SubscribeEvent
     public static void register(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(EngineEntities.LARGE_SKIFF.get(), SkiffBoatRenderer::new);
         event.registerEntityRenderer(EngineEntities.BLUE_FISHING_BOAT.get(), SkiffBoatRenderer::new);
     }
 }

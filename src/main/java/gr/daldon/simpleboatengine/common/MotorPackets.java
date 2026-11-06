@@ -16,7 +16,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-/** Three small messages: server state, throttle changes, and motor clicks. */
+/** Synced engine controls, precise hatch interaction and click-to-board handling. */
 public final class MotorPackets {
     private static final String VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
@@ -32,6 +32,12 @@ public final class MotorPackets {
             .consumerMainThread(SetThrottle::receive).add();
         CHANNEL.messageBuilder(UseMotor.class, 2, NetworkDirection.PLAY_TO_SERVER)
             .encoder(UseMotor::write).decoder(UseMotor::read).consumerMainThread(UseMotor::receive).add();
+        CHANNEL.messageBuilder(OpenCargo.class, 3, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(OpenCargo::write).decoder(OpenCargo::read)
+            .consumerMainThread(OpenCargo::receive).add();
+        CHANNEL.messageBuilder(BoardBoat.class, 4, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(BoardBoat::write).decoder(BoardBoat::read)
+            .consumerMainThread(BoardBoat::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -78,6 +84,39 @@ public final class MotorPackets {
             ctx.get().enqueueWork(() -> {
                 if (player == null || !(player.level().getEntity(msg.boatId()) instanceof Boat boat)) return;
                 ServerMotorEvents.useMotor(player, boat);
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
+    public record OpenCargo(int boatId) {
+        static void write(OpenCargo msg, FriendlyByteBuf out) { out.writeVarInt(msg.boatId); }
+        static OpenCargo read(FriendlyByteBuf in) { return new OpenCargo(in.readVarInt()); }
+        static void receive(OpenCargo msg, Supplier<NetworkEvent.Context> ctx) {
+            ServerPlayer player = ctx.get().getSender();
+            ctx.get().enqueueWork(() -> {
+                if (player == null || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
+                    || player.distanceToSqr(boat) > 40.0 || !boat.isAlive()
+                    || !BoatInteractionTarget.aimedAtHatch(boat, player.getEyePosition(),
+                        player.getViewVector(1f), 5.5)) return;
+                boat.openCargo(player);
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
+    public record BoardBoat(int boatId) {
+        static void write(BoardBoat msg, FriendlyByteBuf out) { out.writeVarInt(msg.boatId); }
+        static BoardBoat read(FriendlyByteBuf in) { return new BoardBoat(in.readVarInt()); }
+        static void receive(BoardBoat msg, Supplier<NetworkEvent.Context> ctx) {
+            ServerPlayer player = ctx.get().getSender();
+            ctx.get().enqueueWork(() -> {
+                if (player == null || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
+                    || player.getVehicle() != null || !player.isInWater() || !boat.isAlive()
+                    || boat.getPassengers().size() >= 2 || player.distanceToSqr(boat) > 40.0
+                    || !BoatInteractionTarget.aimedAtHull(boat, player.getEyePosition(),
+                        player.getViewVector(1f), 5.5)) return;
+                player.startRiding(boat);
             });
             ctx.get().setPacketHandled(true);
         }

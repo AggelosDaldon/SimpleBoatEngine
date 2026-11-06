@@ -3,6 +3,7 @@ package gr.daldon.simpleboatengine.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import gr.daldon.simpleboatengine.common.EngineItems;
+import gr.daldon.simpleboatengine.common.SkiffBoatItem;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,15 +22,12 @@ public final class MotorItemRenderer extends BlockEntityWithoutLevelRenderer {
                              MultiBufferSource buffers, int packedLight, int packedOverlay) {
         pose.pushPose();
         // Item models render in a 0..1 local cube; our mesh is centered on 0.
-        if (item.is(EngineItems.LARGE_SKIFF.get())
-            || item.is(EngineItems.BLUE_FISHING_BOAT.get())) {
+        if (item.getItem() instanceof SkiffBoatItem boatItem) {
             pose.translate(0.5, 0.39, 0.5);
             pose.mulPose(Axis.YP.rotationDegrees(-35f));
             pose.mulPose(Axis.XP.rotationDegrees(25f));
             pose.scale(0.19f, 0.19f, 0.19f);
-            if (item.is(EngineItems.BLUE_FISHING_BOAT.get()))
-                BlueBoatMesh.draw(pose, buffers, packedLight);
-            else SkiffMesh.draw(pose, buffers, packedLight);
+            BlueBoatMesh.draw(pose, buffers, packedLight, boatItem.getHullStyle());
         } else if (item.is(EngineItems.FUEL_CANISTER.get())) {
             pose.translate(0.5, 0.36, 0.5);
             CanisterMesh.draw(pose, buffers, packedLight);

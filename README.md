@@ -7,33 +7,33 @@ this project. It does not require other vehicle mods or use their source/assets.
 ## Features
 
 - Four accessories: **Boat Engine**, **Fuel Bucket**, **Auxiliary Fuel Canister**
-  and **Automatic Boat Pole Light**, plus two independent experimental boats:
-  **Large Fishing Skiff (Test)** and **Aggelos' Blue Fishing Boat**.
-- The new skiff is a separately spawned boat, placed on a water surface from
-  its Creative-tab item (or `/give @s simpleboatengine:large_fishing_skiff`).
-  Its dedicated inventory icon appears in both the mod's creative tab and
-  vanilla **Tools & Utilities**. Use exactly one current Simple Boat Engine
-  JAR in `mods/` when testing; Forge cannot register newer items from an older
-  installed version.
-  It uses the supplied 73-cuboid, 128px Blockbench model, has a driver seat
-  toward the stern and a second seat near the bow, and retains vanilla boat
-  buoyancy and steering. The hull is raised so its interior floor coincides
-  with the skiff collision surface, while both seated riders keep their
-  previous position relative to their benches. Vanilla boats remain available
-  and unchanged.
-- Aggelos' Blue Fishing Boat has its own 72-cuboid, 128px Blockbench model,
-  deep-blue and white texture, and independent Creative item
-  (`/give @s simpleboatengine:aggelos_blue_fishing_boat`). The driver's seat
-  is at the stern; the passenger seat is port-side, as named in the supplied
-  editable model. Both boats are registered in the mod's creative inventory
-  and the vanilla Tools & Utilities tab.
-- All three fitted accessories use separate attachment positions on the skiff:
+  and **Automatic Boat Pole Light**, plus the **Fishing Boat** based on the
+  blue 72-cuboid Blockbench model. The previous experimental Large Fishing
+  Skiff is no longer registered in the game.
+- The Fishing Boat retains vanilla buoyancy and steering, two seating positions
+  (rear driver and port passenger) and the long blue bow deck. The original
+  variant is `/give @s simpleboatengine:aggelos_blue_fishing_boat` (internal
+  registry ID retained to preserve existing boats in saved worlds). Nine more
+  items — oak, spruce, birch, jungle, acacia, dark oak, mangrove, cherry and
+  bamboo — use the same hull, seats and functional accessories with recolored
+  UV-compatible wood atlases.
+- Right-click the **white lid on the forward blue deck**, with an empty hand,
+  to open the boat's persistent **54-slot cargo inventory**. Breaking a boat
+  spills its contents. Clicking elsewhere does not open storage. From the
+  water, aim at the hull and right-click to get aboard; the mod does not
+  automatically climb up for you. On foot, its bow deck and central/stern
+  floor are maintained as walkable surfaces, without expanding the underlying
+  vanilla buoyancy collision box.
+- The fishing boat's item appears in its mod tab and in vanilla Tools &
+  Utilities. Use only one current Simple Boat Engine JAR in `mods/` when
+  testing; old and new JARs together cause duplicate registration errors.
+- All three fitted accessories use separate attachment positions on the boat:
   motor at the transom, fuel canister on starboard aft, and automatic pole light
   at the port stern corner. Both custom boats have individually calibrated
   mount points: the motor hangs outside the transom, the fuel tank sits low on
   the interior starboard floor, and the pole light attaches to the aft rail.
-  The hull visual offsets and both riders' positions are raised above the water.
-  On vanilla boats, the pole light sits slightly further inboard. Engine
+  The hull visual offset and riders have been lowered closer to the waterline.
+  On vanilla boats, the pole light sits further left of the motor. Engine
   targeting, exhaust particles and actual emitted light follow the mounts.
 - Equip a vanilla boat with the engine by right-clicking the **boat** while holding
   the engine item. Installation is the only operation performed on the boat hull.
@@ -75,8 +75,8 @@ this project. It does not require other vehicle mods or use their source/assets.
 
 ## Build
 
-This is a fresh, uncompiled **source project**. Java 17 and Gradle 8.8 are required.
-No existing mod's Gradle wrapper or compiled JAR is included.
+The project requires Java 17 and Gradle 8.8. A compiled build is supplied
+as the GitHub Actions artifact when the workflow succeeds.
 
 1. Open a terminal in the folder containing `settings.gradle`.
 2. Run `gradle build` using Gradle 8.8 with Java 17.
@@ -95,10 +95,12 @@ artifact from that workflow's build page.
 - Boat pole light's two editable models: `models/boat_pole_light_off.bbmodel`
   and `models/boat_pole_light_on.bbmodel`.
 - Boat pole light's 128×128 atlas: `src/main/resources/assets/simpleboatengine/textures/item/pole_light.png`
-- Experimental skiff source: `models/large_motor_fishing_skiff.bbmodel`;
-  Aggelos' blue boat source: `models/aggelos_blue_fishing_boat.bbmodel`;
-  their 128px textures and render meshes are reproduced with
+- Legacy skiff reference (no longer registered): `models/large_motor_fishing_skiff.bbmodel`;
+  actual fishing boat source: `models/aggelos_blue_fishing_boat.bbmodel`;
+  its original 128px UV atlas and renderer mesh can be reproduced with
   `python3 tools/generate_skiff_mesh.py`.
+- Produce the nine wood variants' compatible 128px atlases, inventory icons
+  and item models with `python3 tools/generate_wood_boats.py`.
 - Original engine sound: `assets/simpleboatengine/sounds/motor_loop.ogg`
 - Regenerate the current game's 129-cuboid mesh after editing the Blockbench
   file: `python3 tools/generate_outboard_mesh.py`.

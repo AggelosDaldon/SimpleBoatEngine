@@ -5,6 +5,8 @@ import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.common.EngineItems;
 import gr.daldon.simpleboatengine.common.MotorPackets;
 import gr.daldon.simpleboatengine.common.MotorTarget;
+import gr.daldon.simpleboatengine.common.BlueFishingBoat;
+import gr.daldon.simpleboatengine.common.BoatInteractionTarget;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -46,10 +48,32 @@ public final class MotorControls {
         Minecraft game = Minecraft.getInstance();
         if (game.player == null || game.level == null || game.screen != null) return;
         var held = game.player.getMainHandItem();
-        if (!held.isEmpty() && !held.is(EngineItems.FUEL_BUCKET.get())) return;
 
         Vec3 eye = game.player.getEyePosition();
         Vec3 look = game.player.getViewVector(1f);
+        if (event.getHand() == InteractionHand.MAIN_HAND && held.isEmpty()) {
+            for (Entity entity : game.level.entitiesForRendering()) {
+                if (!(entity instanceof BlueFishingBoat boat)) continue;
+                if (BoatInteractionTarget.aimedAtHatch(boat, eye, look, 5.5)) {
+                    if (!useHeld) {
+                        useHeld = true;
+                        MotorPackets.CHANNEL.sendToServer(new MotorPackets.OpenCargo(boat.getId()));
+                    }
+                    event.setCanceled(true);
+                    return;
+                }
+                if (game.player.isInWater()
+                    && BoatInteractionTarget.aimedAtHull(boat, eye, look, 5.5)) {
+                    if (!useHeld) {
+                        useHeld = true;
+                        MotorPackets.CHANNEL.sendToServer(new MotorPackets.BoardBoat(boat.getId()));
+                    }
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+        }
+        if (!held.isEmpty() && !held.is(EngineItems.FUEL_BUCKET.get())) return;
         for (Entity entity : game.level.entitiesForRendering()) {
             if (!(entity instanceof Boat boat)) continue;
             CompoundTag data = ClientMotorState.get(boat);
