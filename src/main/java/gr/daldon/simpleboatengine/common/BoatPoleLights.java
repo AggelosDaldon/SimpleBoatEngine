@@ -59,19 +59,8 @@ public final class BoatPoleLights {
 
     /** Exact model-space lamps after their attachment transform in MotorWorldRenderer. */
     private static Set<BlockPos> positions(Boat boat, CompoundTag data) {
-        if (data.getBoolean("PoleLightInstalled")) {
-            return Set.of(position(boat, -0.73, 0.34, 0.55, 8.17));
-        }
-        if (!data.getBoolean("RollbarInstalled")) return Set.of();
-
-        Set<BlockPos> result = new HashSet<>();
-        // Four individual lenses along the crossbar, projected to block cells.
-        for (double modelX : new double[] {2.2, 6.05, 9.95, 13.8}) {
-            double localX = (modelX - 8.0) / 16.0 * 1.3;
-            double localZ = 0.08 + (6.85 - 8.0) / 16.0 * 1.3;
-            result.add(position(boat, localX, 0.34, localZ, 11.1));
-        }
-        return result;
+        if (!data.getBoolean("PoleLightInstalled")) return Set.of();
+        return Set.of(position(boat, -0.62, 1.0, 1.0, 8.17));
     }
 
     private static BlockPos position(Boat boat, double x, double heightFraction,

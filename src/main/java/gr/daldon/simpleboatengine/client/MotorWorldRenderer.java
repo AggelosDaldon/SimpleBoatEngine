@@ -70,21 +70,12 @@ public final class MotorWorldRenderer {
             }
             if (status.getBoolean("PoleLightInstalled")) {
                 pose.pushPose();
-                // Opposite stern corner from the auxiliary fuel canister.
-                pose.translate(-0.73f, boat.getBbHeight() * 0.34f, 0.55f);
+                // Rear-left corner: bring the pole forward along the side rail
+                // toward the motor, and lift its mounting foot above the water.
+                // Keep the foot just inside the wooden gunwale.
+                pose.translate(-0.62f, boat.getBbHeight(), 1.0f);
                 pose.scale(1.3f, 1.3f, 1.3f);
                 PoleLightMesh.draw(pose, buffers,
-                    MotorData.isDark(game.level.getDayTime()),
-                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
-                pose.popPose();
-            }
-            if (status.getBoolean("RollbarInstalled") && !status.getBoolean("PoleLightInstalled")) {
-                pose.pushPose();
-                // Match the vanilla boat hull: feet straddle the side gunwales,
-                // bridge stays upright, and all four lenses face the bow (-Z).
-                pose.translate(0f, boat.getBbHeight() * 0.34f, 0.08f);
-                pose.scale(1.3f, 1.3f, 1.3f);
-                RollbarMesh.draw(pose, buffers,
                     MotorData.isDark(game.level.getDayTime()),
                     LevelRenderer.getLightColor(game.level, boat.blockPosition()));
                 pose.popPose();

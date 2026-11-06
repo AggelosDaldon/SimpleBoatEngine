@@ -6,8 +6,8 @@ this project. It does not require other vehicle mods or use their source/assets.
 
 ## Features
 
-- Five items: **Boat Engine**, **Fuel Bucket**, **Auxiliary Fuel Canister**,
-  **Automatic Boat Pole Light** and **Four-Spotlight Boat Roll Bar**.
+- Four items: **Boat Engine**, **Fuel Bucket**, **Auxiliary Fuel Canister**
+  and **Automatic Boat Pole Light**.
 - Equip a vanilla boat with the engine by right-clicking the **boat** while holding
   the engine item. Installation is the only operation performed on the boat hull.
 - After installing, point the crosshair at the visible **motor** at the stern and
@@ -22,19 +22,15 @@ this project. It does not require other vehicle mods or use their source/assets.
   The new space can be filled with a second Fuel Bucket. The canister stays
   fitted to this boat.
 - Right-click an engine-equipped boat with the **Automatic Boat Pole Light**
-  to fit its custom model to the **rear left (port)** corner, opposite the red
-  fuel canister. The light uses its unlit model during daytime and switches
+  to fit its custom model to the **raised rear left (port)** corner, alongside
+  the rear section of the wooden gunwale near the outboard motor. The mounting
+  base sits at gunwale height rather than below the waterline.
+  The light uses its unlit model during daytime and switches
   to its lit model automatically at the start of dusk (world time 12000).
   It produces **real light level 14**, the same as a torch, around the boat,
   without fuel use or extra dependencies. It switches off at dawn (23000).
   An invisible non-solid temporary light block follows the boat and removes
   itself when the boat moves away, the sun rises, or the boat despawns.
-- Alternatively, right-click an engine-equipped boat with the **Four-Spotlight
-  Boat Roll Bar**. The two feet sit on opposite gunwales around the center of
-  the hull, with four forward-facing spotlights above the seats. The four lens
-  textures switch ON automatically at dusk, and temporary light level 14
-  sources follow the boat. A boat can fit **either** the pole light **or**
-  the roll bar, never both. Fuel canisters remain compatible with either setup.
 - While riding a motorized boat, use the mouse wheel for throttle **0 through 10**;
   optional controls can be set in the key bindings. The setting acts as **cruise
   control**: throttle 1–10 moves the boat without holding W; throttle 0 stops
@@ -69,15 +65,11 @@ artifact from that workflow's build page.
 - Boat pole light's two editable models: `models/boat_pole_light_off.bbmodel`
   and `models/boat_pole_light_on.bbmodel`.
 - Boat pole light's 128×128 atlas: `src/main/resources/assets/simpleboatengine/textures/item/pole_light.png`
-- Four-spotlight roll bar's ON/OFF models: `models/boat_rollbar_spotlights_off.bbmodel`
-  and `models/boat_rollbar_spotlights_on.bbmodel`.
-- Roll bar's 128×128 atlas: `src/main/resources/assets/simpleboatengine/textures/item/rollbar_spotlights.png`
 - Original engine sound: `assets/simpleboatengine/sounds/motor_loop.ogg`
 - Regenerate the current game's 129-cuboid mesh after editing the Blockbench
   file: `python3 tools/generate_outboard_mesh.py`.
 - Regenerate the side canister's mesh with: `python3 tools/generate_canister_mesh.py`.
 - Regenerate both pole light variants with: `python3 tools/generate_pole_light_mesh.py`.
-- Regenerate both roll bar variants with: `python3 tools/generate_rollbar_mesh.py`.
 - `tools/make_assets.py` remains for rebuilding the original legacy textures,
   bucket and audio, and will not replace the updated engine's inventory model.
 

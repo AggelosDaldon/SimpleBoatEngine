@@ -24,8 +24,6 @@ public final class EngineItems {
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> ROLLBAR_LIGHT = ITEMS.register("rollbar_light",
-        () -> new EngineItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = TABS.register("main",
         () -> CreativeModeTab.builder()
@@ -36,7 +34,6 @@ public final class EngineItems {
                 output.accept(FUEL_BUCKET.get());
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
-                output.accept(ROLLBAR_LIGHT.get());
             }).build());
 
     private EngineItems() {}
