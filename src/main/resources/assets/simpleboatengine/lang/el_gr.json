@@ -1,0 +1,9 @@
+{
+  "item.simpleboatengine.engine": "Μηχανή βάρκας",
+  "item.simpleboatengine.fuel_bucket": "Κουβάς καυσίμου",
+  "itemGroup.simpleboatengine": "Simple Boat Engine",
+  "key.simpleboatengine.category": "Simple Boat Engine",
+  "key.simpleboatengine.up": "Αύξηση γκαζιού",
+  "key.simpleboatengine.down": "Μείωση γκαζιού",
+  "subtitles.simpleboatengine.motor_loop": "Ήχος μηχανής βάρκας"
+}

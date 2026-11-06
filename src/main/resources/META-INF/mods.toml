@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="simpleboatengine"
+version="${file.jarVersion}"
+displayName="Simple Boat Engine"
+authors="AggelosDaldon"
+description='''A lightweight, standalone outboard motor for vanilla boats. Built for Forge 1.20.1.'''
+
+[[dependencies.simpleboatengine]]
+modId="forge"
+mandatory=true
+versionRange="[47.4.22,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.simpleboatengine]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"

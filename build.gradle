@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.143'
+}
+
+group = 'gr.daldon.simpleboatengine'
+version = '0.1.0'
+
+base {
+    archivesName = 'simple-boat-engine-forge-1.20.1'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+legacyForge {
+    version = '1.20.1-47.4.22'
+    runs {
+        client { client() }
+        server { server() }
+    }
+    mods {
+        simpleboatengine {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes 'Specification-Title': 'Simple Boat Engine',
+                   'Specification-Vendor': 'AggelosDaldon',
+                   'Implementation-Title': project.name,
+                   'Implementation-Version': project.version
+    }
+}

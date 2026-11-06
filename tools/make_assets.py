@@ -1,0 +1,224 @@
+"""Generate all original pixel materials and the motor-loop audio for Simple Boat Engine.
+
+No outside assets are read. Requires Python 3 standard library and ffmpeg.
+"""
+from __future__ import annotations
+
+import json
+import math
+import random
+import struct
+import subprocess
+import tempfile
+import wave
+import zlib
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+RES = ROOT / "src/main/resources/assets/simpleboatengine"
+TEXTURES = RES / "textures/item"
+
+
+def png(path: Path, rows: list[list[tuple[int, int, int, int]]]):
+    height, width = len(rows), len(rows[0])
+
+    def chunk(name: bytes, body: bytes) -> bytes:
+        return struct.pack(">I", len(body)) + name + body + struct.pack(">I", zlib.crc32(name + body))
+
+    raw = b"".join(b"\x00" + bytes(channel for pixel in row for channel in pixel)
+                   for row in rows)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width,
+        height, 8, 6, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
+
+
+def clamp(v: int) -> int:
+    return max(0, min(255, v))
+
+
+def material(name: str, base: tuple[int, int, int], seed: int):
+    rng = random.Random(seed)
+    rows = []
+    for y in range(16):
+        row = []
+        for x in range(16):
+            grain = rng.choice([-5, -3, -2, -1, 0, 0, 0, 1, 2, 3, 4])
+            edge = 13 if (x == 0 or y == 0) else -13 if (x == 15 or y == 15) else 0
+            if name == "cowling":
+                shine = 17 if 2 <= x <= 3 else 5 if x == 4 else 0
+                seam = -12 if y == 11 else 0
+                colour = tuple(clamp(c + grain + edge + shine + seam) for c in base)
+            elif name == "aluminium":
+                shine = 9 if x % 7 == 3 else -4 if x % 7 == 6 else 0
+                colour = tuple(clamp(c + grain + edge + shine) for c in base)
+            elif name == "steel":
+                shade = 8 if y % 7 == 2 else -8 if y % 7 == 6 else 0
+                colour = tuple(clamp(c + grain + edge + shade) for c in base)
+            elif name == "charcoal":
+                shade = -7 if (x + y) % 6 == 0 else 0
+                colour = tuple(clamp(c + grain + edge + shade) for c in base)
+            else:
+                colour = tuple(clamp(c + grain + edge) for c in base)
+            row.append((*colour, 255))
+        rows.append(row)
+    png(TEXTURES / f"{name}.png", rows)
+
+
+def fuel_bucket():
+    pixels = [[(0, 0, 0, 0) for _ in range(16)] for _ in range(16)]
+
+    def put(x: int, y: int, rgba: tuple[int, int, int, int]):
+        if 0 <= x < 16 and 0 <= y < 16:
+            pixels[y][x] = rgba
+
+    dark = (37, 48, 54, 255)
+    bright = (150, 173, 182, 255)
+    metal = (102, 129, 137, 255)
+    petrol = (28, 102, 87, 255)
+    light = (52, 148, 110, 255)
+    for y in range(3, 14):
+        left = 2 + (y - 3) // 5
+        right = 13 - (y - 3) // 5
+        for x in range(left, right + 1):
+            if x in (left, right) or y == 13:
+                put(x, y, dark)
+            elif y <= 4:
+                put(x, y, petrol if x < 11 else light)
+            else:
+                put(x, y, bright if x <= left + 2 else metal)
+    for x in range(4, 12):
+        put(x, 2, dark)
+    for x in range(5, 11):
+        put(x, 1, bright)
+    for x in range(5, 11):
+        put(x, 8, (29, 95, 75, 255))
+        put(x, 9, (29, 95, 75, 255))
+    for x in range(6, 10):
+        put(x, 7, (51, 146, 103, 255))
+    png(TEXTURES / "fuel_bucket.png", pixels)
+
+
+BOXES = [
+    ("cowling", (4.3, 7, 4.5), (11.7, 12.7, 13.1), False),
+    ("aluminium", (4.9, 12.7, 5.1), (11.1, 14, 12.5), False),
+    ("steel", (3.9, 9.7, 4.7), (12.1, 10.5, 13), False),
+    ("charcoal", (6, 14, 7.1), (10, 14.8, 10.8), False),
+    ("steel", (6.7, 5.2, 4.9), (9.3, 8, 7.4), False),
+    ("aluminium", (0, 8.4, 9), (5, 9.2, 10.2), False),
+    ("charcoal", (-1.1, 8.1, 8.7), (1.2, 9.5, 10.4), False),
+    ("steel", (7.1, -4.9, 6.5), (8.9, 7, 8.5), False),
+    ("aluminium", (5.8, -4.4, 6), (10.2, -3.7, 9.1), False),
+    ("steel", (6.9, -7.2, 6.4), (9.1, -4.5, 8.6), False),
+    ("propeller", (7.3, -5.9, 5.4), (8.7, -4.6, 7.5), False),
+    ("propeller", (4.5, -5.7, 5.4), (11.5, -5.05, 6.5), True),
+    ("propeller", (7.7, -8.7, 5.4), (8.3, -2, 6.5), True),
+]
+
+
+def models():
+    model_dir = RES / "models/item"
+    model_dir.mkdir(parents=True, exist_ok=True)
+    faces = {face: {"uv": [0, 0, 16, 16], "texture": f"#{material_name}", "cullface": None}
+             for face in ["north", "south", "west", "east", "up", "down"]
+             for material_name in ["steel"]}
+    elements = []
+    for name, lo, hi, is_prop in BOXES:
+        elements.append({"name": name + ("_blade" if is_prop else ""), "from": lo, "to": hi,
+                         "faces": {face: {"uv": [0, 0, 16, 16], "texture": f"#{name}"}
+                                   for face in faces}})
+
+    engine_model = {
+        "credit": "Original Simple Boat Engine geometry; generated by make_assets.py",
+        "texture_size": [16, 16],
+        "textures": {name: f"simpleboatengine:item/{name}"
+                     for name in ("cowling", "steel", "charcoal", "aluminium", "propeller")},
+        "elements": elements,
+        "display": {
+            "gui": {"rotation": [26, 136, 0], "translation": [0, 3.4, 0], "scale": [0.54, 0.54, 0.54]},
+            "ground": {"translation": [0, 4, 0], "scale": [0.35, 0.35, 0.35]},
+            "fixed": {"rotation": [0, 180, 0], "translation": [0, 3, 0], "scale": [0.6, 0.6, 0.6]},
+            "thirdperson_righthand": {"rotation": [65, 0, 0], "translation": [0, 6, 0], "scale": [0.35, 0.35, 0.35]},
+            "firstperson_righthand": {"rotation": [0, 130, 0], "translation": [0, 5, 0], "scale": [0.46, 0.46, 0.46]}
+        }
+    }
+    (model_dir / "engine.json").write_text(json.dumps(engine_model, indent=2) + "\n")
+    (model_dir / "fuel_bucket.json").write_text(json.dumps({
+        "parent": "minecraft:item/generated",
+        "textures": {"layer0": "simpleboatengine:item/fuel_bucket"}}, indent=2) + "\n")
+
+    # Blockbench-editable backup: same geometric primitives and independent materials.
+    bb = {
+        "meta": {"format_version": "4.10", "model_format": "java_block", "box_uv": False},
+        "name": "simple_boat_engine_original", "model_identifier": "simpleboatengine:engine",
+        "resolution": {"width": 16, "height": 16},
+        "elements": [], "outliner": [], "textures": [], "animations": []
+    }
+    for idx, name in enumerate(["cowling", "steel", "charcoal", "aluminium", "propeller"]):
+        bb["textures"].append({"name": name + ".png", "id": str(idx),
+            "relative_path": f"src/main/resources/assets/simpleboatengine/textures/item/{name}.png",
+            "path": f"src/main/resources/assets/simpleboatengine/textures/item/{name}.png"})
+    import uuid
+    for idx, (name, lo, hi, is_prop) in enumerate(BOXES):
+        uid = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"simpleboatengine-original-part-{idx}"))
+        bb["elements"].append({"name": name + (" blade" if is_prop else ""),
+            "type": "cube", "uuid": uid, "from": lo, "to": hi,
+            "faces": {face: {"uv": [0, 0, 16, 16],
+                            "texture": str(["cowling", "steel", "charcoal", "aluminium", "propeller"].index(name))}
+                      for face in faces}})
+        bb["outliner"].append(uid)
+    (ROOT / "simple_boat_engine_original.bbmodel").write_text(json.dumps(bb, indent=2) + "\n")
+
+
+def sound():
+    sample_rate = 22050
+    duration = 2.0
+    count = int(duration * sample_rate)
+    rng = random.Random(30118)
+    audio = bytearray()
+    phase = 0.0
+    filtered = 0.0
+    for i in range(count):
+        t = i / sample_rate
+        # Two-barrel four-stroke hum plus modest rattling, designed as a loop.
+        revolutions = 43 + 0.7 * math.sin(2 * math.pi * t / duration)
+        phase += 2 * math.pi * revolutions / sample_rate
+        pulse = max(0.0, math.sin(phase)) ** 12
+        drone = 0.19 * math.sin(phase * 0.5) + 0.12 * math.sin(phase)
+        crackle = (rng.random() - 0.5) * (0.06 + 0.19 * pulse)
+        filtered = filtered * 0.91 + crackle * 0.09
+        v = 0.30 * pulse + drone + filtered
+        # Gentle tiny fades hide waveform boundaries in streaming loops.
+        envelope = min(1.0, i / 180.0, (count - i) / 180.0)
+        audio += struct.pack("<h", int(max(-1, min(1, v * envelope)) * 32767))
+
+    dst = RES / "sounds/motor_loop.ogg"
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as temp:
+        wav_path = Path(temp) / "outboard.wav"
+        with wave.open(str(wav_path), "wb") as wav:
+            wav.setnchannels(1)
+            wav.setsampwidth(2)
+            wav.setframerate(sample_rate)
+            wav.writeframes(audio)
+        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+                        "-i", str(wav_path), "-c:a", "libvorbis", "-q:a", "3", str(dst)], check=True)
+
+
+def main():
+    for name, rgb, seed in (
+        ("cowling", (18, 75, 68), 106),
+        ("steel", (121, 138, 143), 107),
+        ("charcoal", (34, 42, 47), 108),
+        ("aluminium", (170, 182, 184), 109),
+        ("propeller", (79, 93, 104), 110),
+    ):
+        material(name, rgb, seed)
+    fuel_bucket()
+    models()
+    sound()
+    print("Generated original engine item model, editable Blockbench model, textures and motor sound.")
+
+
+if __name__ == "__main__":
+    main()

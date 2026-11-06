@@ -1,0 +1,986 @@
+{
+  "meta": {
+    "format_version": "4.10",
+    "model_format": "java_block",
+    "box_uv": false
+  },
+  "name": "simple_boat_engine_original",
+  "model_identifier": "simpleboatengine:engine",
+  "resolution": {
+    "width": 16,
+    "height": 16
+  },
+  "elements": [
+    {
+      "name": "cowling",
+      "type": "cube",
+      "uuid": "42ec3628-5444-57f5-ab2c-374187e17bc9",
+      "from": [
+        4.3,
+        7,
+        4.5
+      ],
+      "to": [
+        11.7,
+        12.7,
+        13.1
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "0"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "0"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "0"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "0"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "0"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "0"
+        }
+      }
+    },
+    {
+      "name": "aluminium",
+      "type": "cube",
+      "uuid": "5b766e02-b6ae-52d2-afff-6f5817e85805",
+      "from": [
+        4.9,
+        12.7,
+        5.1
+      ],
+      "to": [
+        11.1,
+        14,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        }
+      }
+    },
+    {
+      "name": "steel",
+      "type": "cube",
+      "uuid": "0ee755e7-07d6-5b83-8335-7686a92d212e",
+      "from": [
+        3.9,
+        9.7,
+        4.7
+      ],
+      "to": [
+        12.1,
+        10.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        }
+      }
+    },
+    {
+      "name": "charcoal",
+      "type": "cube",
+      "uuid": "5909e617-dfb6-5f63-8f2d-e1ad66ec62ce",
+      "from": [
+        6,
+        14,
+        7.1
+      ],
+      "to": [
+        10,
+        14.8,
+        10.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        }
+      }
+    },
+    {
+      "name": "steel",
+      "type": "cube",
+      "uuid": "8476ac2e-0b19-5844-b6c6-beb734c00a35",
+      "from": [
+        6.7,
+        5.2,
+        4.9
+      ],
+      "to": [
+        9.3,
+        8,
+        7.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        }
+      }
+    },
+    {
+      "name": "aluminium",
+      "type": "cube",
+      "uuid": "67d4a70e-6da7-538a-beb2-9bdeb2cb0e03",
+      "from": [
+        0,
+        8.4,
+        9
+      ],
+      "to": [
+        5,
+        9.2,
+        10.2
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        }
+      }
+    },
+    {
+      "name": "charcoal",
+      "type": "cube",
+      "uuid": "37797cef-f4c8-504a-a8f4-544859f4aa42",
+      "from": [
+        -1.1,
+        8.1,
+        8.7
+      ],
+      "to": [
+        1.2,
+        9.5,
+        10.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "2"
+        }
+      }
+    },
+    {
+      "name": "steel",
+      "type": "cube",
+      "uuid": "3f126a67-0f47-5aa3-9c5e-e8aac422119d",
+      "from": [
+        7.1,
+        -4.9,
+        6.5
+      ],
+      "to": [
+        8.9,
+        7,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        }
+      }
+    },
+    {
+      "name": "aluminium",
+      "type": "cube",
+      "uuid": "805d0056-d76a-5748-8634-a5b92d5f8c97",
+      "from": [
+        5.8,
+        -4.4,
+        6
+      ],
+      "to": [
+        10.2,
+        -3.7,
+        9.1
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "3"
+        }
+      }
+    },
+    {
+      "name": "steel",
+      "type": "cube",
+      "uuid": "e8b590b7-c8ad-5a35-b6e2-c5461c8aa849",
+      "from": [
+        6.9,
+        -7.2,
+        6.4
+      ],
+      "to": [
+        9.1,
+        -4.5,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "1"
+        }
+      }
+    },
+    {
+      "name": "propeller",
+      "type": "cube",
+      "uuid": "8f564b61-95df-5183-bfea-f9f4b51cbb94",
+      "from": [
+        7.3,
+        -5.9,
+        5.4
+      ],
+      "to": [
+        8.7,
+        -4.6,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        }
+      }
+    },
+    {
+      "name": "propeller blade",
+      "type": "cube",
+      "uuid": "3bf4318e-88ca-5d2e-a409-d0ba2bb23dcc",
+      "from": [
+        4.5,
+        -5.7,
+        5.4
+      ],
+      "to": [
+        11.5,
+        -5.05,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        }
+      }
+    },
+    {
+      "name": "propeller blade",
+      "type": "cube",
+      "uuid": "ac7ce592-4af8-57da-982b-647005a748a7",
+      "from": [
+        7.7,
+        -8.7,
+        5.4
+      ],
+      "to": [
+        8.3,
+        -2,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "4"
+        }
+      }
+    }
+  ],
+  "outliner": [
+    "42ec3628-5444-57f5-ab2c-374187e17bc9",
+    "5b766e02-b6ae-52d2-afff-6f5817e85805",
+    "0ee755e7-07d6-5b83-8335-7686a92d212e",
+    "5909e617-dfb6-5f63-8f2d-e1ad66ec62ce",
+    "8476ac2e-0b19-5844-b6c6-beb734c00a35",
+    "67d4a70e-6da7-538a-beb2-9bdeb2cb0e03",
+    "37797cef-f4c8-504a-a8f4-544859f4aa42",
+    "3f126a67-0f47-5aa3-9c5e-e8aac422119d",
+    "805d0056-d76a-5748-8634-a5b92d5f8c97",
+    "e8b590b7-c8ad-5a35-b6e2-c5461c8aa849",
+    "8f564b61-95df-5183-bfea-f9f4b51cbb94",
+    "3bf4318e-88ca-5d2e-a409-d0ba2bb23dcc",
+    "ac7ce592-4af8-57da-982b-647005a748a7"
+  ],
+  "textures": [
+    {
+      "name": "cowling.png",
+      "id": "0",
+      "relative_path": "src/main/resources/assets/simpleboatengine/textures/item/cowling.png",
+      "path": "src/main/resources/assets/simpleboatengine/textures/item/cowling.png"
+    },
+    {
+      "name": "steel.png",
+      "id": "1",
+      "relative_path": "src/main/resources/assets/simpleboatengine/textures/item/steel.png",
+      "path": "src/main/resources/assets/simpleboatengine/textures/item/steel.png"
+    },
+    {
+      "name": "charcoal.png",
+      "id": "2",
+      "relative_path": "src/main/resources/assets/simpleboatengine/textures/item/charcoal.png",
+      "path": "src/main/resources/assets/simpleboatengine/textures/item/charcoal.png"
+    },
+    {
+      "name": "aluminium.png",
+      "id": "3",
+      "relative_path": "src/main/resources/assets/simpleboatengine/textures/item/aluminium.png",
+      "path": "src/main/resources/assets/simpleboatengine/textures/item/aluminium.png"
+    },
+    {
+      "name": "propeller.png",
+      "id": "4",
+      "relative_path": "src/main/resources/assets/simpleboatengine/textures/item/propeller.png",
+      "path": "src/main/resources/assets/simpleboatengine/textures/item/propeller.png"
+    }
+  ],
+  "animations": []
+}

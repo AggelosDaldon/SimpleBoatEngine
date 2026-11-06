@@ -1,0 +1,9 @@
+{
+  "item.simpleboatengine.engine": "Boat Engine",
+  "item.simpleboatengine.fuel_bucket": "Fuel Bucket",
+  "itemGroup.simpleboatengine": "Simple Boat Engine",
+  "key.simpleboatengine.category": "Simple Boat Engine",
+  "key.simpleboatengine.up": "Increase throttle",
+  "key.simpleboatengine.down": "Decrease throttle",
+  "subtitles.simpleboatengine.motor_loop": "Boat engine humming"
+}
