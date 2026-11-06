@@ -58,8 +58,10 @@ public final class MotorWorldRenderer {
                 pose.pushPose();
                 // Starboard stern: close to the right outer edge of the vanilla hull.
                 // +X is the boat's right side in our stern-relative rendering space.
-                pose.translate(0.73f, boat.getBbHeight() * 0.34f, 0.83f);
-                pose.mulPose(Axis.YP.rotationDegrees(90f));
+                // Pull the canister 0.28 blocks forward along the starboard side.
+                pose.translate(0.73f, boat.getBbHeight() * 0.34f, 0.55f);
+                // Turn the cap towards the bow without changing the mesh UVs.
+                pose.mulPose(Axis.YP.rotationDegrees(-90f));
                 pose.scale(1.3f, 1.3f, 1.3f);
                 CanisterMesh.draw(pose, buffers,
                     LevelRenderer.getLightColor(game.level, boat.blockPosition()));
