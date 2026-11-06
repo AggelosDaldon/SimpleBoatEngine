@@ -142,7 +142,10 @@ def models():
             "firstperson_righthand": {"rotation": [0, 130, 0], "translation": [0, 5, 0], "scale": [0.46, 0.46, 0.46]}
         }
     }
-    (model_dir / "engine.json").write_text(json.dumps(engine_model, indent=2) + "\n")
+    # The current motor uses a shared custom renderer, not this legacy JSON.
+    # Do not overwrite its builtin/entity item model when regenerating assets.
+    if not (model_dir / "engine.json").exists():
+        (model_dir / "engine.json").write_text(json.dumps(engine_model, indent=2) + "\n")
     (model_dir / "fuel_bucket.json").write_text(json.dumps({
         "parent": "minecraft:item/generated",
         "textures": {"layer0": "simpleboatengine:item/fuel_bucket"}}, indent=2) + "\n")
@@ -217,7 +220,7 @@ def main():
     fuel_bucket()
     models()
     sound()
-    print("Generated original engine item model, editable Blockbench model, textures and motor sound.")
+    print("Regenerated legacy material textures, fuel bucket model and motor sound.")
 
 
 if __name__ == "__main__":

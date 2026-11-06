@@ -19,8 +19,10 @@ jobs:
         run: gradle --no-daemon build --stacktrace
       - name: Verify resource pack metadata is packaged
         run: |
-          unzip -p build/libs/simple-boat-engine-forge-1.20.1-0.1.1.jar pack.mcmeta
-          unzip -l build/libs/simple-boat-engine-forge-1.20.1-0.1.1.jar | grep -E 'assets/simpleboatengine/models/item/engine.json|assets/simpleboatengine/sounds/motor_loop.ogg'
+          JAR=$(find build/libs -maxdepth 1 -name 'simple-boat-engine-forge-1.20.1-*.jar' -print -quit)
+          test -n "$JAR"
+          unzip -p "$JAR" pack.mcmeta
+          unzip -l "$JAR" | grep -E 'assets/simpleboatengine/models/item/engine.json|assets/simpleboatengine/sounds/motor_loop.ogg|assets/simpleboatengine/textures/item/outboard_engine.png'
       - name: Upload standalone JAR
         uses: actions/upload-artifact@v4
         with:

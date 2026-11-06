@@ -15,8 +15,9 @@ this project. It does not require other vehicle mods or use their source/assets.
   Bucket. The bucket is returned empty. The 3000-unit tank supports a 5000-block
   journey at full throttle 10, before counting slowing or steering.
 - While riding a motorized boat, use the mouse wheel for throttle **0 through 10**;
-  optional controls can be set in the key bindings. Hold **W/forward** to apply
-  thrust; releasing forward stops acceleration. Throttle 0 uses no fuel.
+  optional controls can be set in the key bindings. The setting acts as **cruise
+  control**: throttle 1–10 moves the boat without holding W; throttle 0 stops
+  motor acceleration and uses no fuel. Steering remains with the vanilla keys.
 - Lower throttle settings consume proportionally less fuel per distance. The last
   20% of the tank limits throttle to 3, providing a low-fuel safety reserve.
 - Compact HUD to the right of the hotbar shows live speed, throttle setting and
@@ -40,13 +41,16 @@ artifact from that workflow's build page.
 
 ## Modeling and source assets
 
-- Original editable Blockbench model: `simple_boat_engine_original.bbmodel`
-- Six original textures: `src/main/resources/assets/simpleboatengine/textures/item/`
+- Current editable Blockbench model: `models/outboard_engine_forge_1.20.1.bbmodel`
+- Exact 256×256 UV texture: `src/main/resources/assets/simpleboatengine/textures/item/outboard_engine.png`
 - Original engine sound: `assets/simpleboatengine/sounds/motor_loop.ogg`
-- Rebuild all original assets with: `python tools/make_assets.py` (needs `ffmpeg`)
+- Regenerate the current game's 129-cuboid mesh after editing the Blockbench
+  file: `python3 tools/generate_outboard_mesh.py`.
+- `tools/make_assets.py` remains for rebuilding the original legacy textures,
+  bucket and audio, and will not replace the updated engine's inventory model.
 
-The editable Blockbench file is an art-source model. The in-world rotating model
-is rendered by `MotorMesh.java`, with the matching item JSON model for inventory.
+The in-world motor and inventory item share `MotorMesh.java` with the full UV
+atlas. The propeller blades and hub animate together around their model pivot.
 
 ## Copyright
 
