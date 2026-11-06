@@ -20,6 +20,8 @@ public final class EngineItems {
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket",
         () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> FUEL_CANISTER = ITEMS.register("fuel_canister",
+        () -> new EngineItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = TABS.register("main",
         () -> CreativeModeTab.builder()
@@ -28,6 +30,7 @@ public final class EngineItems {
             .displayItems((parameters, output) -> {
                 output.accept(ENGINE.get());
                 output.accept(FUEL_BUCKET.get());
+                output.accept(FUEL_CANISTER.get());
             }).build());
 
     private EngineItems() {}

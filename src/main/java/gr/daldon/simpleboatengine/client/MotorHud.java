@@ -29,8 +29,9 @@ public final class MotorHud {
         if (data == null || !data.getBoolean("Running")) return;
 
         int throttle = Math.max(0, Math.min(10, data.getInt("Throttle")));
-        float fuel = Math.max(0f, Math.min(3000f, data.getFloat("Fuel")));
-        float fraction = fuel / 3000f;
+        int capacity = data.getBoolean("CanisterInstalled") ? 6000 : 3000;
+        float fuel = Math.max(0f, Math.min(capacity, data.getFloat("Fuel")));
+        float fraction = fuel / capacity;
         double speed = boat.getDeltaMovement().horizontalDistance() * 20.0;
         int color = speed >= 11.0 ? 0xFFFF766B : speed >= 5.0 ? 0xFFFFC56A : 0xFF89D2BF;
         int fuelColor = fraction < 0.2f ? 0xFFFF837B : 0xFF8BD0A3;
@@ -50,7 +51,7 @@ public final class MotorHud {
         gui.drawString(game.font, number, left + WIDTH - 7 - game.font.width(number),
             top + 15, color, false);
         gui.drawString(game.font, "FUEL", left + 7, top + 26, 0xFFD8E0DF, false);
-        String quantity = (int) Math.ceil(fuel) + "/3000";
+        String quantity = (int) Math.ceil(fuel) + "/" + capacity;
         gui.drawString(game.font, quantity, left + WIDTH - 5 - game.font.width(quantity),
             top + 26, fuelColor, false);
         gui.fill(left + 5, top + HEIGHT - 3, left + WIDTH - 5, top + HEIGHT - 2, 0xFF465358);

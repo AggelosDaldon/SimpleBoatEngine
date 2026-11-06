@@ -26,8 +26,13 @@ public final class MotorMesh {
     private MotorMesh() {}
 
     public static void draw(PoseStack stack, MultiBufferSource source, float spin, int light) {
-        VertexConsumer vertices = source.getBuffer(RenderType.entityCutoutNoCull(ATLAS));
-        for (float[] piece : MotorMeshData.PARTS) {
+        drawAtlas(stack, source, ATLAS, MotorMeshData.PARTS, 256, spin, light);
+    }
+
+    static void drawAtlas(PoseStack stack, MultiBufferSource source, ResourceLocation atlas,
+                          float[][] pieces, int atlasSize, float spin, int light) {
+        VertexConsumer vertices = source.getBuffer(RenderType.entityCutoutNoCull(atlas));
+        for (float[] piece : pieces) {
             stack.pushPose();
             if (piece[10] > 0f) {
                 // The propeller group's pivot as authored in Blockbench.
@@ -38,7 +43,7 @@ public final class MotorMesh {
                 rotateAroundZ(stack, piece[7], piece[8], piece[9],
                     (float) Math.toRadians(piece[6]));
             }
-            cuboid(stack, vertices, piece, light);
+            cuboid(stack, vertices, piece, atlasSize, light);
             stack.popPose();
         }
     }
@@ -49,7 +54,8 @@ public final class MotorMesh {
         stack.translate(-(x - 8f) / 16f, -y / 16f, -(z - 8f) / 16f);
     }
 
-    private static void cuboid(PoseStack stack, VertexConsumer vertices, float[] b, int light) {
+    private static void cuboid(PoseStack stack, VertexConsumer vertices, float[] b,
+                               int atlasSize, int light) {
         float x0 = (b[0] - 8f) / 16f, y0 = b[1] / 16f, z0 = (b[2] - 8f) / 16f;
         float x1 = (b[3] - 8f) / 16f, y1 = b[4] / 16f, z1 = (b[5] - 8f) / 16f;
         float[][] p = {
@@ -60,8 +66,8 @@ public final class MotorMesh {
         Matrix3f normal = stack.last().normal();
         for (int face = 0; face < CORNERS.length; face++) {
             int uvOffset = 11 + face * 4;
-            float u0 = b[uvOffset] / 256f, v0 = b[uvOffset + 1] / 256f;
-            float u1 = b[uvOffset + 2] / 256f, v1 = b[uvOffset + 3] / 256f;
+            float u0 = b[uvOffset] / atlasSize, v0 = b[uvOffset + 1] / atlasSize;
+            float u1 = b[uvOffset + 2] / atlasSize, v1 = b[uvOffset + 3] / atlasSize;
             for (int vertex = 0; vertex < 4; vertex++) {
                 float[] point = p[CORNERS[face][vertex]];
                 float u = vertex <= 1 ? u0 : u1;

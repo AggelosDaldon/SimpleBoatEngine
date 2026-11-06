@@ -1,6 +1,7 @@
 package gr.daldon.simpleboatengine.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -43,6 +44,7 @@ public final class MotorWorldRenderer {
                 height = boat.getBbHeight() * 0.7f;
                 stern = 1.12f;
             }
+            pose.pushPose();
             pose.translate(0, height, stern);
             pose.scale(1.5f, 1.5f, 1.5f);
             int throttle = Math.max(0, Math.min(10, status.getInt("Throttle")));
@@ -50,6 +52,19 @@ public final class MotorWorldRenderer {
                 ? (boat.tickCount + tick) * (0.12f + throttle * 0.048f) : 0f;
             MotorMesh.draw(pose, buffers, angle,
                 LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+            pose.popPose();
+
+            if (status.getBoolean("CanisterInstalled")) {
+                pose.pushPose();
+                // Starboard stern: close to the right outer edge of the vanilla hull.
+                // +X is the boat's right side in our stern-relative rendering space.
+                pose.translate(0.73f, boat.getBbHeight() * 0.34f, 0.83f);
+                pose.mulPose(Axis.YP.rotationDegrees(90f));
+                pose.scale(1.3f, 1.3f, 1.3f);
+                CanisterMesh.draw(pose, buffers,
+                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+                pose.popPose();
+            }
             pose.popPose();
         }
         buffers.endBatch();

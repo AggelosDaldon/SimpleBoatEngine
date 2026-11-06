@@ -6,14 +6,20 @@ this project. It does not require other vehicle mods or use their source/assets.
 
 ## Features
 
-- Two items only: **Boat Engine** and **Fuel Bucket**. Independent custom recipes.
+- Three items: **Boat Engine**, **Fuel Bucket** and **Auxiliary Fuel Canister**.
 - Equip a vanilla boat with the engine by right-clicking the **boat** while holding
   the engine item. Installation is the only operation performed on the boat hull.
 - After installing, point the crosshair at the visible **motor** at the stern and
   right-click it with an empty hand to turn it on/off.
 - To refuel, turn the motor off and right-click **the motor itself** with the Fuel
-  Bucket. The bucket is returned empty. The 3000-unit tank supports a 5000-block
-  journey at full throttle 10, before counting slowing or steering.
+  Bucket. The bucket is returned empty. Each bucket adds 3000 fuel units, up to
+  the installed tank's capacity. The base 3000-unit tank supports 5000 blocks
+  at full throttle 10, before counting slowing or steering.
+- Install the small red Auxiliary Fuel Canister by right-clicking an
+  **engine-equipped boat** with the canister in your hand. It appears on the
+  **rear right (starboard)** side, and raises capacity from 3000 to **6000**.
+  The new space can be filled with a second Fuel Bucket. The canister stays
+  fitted to this boat.
 - While riding a motorized boat, use the mouse wheel for throttle **0 through 10**;
   optional controls can be set in the key bindings. The setting acts as **cruise
   control**: throttle 1–10 moves the boat without holding W; throttle 0 stops
@@ -43,9 +49,12 @@ artifact from that workflow's build page.
 
 - Current editable Blockbench model: `models/outboard_engine_forge_1.20.1.bbmodel`
 - Exact 256×256 UV texture: `src/main/resources/assets/simpleboatengine/textures/item/outboard_engine.png`
+- Side canister's editable model: `models/small_red_fuel_canister.bbmodel`
+- Side canister's 128×128 atlas: `src/main/resources/assets/simpleboatengine/textures/item/boat_accessories.png`
 - Original engine sound: `assets/simpleboatengine/sounds/motor_loop.ogg`
 - Regenerate the current game's 129-cuboid mesh after editing the Blockbench
   file: `python3 tools/generate_outboard_mesh.py`.
+- Regenerate the side canister's mesh with: `python3 tools/generate_canister_mesh.py`.
 - `tools/make_assets.py` remains for rebuilding the original legacy textures,
   bucket and audio, and will not replace the updated engine's inventory model.
 

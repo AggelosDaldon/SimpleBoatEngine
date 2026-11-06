@@ -82,7 +82,8 @@ public final class MotorControls {
         CompoundTag data = ClientMotorState.get(boat);
         if (data == null || !data.getBoolean("Running")) return;
         int old = data.getInt("Throttle");
-        int limit = data.getFloat("Fuel") < 600f ? 3 : 10;
+        int tank = data.getBoolean("CanisterInstalled") ? 6000 : 3000;
+        int limit = data.getFloat("Fuel") < tank * 0.2f ? 3 : 10;
         int next = Math.max(0, Math.min(limit, old + Integer.signum(direction)));
         if (next != old) {
             data.putInt("Throttle", next); // Immediate local feedback; server validates.

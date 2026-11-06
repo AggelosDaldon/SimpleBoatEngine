@@ -6,6 +6,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 /** This project's own persistent boat state, deliberately isolated from other mods. */
 public final class MotorData {
     public static final int TANK_CAPACITY = 3000;
+    public static final int EXTRA_CANISTER_CAPACITY = 3000;
     public static final double FUEL_PER_BLOCK_AT_FULL_THROTTLE = TANK_CAPACITY / 5000.0;
     private static final String KEY = "SimpleBoatEngine";
 
@@ -29,12 +30,16 @@ public final class MotorData {
         return read(boat).getBoolean("Running");
     }
 
+    public static int capacity(CompoundTag data) {
+        return TANK_CAPACITY + (data.getBoolean("CanisterInstalled") ? EXTRA_CANISTER_CAPACITY : 0);
+    }
+
     public static int throttle(CompoundTag data) {
         return Math.max(0, Math.min(10, data.getInt("Throttle")));
     }
 
     public static int throttleLimit(CompoundTag data) {
-        return data.getFloat("Fuel") < TANK_CAPACITY * 0.2f ? 3 : 10;
+        return data.getFloat("Fuel") < capacity(data) * 0.2f ? 3 : 10;
     }
 
     public static CompoundTag snapshot(Boat boat) {
@@ -44,6 +49,7 @@ public final class MotorData {
         output.putBoolean("Running", stored.getBoolean("Running"));
         output.putInt("Throttle", throttle(stored));
         output.putFloat("Fuel", stored.getFloat("Fuel"));
+        output.putBoolean("CanisterInstalled", stored.getBoolean("CanisterInstalled"));
         return output;
     }
 }

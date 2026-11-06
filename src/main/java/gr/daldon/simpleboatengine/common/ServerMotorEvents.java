@@ -32,6 +32,24 @@ public final class ServerMotorEvents {
         if (!(event.getTarget() instanceof Boat boat)
             || event.getHand() != InteractionHand.MAIN_HAND) return;
         ItemStack held = event.getEntity().getMainHandItem();
+        if (held.is(EngineItems.FUEL_CANISTER.get())) {
+            if (!boat.level().isClientSide) {
+                CompoundTag data = MotorData.writable(boat);
+                if (!MotorData.installed(boat)) {
+                    notify(event.getEntity(), "Install an engine before adding a fuel canister.");
+                } else if (!data.getBoolean("CanisterInstalled")) {
+                    data.putBoolean("CanisterInstalled", true);
+                    if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
+                    notify(event.getEntity(), "Extra fuel canister mounted: tank capacity 6000.");
+                    click(boat);
+                } else {
+                    notify(event.getEntity(), "This boat already has an extra fuel canister.");
+                }
+            }
+            event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
+            event.setCanceled(true);
+            return;
+        }
         if (!held.is(EngineItems.ENGINE.get()) || MotorData.installed(boat)) return;
         if (!boat.level().isClientSide) {
             CompoundTag data = MotorData.writable(boat);
@@ -39,6 +57,7 @@ public final class ServerMotorEvents {
             data.putBoolean("Running", false);
             data.putInt("Throttle", 0);
             data.putFloat("Fuel", 0f);
+            data.putBoolean("CanisterInstalled", false);
             if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
             notify(event.getEntity(), "Motor installed! Point at the motor to refuel and switch it on.");
             click(boat);
@@ -58,17 +77,18 @@ public final class ServerMotorEvents {
                 notify(player, "Switch off the motor before refueling.");
                 return;
             }
-            if (data.getFloat("Fuel") >= MotorData.TANK_CAPACITY - 0.01f) {
+            if (data.getFloat("Fuel") >= MotorData.capacity(data) - 0.01f) {
                 notify(player, "The tank is already full.");
                 return;
             }
-            data.putFloat("Fuel", MotorData.TANK_CAPACITY);
+            data.putFloat("Fuel", Math.min(MotorData.capacity(data),
+                data.getFloat("Fuel") + MotorData.TANK_CAPACITY));
             if (!player.getAbilities().instabuild) {
                 item.shrink(1);
                 ItemStack bucket = new ItemStack(Items.BUCKET);
                 if (!player.getInventory().add(bucket)) player.drop(bucket, false);
             }
-            notify(player, "Fuel: 3000 / 3000");
+            notify(player, "Fuel: " + (int) data.getFloat("Fuel") + " / " + MotorData.capacity(data));
             click(boat);
             return;
         }

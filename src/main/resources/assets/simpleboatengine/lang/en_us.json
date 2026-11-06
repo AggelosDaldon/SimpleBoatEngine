@@ -1,6 +1,7 @@
 {
   "item.simpleboatengine.engine": "Boat Engine",
   "item.simpleboatengine.fuel_bucket": "Fuel Bucket",
+  "item.simpleboatengine.fuel_canister": "Auxiliary Fuel Canister",
   "itemGroup.simpleboatengine": "Simple Boat Engine",
   "key.simpleboatengine.category": "Simple Boat Engine",
   "key.simpleboatengine.up": "Increase throttle",

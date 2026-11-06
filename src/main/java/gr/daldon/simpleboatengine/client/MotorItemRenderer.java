@@ -1,6 +1,7 @@
 package gr.daldon.simpleboatengine.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import gr.daldon.simpleboatengine.common.EngineItems;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,8 +20,13 @@ public final class MotorItemRenderer extends BlockEntityWithoutLevelRenderer {
                              MultiBufferSource buffers, int packedLight, int packedOverlay) {
         pose.pushPose();
         // Item models render in a 0..1 local cube; our mesh is centered on 0.
-        pose.translate(0.5, 0.5, 0.5);
-        MotorMesh.draw(pose, buffers, 0f, packedLight);
+        if (item.is(EngineItems.FUEL_CANISTER.get())) {
+            pose.translate(0.5, 0.36, 0.5);
+            CanisterMesh.draw(pose, buffers, packedLight);
+        } else {
+            pose.translate(0.5, 0.5, 0.5);
+            MotorMesh.draw(pose, buffers, 0f, packedLight);
+        }
         pose.popPose();
     }
 }
