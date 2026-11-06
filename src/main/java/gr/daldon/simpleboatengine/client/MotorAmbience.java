@@ -116,14 +116,14 @@ public final class MotorAmbience {
         public void tick() {
             CompoundTag data = ClientMotorState.get(boat);
             boolean on = !boat.isRemoved() && data != null && data.getBoolean("Running");
-            fade = Math.max(0f, Math.min(1f, fade + (on ? 0.025f : -0.03f)));
+            fade = Math.max(0f, Math.min(1f, fade + (on ? 0.025f : -0.12f)));
             if (!on && fade == 0f) {
                 finished = true;
                 stop();
                 return;
             }
             int throttle = data == null ? 0 : Math.max(0, Math.min(10, data.getInt("Throttle")));
-            volume = fade * 0.55f;
+            volume = fade * 0.67f;
             pitch = 0.84f + throttle * 0.039f;
             x = boat.getX();
             y = boat.getY();

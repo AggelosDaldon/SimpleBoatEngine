@@ -70,10 +70,9 @@ public final class MotorWorldRenderer {
             }
             if (status.getBoolean("PoleLightInstalled")) {
                 pose.pushPose();
-                // Rear-left corner of the wooden gunwale, immediately next to
-                // the motor. Pull the foot inside the railing, a little towards
-                // the bow, and lower it to rest on the wood instead of floating.
-                pose.translate(-0.48f, boat.getBbHeight() * 0.84f, 0.84f);
+                // Rear-left gunwale corner: a touch higher, farther astern,
+                // and outward toward the edge so the base sits on the timber.
+                pose.translate(-0.54f, boat.getBbHeight() * 0.98f, 0.96f);
                 pose.scale(1.3f, 1.3f, 1.3f);
                 PoleLightMesh.draw(pose, buffers,
                     MotorData.isDark(game.level.getDayTime()),

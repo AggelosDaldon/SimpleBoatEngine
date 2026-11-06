@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -131,6 +132,30 @@ public final class ServerMotorEvents {
 
     private static void notify(net.minecraft.world.entity.player.Player player, String message) {
         player.displayClientMessage(Component.literal(message), true);
+    }
+
+    /** Dismounting stops the motor immediately, even when cruise throttle was set. */
+    @SubscribeEvent
+    public static void onDismount(EntityMountEvent event) {
+        if (!event.isDismounting()
+            || !(event.getEntityBeingMounted() instanceof Boat boat)
+            || !(event.getEntityMounting() instanceof ServerPlayer)
+            || !(boat.level() instanceof ServerLevel level)
+            || !MotorData.installed(boat)) return;
+
+        CompoundTag data = MotorData.writable(boat);
+        if (!data.getBoolean("Running")) return;
+
+        data.putBoolean("Running", false);
+        data.putInt("Throttle", 0);
+        PREVIOUS.remove(boat);
+        click(boat);
+        // Send the updated state now instead of waiting for the next 5-tick sync.
+        for (ServerPlayer nearby : level.players()) {
+            if (nearby.distanceToSqr(boat) <= 64.0 * 64.0) {
+                MotorPackets.sendStatus(boat, nearby);
+            }
+        }
     }
 
     @SubscribeEvent

@@ -35,13 +35,16 @@ this project. It does not require other vehicle mods or use their source/assets.
   optional controls can be set in the key bindings. The setting acts as **cruise
   control**: throttle 1–10 moves the boat without holding W; throttle 0 stops
   motor acceleration and uses no fuel. Steering remains with the vanilla keys.
+  The motor shuts off immediately and resets throttle when a player gets out
+  of the boat. Cruising speed is slightly higher than in the previous version.
 - Lower throttle settings consume proportionally less fuel per distance. The last
   20% of the tank limits throttle to 3, providing a low-fuel safety reserve.
 - Compact HUD to the right of the hotbar shows live speed, throttle setting and
   remaining fuel; color shade changes with speed. Only visible while running.
 - Motor-propeller blades turn even at throttle 0 while the engine is on. More bubbles
   at higher throttle. Small smoke wisps emit above the top intake only while ON.
-- Original spatial motor hum; supports dedicated-server synchronized motor state.
+- Original spatial motor hum, slightly louder; supports dedicated-server
+  synchronized motor state.
 
 ## Build
 
