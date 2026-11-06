@@ -22,9 +22,9 @@ this project. It does not require other vehicle mods or use their source/assets.
   The new space can be filled with a second Fuel Bucket. The canister stays
   fitted to this boat.
 - Right-click an engine-equipped boat with the **Automatic Boat Pole Light**
-  to fit its custom model to the **raised rear left (port)** corner, alongside
-  the rear section of the wooden gunwale near the outboard motor. The mounting
-  base sits at gunwale height rather than below the waterline.
+  to fit its custom model to the **rear left (port)** corner, alongside
+  the wooden gunwale near the outboard motor. The mounting base is inset onto
+  the wood rather than suspended outside the hull or below the waterline.
   The light uses its unlit model during daytime and switches
   to its lit model automatically at the start of dusk (world time 12000).
   It produces **real light level 14**, the same as a torch, around the boat,
