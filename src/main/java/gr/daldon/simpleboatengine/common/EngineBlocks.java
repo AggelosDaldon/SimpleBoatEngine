@@ -17,5 +17,8 @@ public final class EngineBlocks {
             .noCollission().noOcclusion().noLootTable().replaceable()
             .lightLevel(state -> 14)));
 
+    public static final RegistryObject<Block> CUSTOMIZER = BLOCKS.register("boat_customizer",
+        () -> new BoatCustomizerBlock(BlockBehaviour.Properties.of().strength(2.5f)));
+
     private EngineBlocks() {}
 }

@@ -7,6 +7,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.BlockItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -31,6 +32,8 @@ public final class EngineItems {
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> CUSTOMIZER = ITEMS.register("boat_customizer",
+        () -> new BlockItem(EngineBlocks.CUSTOMIZER.get(), new Item.Properties()));
     public static final RegistryObject<Item> BLUE_FISHING_BOAT = ITEMS.register("aggelos_blue_fishing_boat",
         () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.BLUE_FISHING_BOAT));
     public static final String[] WOODS = {
@@ -63,6 +66,7 @@ public final class EngineItems {
                 output.accept(FUEL_BUCKET.get());
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
+                output.accept(CUSTOMIZER.get());
                 output.accept(BLUE_FISHING_BOAT.get());
                 for (RegistryObject<Item> boat : WOOD_BOATS) output.accept(boat.get());
             }).build());

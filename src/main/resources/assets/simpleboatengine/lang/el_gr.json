@@ -3,6 +3,8 @@
   "item.simpleboatengine.fuel_bucket": "Κουβάς καυσίμου",
   "item.simpleboatengine.fuel_canister": "Βοηθητικό δοχείο καυσίμου",
   "item.simpleboatengine.pole_light": "Αυτόματο φως βάρκας",
+  "block.simpleboatengine.boat_customizer": "Σταθμός βαφής βάρκας",
+  "container.simpleboatengine.boat_customizer": "Σταθμός βαφής βάρκας",
   "item.simpleboatengine.aggelos_blue_fishing_boat": "Μπλε ψαρόβαρκα",
   "entity.simpleboatengine.aggelos_blue_fishing_boat": "Ψαρόβαρκα",
   "container.simpleboatengine.fishing_boat": "Αποθήκη ψαρόβαρκας",

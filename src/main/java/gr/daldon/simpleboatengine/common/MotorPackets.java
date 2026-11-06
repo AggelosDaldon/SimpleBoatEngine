@@ -2,6 +2,10 @@ package gr.daldon.simpleboatengine.common;
 
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.client.ClientMotorState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.network.chat.Component;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -38,6 +42,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(BoardBoat.class, 4, NetworkDirection.PLAY_TO_SERVER)
             .encoder(BoardBoat::write).decoder(BoardBoat::read)
             .consumerMainThread(BoardBoat::receive).add();
+        CHANNEL.messageBuilder(CustomizeBoat.class, 5, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(CustomizeBoat::write).decoder(CustomizeBoat::read)
+            .consumerMainThread(CustomizeBoat::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -117,6 +124,58 @@ public final class MotorPackets {
                     || !BoatInteractionTarget.aimedAtHull(boat, player.getEyePosition(),
                         player.getViewVector(1f), 5.5)) return;
                 player.startRiding(boat);
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
+    /** Server accepts edits only while the requesting player has this station open. */
+    public record CustomizeBoat(BlockPos pos, int channel, int color, String name) {
+        static void write(CustomizeBoat msg, FriendlyByteBuf out) {
+            out.writeBlockPos(msg.pos);
+            out.writeVarInt(msg.channel);
+            out.writeVarInt(msg.color);
+            out.writeUtf(msg.name, 32);
+        }
+        static CustomizeBoat read(FriendlyByteBuf in) {
+            return new CustomizeBoat(in.readBlockPos(), in.readVarInt(), in.readVarInt(), in.readUtf(32));
+        }
+        static void receive(CustomizeBoat msg, Supplier<NetworkEvent.Context> ctx) {
+            ServerPlayer player = ctx.get().getSender();
+            ctx.get().enqueueWork(() -> {
+                if (player == null || !(player.containerMenu instanceof BoatCustomizerMenu menu)
+                    || !msg.pos.equals(menu.getBlockPos())
+                    || player.distanceToSqr(msg.pos.getX() + 0.5, msg.pos.getY() + 0.5,
+                        msg.pos.getZ() + 0.5) > 64
+                    || !(player.level().getBlockEntity(msg.pos) instanceof BoatCustomizerBlockEntity workshop)) return;
+                ItemStack item = workshop.getItem(0);
+                if (!(item.getItem() instanceof SkiffBoatItem)) return;
+                if (msg.channel == -1) {
+                    BoatPaint.setName(item, msg.name);
+                } else {
+                    if (msg.channel < 0 || msg.channel >= BoatPaint.CHANNELS) return;
+                    int count = msg.channel == BoatPaint.ANTIFOUL ? 5 : 16;
+                    if (msg.color < 0 || msg.color >= count) return;
+                    if (msg.channel != BoatPaint.ANTIFOUL && !player.getAbilities().instabuild) {
+                        boolean spent = false;
+                        for (int index = 0; index < player.getInventory().getContainerSize(); index++) {
+                            ItemStack dye = player.getInventory().getItem(index);
+                            if (dye.getItem() instanceof DyeItem dyeItem
+                                && dyeItem.getDyeColor().getId() == msg.color) {
+                                dye.shrink(1);
+                                spent = true;
+                                break;
+                            }
+                        }
+                        if (!spent) {
+                            player.displayClientMessage(Component.literal("You need the matching dye."), true);
+                            return;
+                        }
+                    }
+                    BoatPaint.set(item, msg.channel, msg.color);
+                }
+                workshop.setItem(0, item);
+                menu.broadcastChanges();
             });
             ctx.get().setPacketHandled(true);
         }

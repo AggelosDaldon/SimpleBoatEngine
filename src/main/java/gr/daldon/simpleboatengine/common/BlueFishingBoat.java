@@ -30,6 +30,8 @@ public final class BlueFishingBoat extends SkiffBoat {
         SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> FLOOR_PAINT =
         SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<CompoundTag> CUSTOMIZATION =
+        SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.COMPOUND_TAG);
     private final SimpleContainer cargo = new SimpleContainer(54);
     private boolean cargoDropped;
 
@@ -51,6 +53,9 @@ public final class BlueFishingBoat extends SkiffBoat {
         ItemStack stack = new ItemStack(getDropItem());
         BoatPaint.setHull(stack, getHullPaint());
         BoatPaint.setFloor(stack, getFloorPaint());
+        for (int channel = 2; channel < BoatPaint.CHANNELS; channel++)
+            BoatPaint.set(stack, channel, getPaint(channel));
+        BoatPaint.setName(stack, getBoatName());
         return stack;
     }
 
@@ -68,6 +73,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         entityData.define(HULL_STYLE, 0);
         entityData.define(HULL_PAINT, -1);
         entityData.define(FLOOR_PAINT, -1);
+        entityData.define(CUSTOMIZATION, new CompoundTag());
     }
 
     public int getHullStyle() { return entityData.get(HULL_STYLE); }
@@ -81,6 +87,42 @@ public final class BlueFishingBoat extends SkiffBoat {
     public void setHullPaint(int id) { entityData.set(HULL_PAINT, id >= 0 && id < 16 ? id : -1); }
     public void setFloorPaint(int id) { entityData.set(FLOOR_PAINT, id >= 0 && id < 16 ? id : -1); }
 
+    public int getPaint(int channel) {
+        if (channel == BoatPaint.HULL) return getHullPaint();
+        if (channel == BoatPaint.FLOOR) return getFloorPaint();
+        return BoatPaint.get(extrasAsItem(), channel);
+    }
+
+    private ItemStack extrasAsItem() {
+        ItemStack stack = new ItemStack(getDropItem());
+        stack.setTag(entityData.get(CUSTOMIZATION).copy());
+        return stack;
+    }
+
+    public void setPaint(int channel, int id) {
+        if (channel == BoatPaint.HULL) { setHullPaint(id); return; }
+        if (channel == BoatPaint.FLOOR) { setFloorPaint(id); return; }
+        CompoundTag copy = entityData.get(CUSTOMIZATION).copy();
+        ItemStack temp = new ItemStack(getDropItem());
+        temp.setTag(copy);
+        BoatPaint.set(temp, channel, id);
+        entityData.set(CUSTOMIZATION, temp.getTag().copy());
+    }
+
+    public int[] getPaints() {
+        int[] result = new int[BoatPaint.CHANNELS];
+        for (int i = 0; i < result.length; i++) result[i] = getPaint(i);
+        return result;
+    }
+
+    public String getBoatName() { return BoatPaint.name(extrasAsItem()); }
+
+    public void setBoatName(String name) {
+        ItemStack temp = extrasAsItem();
+        BoatPaint.setName(temp, name);
+        entityData.set(CUSTOMIZATION, temp.getTag().copy());
+    }
+
     public void openCargo(ServerPlayer player) {
         player.openMenu(new SimpleMenuProvider(
             (id, inventory, owner) -> ChestMenu.sixRows(id, inventory, cargo),
@@ -93,6 +135,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         tag.putInt("FishingBoatHullStyle", getHullStyle());
         tag.putInt("FishingBoatHullPaint", getHullPaint());
         tag.putInt("FishingBoatFloorPaint", getFloorPaint());
+        tag.put("FishingBoatCustomization", entityData.get(CUSTOMIZATION).copy());
         ListTag list = new ListTag();
         for (int index = 0; index < cargo.getContainerSize(); index++) {
             var stack = cargo.getItem(index);
@@ -111,6 +154,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         setHullStyle(tag.getInt("FishingBoatHullStyle"));
         setHullPaint(tag.contains("FishingBoatHullPaint") ? tag.getInt("FishingBoatHullPaint") : -1);
         setFloorPaint(tag.contains("FishingBoatFloorPaint") ? tag.getInt("FishingBoatFloorPaint") : -1);
+        entityData.set(CUSTOMIZATION, tag.getCompound("FishingBoatCustomization").copy());
         cargo.clearContent();
         for (Tag value : tag.getList("FishingBoatCargo", Tag.TAG_COMPOUND)) {
             CompoundTag entry = (CompoundTag) value;

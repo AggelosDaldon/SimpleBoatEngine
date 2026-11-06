@@ -9,11 +9,15 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
 
 /** Renders the experimental user-authored hull instead of a vanilla boat model. */
 public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
+    private final Font font;
     public SkiffBoatRenderer(EntityRendererProvider.Context context) {
         super(context);
+        this.font = context.getFont();
         this.shadowRadius = 0.85f;
     }
 
@@ -27,8 +31,22 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
         pose.translate(0f, BoatMounts.HULL_Y, 0f);
         if (boat instanceof BlueFishingBoat blue)
             BlueBoatMesh.draw(pose, buffers, light,
-                blue.getHullStyle(), blue.getHullPaint(), blue.getFloorPaint());
+                blue.getHullStyle(), blue.getPaints());
         else SkiffMesh.draw(pose, buffers, light);
+        if (boat instanceof BlueFishingBoat blue && !blue.getBoatName().isBlank()) {
+            String label = blue.getBoatName();
+            // Small painted lettering on both bow sides, rotated with the hull.
+            for (int side : new int[]{-1, 1}) {
+                pose.pushPose();
+                pose.translate(side * 0.82, 0.55, -1.15);
+                pose.mulPose(Axis.YP.rotationDegrees(side < 0 ? -90f : 90f));
+                pose.scale(0.008f, -0.008f, 0.008f);
+                font.drawInBatch(Component.literal(label), -font.width(label) / 2f, 0f,
+                    0xFFF5E1, false, pose.last().pose(), buffers, Font.DisplayMode.NORMAL,
+                    0, light);
+                pose.popPose();
+            }
+        }
         pose.popPose();
         super.render(boat, yaw, partialTick, pose, buffers, light);
     }

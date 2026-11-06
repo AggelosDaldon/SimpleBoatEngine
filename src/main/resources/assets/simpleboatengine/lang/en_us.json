@@ -3,6 +3,8 @@
   "item.simpleboatengine.fuel_bucket": "Fuel Bucket",
   "item.simpleboatengine.fuel_canister": "Auxiliary Fuel Canister",
   "item.simpleboatengine.pole_light": "Automatic Boat Pole Light",
+  "block.simpleboatengine.boat_customizer": "Boat Customization Station",
+  "container.simpleboatengine.boat_customizer": "Boat Customization Station",
   "item.simpleboatengine.aggelos_blue_fishing_boat": "Blue Fishing Boat",
   "entity.simpleboatengine.aggelos_blue_fishing_boat": "Fishing Boat",
   "container.simpleboatengine.fishing_boat": "Fishing Boat Storage",

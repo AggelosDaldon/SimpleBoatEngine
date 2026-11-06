@@ -49,6 +49,9 @@ public final class SkiffBoatItem extends EngineItem {
             blue.setHullStyle(style);
             blue.setHullPaint(BoatPaint.hull(held));
             blue.setFloorPaint(BoatPaint.floor(held));
+            for (int channel = 2; channel < BoatPaint.CHANNELS; channel++)
+                blue.setPaint(channel, BoatPaint.get(held, channel));
+            blue.setBoatName(BoatPaint.name(held));
         }
         boat.setPos(location.x, location.y, location.z);
         boat.setYRot(player.getYRot());

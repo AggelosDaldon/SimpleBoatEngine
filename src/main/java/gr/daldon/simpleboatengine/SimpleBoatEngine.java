@@ -6,6 +6,8 @@ import gr.daldon.simpleboatengine.common.EngineSounds;
 import gr.daldon.simpleboatengine.common.EngineEntities;
 import gr.daldon.simpleboatengine.common.MotorPackets;
 import gr.daldon.simpleboatengine.common.EngineRecipes;
+import gr.daldon.simpleboatengine.common.EngineBlockEntities;
+import gr.daldon.simpleboatengine.common.EngineMenus;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +19,8 @@ public final class SimpleBoatEngine {
     public SimpleBoatEngine() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         EngineBlocks.BLOCKS.register(modBus);
+        EngineBlockEntities.TYPES.register(modBus);
+        EngineMenus.MENUS.register(modBus);
         EngineEntities.ENTITIES.register(modBus);
         EngineItems.ITEMS.register(modBus);
         EngineItems.TABS.register(modBus);

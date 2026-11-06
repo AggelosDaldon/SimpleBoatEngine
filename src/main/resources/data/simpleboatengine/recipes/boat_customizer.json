@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["CDC", "TBT", "PPP"],
+  "key": {
+    "C": { "item": "minecraft:copper_ingot" },
+    "D": { "item": "minecraft:blue_dye" },
+    "T": { "item": "minecraft:stick" },
+    "B": { "item": "minecraft:barrel" },
+    "P": { "item": "minecraft:spruce_planks" }
+  },
+  "result": { "item": "simpleboatengine:boat_customizer" }
+}

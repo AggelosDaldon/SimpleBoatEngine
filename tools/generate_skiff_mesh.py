@@ -41,10 +41,21 @@ def generate(source_name, class_name, texture_name):
             assert len(values) == 34, piece["name"]
             rows.append("        {" + ", ".join(map(fmt, values)) + "}, // " + piece["name"])
             name = piece["name"].lower()
-            # Hull=1; floor=2; all white trim, hatch and seats remain unpainted.
-            if "floor" in name:
+            # 1 hull, 2 floor, 3 stripe, 4 hatch, 5 seats, 6 antifoul,
+            # 7 interior sidewalls. White stern lining remains unpainted.
+            if "central keel" in name or "underwater hull" in name or "lower dark edge" in name:
+                channels.append(6)
+            elif "stripe" in name:
+                channels.append(3)
+            elif "hatch lid" in name:
+                channels.append(4)
+            elif "seat" in name:
+                channels.append(5)
+            elif "interior sidewall" in name:
+                channels.append(7)
+            elif "floor" in name:
                 channels.append(2)
-            elif "white" in name or "seat" in name:
+            elif "white" in name:
                 channels.append(0)
             else:
                 channels.append(1)

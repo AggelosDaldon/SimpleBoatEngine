@@ -31,6 +31,25 @@ this project. It does not require other vehicle mods or use their source/assets.
   one side retains the other side's previous dye. The bow hatch, stripes,
   sidewalls and seats remain original; dye colors persist on the placed entity
   and the dropped item when it is recovered.
+- **Boat Customization Station (v0.2.6):** craft the station with a barrel,
+  copper, blue dye, sticks and spruce planks; place it in your world. Right-click
+  while holding any of the ten Fishing Boat items to put the boat on display,
+  then use the GUI to recolor seven separate surfaces: hull, interior floor,
+  accent stripe, forward hatch, seats, below-waterline antifouling, and inner
+  walls. The standard surfaces use the 16 vanilla dyes (one matching dye is
+  consumed from player inventory). Antifouling has five free marine-safe
+  cosmetic presets, including the original teal. Enter a name (20 characters)
+  to paint it on both sides near the bow. Shift-right-click the station to
+  pick up the customized boat, or remove it directly from the GUI slot.
+  Paint, name and the exact existing item are preserved when retrieving the
+  boat, placing it in water, and picking it up again. The customized colors
+  also render on the boat item in your inventory and on the station preview.
+- The v0.2.6 update also places the hull deeper in the water, lowers and moves
+  the outboard motor closer to the transom, lowers its propeller, and seats
+  the pole light on the gunwale. The separate walking support surfaces cover
+  the cabin floor, bow deck, both rails, and stern rail, allowing walkers to
+  step onto the raised deck without a jump. Movement and attachment locations
+  should be checked in a live world after installing the updated JAR.
 - The fishing boat's item appears in its mod tab and in vanilla Tools &
   Utilities. Use only one current Simple Boat Engine JAR in `mods/` when
   testing; old and new JARs together cause duplicate registration errors.

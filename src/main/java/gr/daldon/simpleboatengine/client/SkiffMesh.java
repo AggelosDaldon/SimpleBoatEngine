@@ -48,19 +48,30 @@ public final class SkiffMesh {
     /** A neutral grayscale UV atlas is tinted independently for hull and floor. */
     static void drawPainted(PoseStack stack, MultiBufferSource buffers, int light,
                             ResourceLocation original, ResourceLocation neutral,
-                            float[][] parts, byte[] channels, int hullPaint, int floorPaint) {
+                            float[][] parts, byte[] channels, int[] paints) {
         for (int index = 0; index < parts.length; index++) {
             float[] part = parts[index];
-            int selected = channels[index] == 1 ? hullPaint :
-                channels[index] == 2 ? floorPaint : -1;
+            int category = channels[index];
+            int selected = category >= 1 && category <= paints.length ? paints[category - 1] : -1;
             VertexConsumer output = buffers.getBuffer(RenderType.entityCutoutNoCull(
                 selected < 0 ? original : neutral));
             int red = 255, green = 255, blue = 255;
             if (selected >= 0) {
-                float[] diffuse = DyeColor.byId(selected).getTextureDiffuseColors();
-                red = Math.round(diffuse[0] * 255f);
-                green = Math.round(diffuse[1] * 255f);
-                blue = Math.round(diffuse[2] * 255f);
+                if (category == 6) {
+                    // Marine antifouling: original teal plus four curated colors.
+                    int[] rgb = {
+                        0x14585D, 0x15345C, 0x314238, 0x522A32, 0x292D35
+                    };
+                    int packed = rgb[Math.max(0, Math.min(selected, rgb.length - 1))];
+                    red = (packed >> 16) & 255;
+                    green = (packed >> 8) & 255;
+                    blue = packed & 255;
+                } else {
+                    float[] diffuse = DyeColor.byId(selected).getTextureDiffuseColors();
+                    red = Math.round(diffuse[0] * 255f);
+                    green = Math.round(diffuse[1] * 255f);
+                    blue = Math.round(diffuse[2] * 255f);
+                }
             }
             stack.pushPose();
             if (part[6] != 0f) {

@@ -21,10 +21,12 @@ public final class BoatDeckSupport {
     private static final Map<Player, Track> TRACKED = Collections.synchronizedMap(new WeakHashMap<>());
     private static final double FLOOR = BoatMounts.HULL_Y + 4.95 / 16.0;
     private static final double BOW_DECK = BoatMounts.HULL_Y + 13.27 / 16.0;
+    private static final double RAIL = BoatMounts.HULL_Y + 14.3 / 16.0;
 
     private static final class Track {
         final BlueFishingBoat boat;
         Vec3 last;
+        int unsupportedTicks;
 
         Track(BlueFishingBoat boat) {
             this.boat = boat;
@@ -70,21 +72,28 @@ public final class BoatDeckSupport {
             double x = dx * c - dz * s;
             double z = dx * s + dz * c;
 
-            // Bow deck reaches the blue nose. White inner floor reaches stern.
-            boolean bow = z >= -2.40 && z < -0.49 && Math.abs(x) <=
-                (z < -1.85 ? 0.42 : z < -1.35 ? 0.60 : 0.79);
-            boolean floor = z >= -0.51 && z <= 2.26 && Math.abs(x) <= 0.78;
-            if (!bow && !floor) continue;
+            // Distinct support heights: bow, inner floor, both side rails and
+            // full stern transom. A wide flat AABB could not support these.
+            boolean bow = z >= -2.43 && z < -0.49 && Math.abs(x) <=
+                (z < -1.85 ? 0.43 : z < -1.35 ? 0.66 : 0.86);
+            boolean sternRail = z >= 2.14 && z <= 2.39 && Math.abs(x) <= 1.03;
+            boolean sideRail = z >= -1.45 && z <= 2.30
+                && Math.abs(x) > 0.77 && Math.abs(x) <= 1.17;
+            boolean floor = z >= -0.51 && z < 2.16 && Math.abs(x) <= 0.83;
+            if (!bow && !floor && !sideRail && !sternRail) continue;
 
-            double desiredY = boat.getY() + (bow ? BOW_DECK : FLOOR);
+            double desiredY = boat.getY() + (bow ? BOW_DECK :
+                sternRail || sideRail ? RAIL : FLOOR);
             double feet = player.getY();
             boolean alreadyOnBoat = track != null && track.boat == boat;
             // No automatic climb out of water. A first-time landing must be
             // from above; existing walkers can step over the 0.52-block ledge.
-            if (player.isInWater() && (!alreadyOnBoat || feet < desiredY - 0.10)) continue;
-            double minFeet = alreadyOnBoat ? desiredY - 0.68 : desiredY - 0.075;
-            if (feet < minFeet || feet > desiredY + 0.64) continue;
-            if (player.getDeltaMovement().y > 0.13) continue; // jumping
+            if (player.isInWater() && (!alreadyOnBoat || feet < desiredY - 0.12)) continue;
+            double minFeet = alreadyOnBoat ? desiredY - 0.80 : desiredY - 0.075;
+            if (feet < minFeet || feet > desiredY + 0.70) continue;
+            // Jumping must not forget the boat underneath: previously clearing
+            // TRACKED here caused clipping when walking onto the raised bow.
+            if (player.getDeltaMovement().y > 0.13) continue;
 
             support = boat;
             supportY = desiredY;
@@ -92,10 +101,12 @@ public final class BoatDeckSupport {
         }
 
         if (support == null) {
-            TRACKED.remove(player);
+            if (track == null || ++track.unsupportedTicks > 16
+                || player.distanceToSqr(track.boat) > 25.0) TRACKED.remove(player);
             return;
         }
         if (track == null || track.boat != support) TRACKED.put(player, new Track(support));
+        else track.unsupportedTicks = 0;
         // Keep the player's feet at the exact textured floor/deck top.
         player.setPos(player.getX(), supportY, player.getZ());
         Vec3 velocity = player.getDeltaMovement();
