@@ -24,6 +24,13 @@ this project. It does not require other vehicle mods or use their source/assets.
   automatically climb up for you. On foot, its bow deck and central/stern
   floor are maintained as walkable surfaces, without expanding the underlying
   vanilla buoyancy collision box.
+- **Paint both surfaces independently (v0.2.5):** place any Fishing Boat item
+  at the center of a 3×3 Crafting Table. Put any vanilla dye immediately to
+  the **right** to recolor the outer hull, or immediately **below** to recolor
+  the white interior floor. Both dye positions work simultaneously. Repainting
+  one side retains the other side's previous dye. The bow hatch, stripes,
+  sidewalls and seats remain original; dye colors persist on the placed entity
+  and the dropped item when it is recovered.
 - The fishing boat's item appears in its mod tab and in vanilla Tools &
   Utilities. Use only one current Simple Boat Engine JAR in `mods/` when
   testing; old and new JARs together cause duplicate registration errors.

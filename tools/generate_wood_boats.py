@@ -42,6 +42,16 @@ def replace(pixel, base):
 def generate():
     source_entity = Image.open(ASSETS / "textures/entity/aggelos_blue_fishing_boat.png").convert("RGBA")
     source_item = Image.open(ASSETS / "textures/item/aggelos_blue_fishing_boat.png").convert("RGBA")
+    # White/neutral diffuse UV atlas gives accurate vanilla dye colors while
+    # keeping each Blockbench pixel's shadowing. Accents render unpainted.
+    neutral = Image.new("RGBA", source_entity.size)
+    shades = []
+    for red, green, blue, alpha in source_entity.getdata():
+        luminance = red * 0.30 + green * 0.56 + blue * 0.14
+        shade = min(255, round(95 + luminance * 1.1)) if luminance < 145 else min(255, round(25 + luminance * 0.88))
+        shades.append((shade, shade, shade, alpha))
+    neutral.putdata(shades)
+    neutral.save(ASSETS / "textures/entity/paintable_fishing_boat.png", optimize=True)
     for wood, rgb in WOOD.items():
         for image, folder in ((source_entity, "entity"), (source_item, "item")):
             out = Image.new("RGBA", image.size)

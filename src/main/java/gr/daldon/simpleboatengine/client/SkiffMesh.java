@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -39,12 +40,41 @@ public final class SkiffMesh {
                 stack.mulPose(Axis.YP.rotationDegrees(part[6]));
                 stack.translate(-part[7] / 16f, -part[8] / 16f, -part[9] / 16f);
             }
-            cube(stack, output, part, light);
+            cube(stack, output, part, light, 255, 255, 255);
             stack.popPose();
         }
     }
 
-    private static void cube(PoseStack stack, VertexConsumer output, float[] part, int light) {
+    /** A neutral grayscale UV atlas is tinted independently for hull and floor. */
+    static void drawPainted(PoseStack stack, MultiBufferSource buffers, int light,
+                            ResourceLocation original, ResourceLocation neutral,
+                            float[][] parts, byte[] channels, int hullPaint, int floorPaint) {
+        for (int index = 0; index < parts.length; index++) {
+            float[] part = parts[index];
+            int selected = channels[index] == 1 ? hullPaint :
+                channels[index] == 2 ? floorPaint : -1;
+            VertexConsumer output = buffers.getBuffer(RenderType.entityCutoutNoCull(
+                selected < 0 ? original : neutral));
+            int red = 255, green = 255, blue = 255;
+            if (selected >= 0) {
+                float[] diffuse = DyeColor.byId(selected).getTextureDiffuseColors();
+                red = Math.round(diffuse[0] * 255f);
+                green = Math.round(diffuse[1] * 255f);
+                blue = Math.round(diffuse[2] * 255f);
+            }
+            stack.pushPose();
+            if (part[6] != 0f) {
+                stack.translate(part[7] / 16f, part[8] / 16f, part[9] / 16f);
+                stack.mulPose(Axis.YP.rotationDegrees(part[6]));
+                stack.translate(-part[7] / 16f, -part[8] / 16f, -part[9] / 16f);
+            }
+            cube(stack, output, part, light, red, green, blue);
+            stack.popPose();
+        }
+    }
+
+    private static void cube(PoseStack stack, VertexConsumer output, float[] part, int light,
+                             int red, int green, int blue) {
         float x0 = part[0] / 16f, y0 = part[1] / 16f, z0 = part[2] / 16f;
         float x1 = part[3] / 16f, y1 = part[4] / 16f, z1 = part[5] / 16f;
         float[][] points = {
@@ -62,7 +92,7 @@ public final class SkiffMesh {
                 float u = index <= 1 ? u0 : u1;
                 float v = index == 0 || index == 3 ? v1 : v0;
                 output.vertex(pose, point[0], point[1], point[2])
-                    .color(255, 255, 255, 255).uv(u, v)
+                    .color(red, green, blue, 255).uv(u, v)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light)
                     .normal(normal, NORMALS[face][0], NORMALS[face][1], NORMALS[face][2])
                     .endVertex();

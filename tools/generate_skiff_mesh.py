@@ -28,6 +28,7 @@ def generate(source_name, class_name, texture_name):
     model = json.loads(source.read_text(encoding="utf-8"))
     by_id = {entry["uuid"]: entry for entry in model["elements"]}
     rows = []
+    channels = []
 
     def visit(node):
         if isinstance(node, str):
@@ -39,6 +40,14 @@ def generate(source_name, class_name, texture_name):
                 values.extend(piece["faces"][side]["uv"])
             assert len(values) == 34, piece["name"]
             rows.append("        {" + ", ".join(map(fmt, values)) + "}, // " + piece["name"])
+            name = piece["name"].lower()
+            # Hull=1; floor=2; all white trim, hatch and seats remain unpainted.
+            if "floor" in name:
+                channels.append(2)
+            elif "white" in name or "seat" in name:
+                channels.append(0)
+            else:
+                channels.append(1)
         else:
             for child in node.get("children", []):
                 visit(child)
@@ -55,6 +64,9 @@ final class """ + class_name + """ {
     // Bounds (6), Y rotation and pivot (4), six sets of 128px face UVs (24).
     static final float[][] PARTS = {
 """ + "\n".join(rows) + """
+    };
+    static final byte[] CHANNELS = {
+        """ + ", ".join(map(str, channels)) + """
     };
     private """ + class_name + """() {}
 }

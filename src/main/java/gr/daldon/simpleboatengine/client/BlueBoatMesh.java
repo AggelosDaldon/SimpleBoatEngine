@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 public final class BlueBoatMesh {
     public static final ResourceLocation TEXTURE = new ResourceLocation(SimpleBoatEngine.ID,
         "textures/entity/aggelos_blue_fishing_boat.png");
+    private static final ResourceLocation NEUTRAL_TEXTURE = new ResourceLocation(SimpleBoatEngine.ID,
+        "textures/entity/paintable_fishing_boat.png");
 
     private BlueBoatMesh() {}
 
@@ -25,5 +27,15 @@ public final class BlueBoatMesh {
 
     public static void draw(PoseStack stack, MultiBufferSource buffers, int light, int style) {
         SkiffMesh.drawParts(stack, buffers, light, texture(style), BlueBoatMeshData.PARTS);
+    }
+
+    public static void draw(PoseStack stack, MultiBufferSource buffers, int light,
+                            int style, int hullPaint, int floorPaint) {
+        if (hullPaint < 0 && floorPaint < 0) {
+            draw(stack, buffers, light, style);
+            return;
+        }
+        SkiffMesh.drawPainted(stack, buffers, light, texture(style), NEUTRAL_TEXTURE,
+            BlueBoatMeshData.PARTS, BlueBoatMeshData.CHANNELS, hullPaint, floorPaint);
     }
 }

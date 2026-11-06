@@ -45,7 +45,11 @@ public final class SkiffBoatItem extends EngineItem {
         Vec3 location = hit.getLocation();
         SkiffBoat boat = type.get().create(level);
         if (boat == null) return InteractionResultHolder.fail(held);
-        if (boat instanceof BlueFishingBoat blue) blue.setHullStyle(style);
+        if (boat instanceof BlueFishingBoat blue) {
+            blue.setHullStyle(style);
+            blue.setHullPaint(BoatPaint.hull(held));
+            blue.setFloorPaint(BoatPaint.floor(held));
+        }
         boat.setPos(location.x, location.y, location.z);
         boat.setYRot(player.getYRot());
         if (!level.noCollision(boat, boat.getBoundingBox().inflate(-0.1))) {

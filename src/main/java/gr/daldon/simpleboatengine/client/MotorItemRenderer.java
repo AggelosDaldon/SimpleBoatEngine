@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import gr.daldon.simpleboatengine.common.EngineItems;
 import gr.daldon.simpleboatengine.common.SkiffBoatItem;
+import gr.daldon.simpleboatengine.common.BoatPaint;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,7 +28,8 @@ public final class MotorItemRenderer extends BlockEntityWithoutLevelRenderer {
             pose.mulPose(Axis.YP.rotationDegrees(-35f));
             pose.mulPose(Axis.XP.rotationDegrees(25f));
             pose.scale(0.19f, 0.19f, 0.19f);
-            BlueBoatMesh.draw(pose, buffers, packedLight, boatItem.getHullStyle());
+            BlueBoatMesh.draw(pose, buffers, packedLight,
+                boatItem.getHullStyle(), BoatPaint.hull(item), BoatPaint.floor(item));
         } else if (item.is(EngineItems.FUEL_CANISTER.get())) {
             pose.translate(0.5, 0.36, 0.5);
             CanisterMesh.draw(pose, buffers, packedLight);

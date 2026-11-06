@@ -2,6 +2,7 @@ package gr.daldon.simpleboatengine.common;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
@@ -18,11 +19,16 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.Vec3;
 
 /** Aggelos' blue fishing boat, with the original rear driver and port-side seat. */
 public final class BlueFishingBoat extends SkiffBoat {
     private static final EntityDataAccessor<Integer> HULL_STYLE =
+        SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> HULL_PAINT =
+        SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> FLOOR_PAINT =
         SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.INT);
     private final SimpleContainer cargo = new SimpleContainer(54);
     private boolean cargoDropped;
@@ -38,13 +44,30 @@ public final class BlueFishingBoat extends SkiffBoat {
 
     @Override
     public ItemStack getPickResult() {
-        return new ItemStack(getDropItem());
+        return paintedItem();
+    }
+
+    private ItemStack paintedItem() {
+        ItemStack stack = new ItemStack(getDropItem());
+        BoatPaint.setHull(stack, getHullPaint());
+        BoatPaint.setFloor(stack, getFloorPaint());
+        return stack;
+    }
+
+    /** A harvested boat remembers both dyes instead of reverting to the base item. */
+    @Override
+    protected void destroy(DamageSource source) {
+        kill();
+        if (level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))
+            spawnAtLocation(paintedItem());
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(HULL_STYLE, 0);
+        entityData.define(HULL_PAINT, -1);
+        entityData.define(FLOOR_PAINT, -1);
     }
 
     public int getHullStyle() { return entityData.get(HULL_STYLE); }
@@ -52,6 +75,11 @@ public final class BlueFishingBoat extends SkiffBoat {
     public void setHullStyle(int style) {
         entityData.set(HULL_STYLE, Math.max(0, Math.min(9, style)));
     }
+
+    public int getHullPaint() { return entityData.get(HULL_PAINT); }
+    public int getFloorPaint() { return entityData.get(FLOOR_PAINT); }
+    public void setHullPaint(int id) { entityData.set(HULL_PAINT, id >= 0 && id < 16 ? id : -1); }
+    public void setFloorPaint(int id) { entityData.set(FLOOR_PAINT, id >= 0 && id < 16 ? id : -1); }
 
     public void openCargo(ServerPlayer player) {
         player.openMenu(new SimpleMenuProvider(
@@ -63,6 +91,8 @@ public final class BlueFishingBoat extends SkiffBoat {
     protected void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("FishingBoatHullStyle", getHullStyle());
+        tag.putInt("FishingBoatHullPaint", getHullPaint());
+        tag.putInt("FishingBoatFloorPaint", getFloorPaint());
         ListTag list = new ListTag();
         for (int index = 0; index < cargo.getContainerSize(); index++) {
             var stack = cargo.getItem(index);
@@ -79,6 +109,8 @@ public final class BlueFishingBoat extends SkiffBoat {
     protected void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         setHullStyle(tag.getInt("FishingBoatHullStyle"));
+        setHullPaint(tag.contains("FishingBoatHullPaint") ? tag.getInt("FishingBoatHullPaint") : -1);
+        setFloorPaint(tag.contains("FishingBoatFloorPaint") ? tag.getInt("FishingBoatFloorPaint") : -1);
         cargo.clearContent();
         for (Tag value : tag.getList("FishingBoatCargo", Tag.TAG_COMPOUND)) {
             CompoundTag entry = (CompoundTag) value;
