@@ -1,6 +1,7 @@
 package gr.daldon.simpleboatengine.common;
 
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
+import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +17,8 @@ import net.minecraftforge.fml.common.Mod;
  */
 @Mod.EventBusSubscriber(modid = SimpleBoatEngine.ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class BoatDeckSupport {
-    private static final Map<Player, Track> TRACKED = new WeakHashMap<>();
+    // Client and integrated server tick on different threads in singleplayer.
+    private static final Map<Player, Track> TRACKED = Collections.synchronizedMap(new WeakHashMap<>());
     private static final double FLOOR = BoatMounts.HULL_Y + 4.95 / 16.0;
     private static final double BOW_DECK = BoatMounts.HULL_Y + 13.27 / 16.0;
 
@@ -71,7 +73,7 @@ public final class BoatDeckSupport {
             // Bow deck reaches the blue nose. White inner floor reaches stern.
             boolean bow = z >= -2.40 && z < -0.49 && Math.abs(x) <=
                 (z < -1.85 ? 0.42 : z < -1.35 ? 0.60 : 0.79);
-            boolean floor = z >= -0.51 && z <= 2.16 && Math.abs(x) <= 0.73;
+            boolean floor = z >= -0.51 && z <= 2.26 && Math.abs(x) <= 0.78;
             if (!bow && !floor) continue;
 
             double desiredY = boat.getY() + (bow ? BOW_DECK : FLOOR);
