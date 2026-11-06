@@ -30,6 +30,12 @@ public final class MotorData {
         return read(boat).getBoolean("Running");
     }
 
+    /** Switches on at the beginning of dusk and off when dawn is brightening. */
+    public static boolean isDark(long dayTime) {
+        long time = Math.floorMod(dayTime, 24000L);
+        return time >= 12000L && time < 23000L;
+    }
+
     public static int capacity(CompoundTag data) {
         return TANK_CAPACITY + (data.getBoolean("CanisterInstalled") ? EXTRA_CANISTER_CAPACITY : 0);
     }
@@ -50,6 +56,7 @@ public final class MotorData {
         output.putInt("Throttle", throttle(stored));
         output.putFloat("Fuel", stored.getFloat("Fuel"));
         output.putBoolean("CanisterInstalled", stored.getBoolean("CanisterInstalled"));
+        output.putBoolean("PoleLightInstalled", stored.getBoolean("PoleLightInstalled"));
         return output;
     }
 }

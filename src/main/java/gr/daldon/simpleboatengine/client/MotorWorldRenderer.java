@@ -3,6 +3,7 @@ package gr.daldon.simpleboatengine.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
+import gr.daldon.simpleboatengine.common.MotorData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.util.Mth;
@@ -64,6 +65,16 @@ public final class MotorWorldRenderer {
                 pose.mulPose(Axis.YP.rotationDegrees(-90f));
                 pose.scale(1.3f, 1.3f, 1.3f);
                 CanisterMesh.draw(pose, buffers,
+                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+                pose.popPose();
+            }
+            if (status.getBoolean("PoleLightInstalled")) {
+                pose.pushPose();
+                // Opposite stern corner from the auxiliary fuel canister.
+                pose.translate(-0.73f, boat.getBbHeight() * 0.34f, 0.55f);
+                pose.scale(1.3f, 1.3f, 1.3f);
+                PoleLightMesh.draw(pose, buffers,
+                    MotorData.isDark(game.level.getDayTime()),
                     LevelRenderer.getLightColor(game.level, boat.blockPosition()));
                 pose.popPose();
             }

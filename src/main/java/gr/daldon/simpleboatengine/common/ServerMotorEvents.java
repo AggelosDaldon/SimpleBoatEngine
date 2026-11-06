@@ -32,6 +32,24 @@ public final class ServerMotorEvents {
         if (!(event.getTarget() instanceof Boat boat)
             || event.getHand() != InteractionHand.MAIN_HAND) return;
         ItemStack held = event.getEntity().getMainHandItem();
+        if (held.is(EngineItems.POLE_LIGHT.get())) {
+            if (!boat.level().isClientSide) {
+                CompoundTag data = MotorData.writable(boat);
+                if (!MotorData.installed(boat)) {
+                    notify(event.getEntity(), "Install a boat engine before fitting the pole light.");
+                } else if (data.getBoolean("PoleLightInstalled")) {
+                    notify(event.getEntity(), "This boat already has a pole light.");
+                } else {
+                    data.putBoolean("PoleLightInstalled", true);
+                    if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
+                    notify(event.getEntity(), "Automatic boat light fitted to the rear left corner.");
+                    click(boat);
+                }
+            }
+            event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
+            event.setCanceled(true);
+            return;
+        }
         if (held.is(EngineItems.FUEL_CANISTER.get())) {
             if (!boat.level().isClientSide) {
                 CompoundTag data = MotorData.writable(boat);
@@ -58,6 +76,7 @@ public final class ServerMotorEvents {
             data.putInt("Throttle", 0);
             data.putFloat("Fuel", 0f);
             data.putBoolean("CanisterInstalled", false);
+            data.putBoolean("PoleLightInstalled", false);
             if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
             notify(event.getEntity(), "Motor installed! Point at the motor to refuel and switch it on.");
             click(boat);
@@ -152,6 +171,7 @@ public final class ServerMotorEvents {
             }
 
             if (level.getGameTime() % 5L == 0L) {
+                BoatPoleLights.update(level, boat, data);
                 for (ServerPlayer player : level.players()) {
                     if (player.distanceToSqr(boat) <= 64.0 * 64.0) {
                         MotorPackets.sendStatus(boat, player);

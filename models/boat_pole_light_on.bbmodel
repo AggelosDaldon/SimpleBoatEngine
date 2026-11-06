@@ -1,0 +1,1177 @@
+{
+  "meta": {
+    "format_version": "5.0",
+    "model_format": "java_block_sequence",
+    "box_uv": false
+  },
+  "name": "Small Boat Pole Light - ON",
+  "resolution": {
+    "width": 128,
+    "height": 128
+  },
+  "ambientocclusion": true,
+  "elements": [
+    {
+      "type": "cube",
+      "name": "Bottom mounting foot",
+      "uuid": "4a8201d4-97aa-460f-8530-8954a73580a1",
+      "from": [
+        7.25,
+        0.0,
+        7.35
+      ],
+      "to": [
+        8.75,
+        0.31,
+        8.65
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            16,
+            96,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Clamp socket body",
+      "uuid": "00b03b87-7aec-4a61-b492-b67a146ed856",
+      "from": [
+        7.52,
+        0.25,
+        7.53
+      ],
+      "to": [
+        8.48,
+        1.3,
+        8.47
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            16,
+            96,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Mounting tilt lever",
+      "uuid": "744470d2-6d44-4baf-b314-710b4ea9a245",
+      "from": [
+        6.94,
+        0.43,
+        7.79
+      ],
+      "to": [
+        7.54,
+        0.62,
+        8.21
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            16,
+            96,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Tilt lever end",
+      "uuid": "e3fb888b-6ed2-47a0-a1d8-dc1e1cc1d0eb",
+      "from": [
+        6.86,
+        0.3,
+        7.75
+      ],
+      "to": [
+        7.08,
+        0.91,
+        8.25
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Pole lower clamp",
+      "uuid": "7076b595-f95a-402a-add0-fe7d14743a59",
+      "from": [
+        7.68,
+        1.28,
+        7.7
+      ],
+      "to": [
+        8.32,
+        1.92,
+        8.3
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            80,
+            16,
+            96,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Stainless steel pole",
+      "uuid": "1acbcb02-94fb-44f8-872b-55c5840c95f8",
+      "from": [
+        7.82,
+        1.9,
+        7.84
+      ],
+      "to": [
+        8.18,
+        6.55,
+        8.16
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            96,
+            16,
+            112,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            96,
+            16,
+            112,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            32,
+            16,
+            48
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            96,
+            16,
+            112,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            112,
+            16,
+            128,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            96,
+            16,
+            112,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Black light socket",
+      "uuid": "b4953790-d958-407b-89f6-c22c10636e84",
+      "from": [
+        7.52,
+        6.52,
+        7.53
+      ],
+      "to": [
+        8.48,
+        6.98,
+        8.47
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            48,
+            16,
+            64,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            32,
+            16,
+            48,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Socket neck taper",
+      "uuid": "22ad5117-a3f7-46f2-beb4-f665f1c84614",
+      "from": [
+        7.72,
+        6.9,
+        7.72
+      ],
+      "to": [
+        8.28,
+        7.14,
+        8.28
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            16,
+            16,
+            32,
+            32
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Clear lamp lens",
+      "uuid": "b4463e3b-4348-4d35-a0b9-ad64c544ad3d",
+      "from": [
+        7.64,
+        7.11,
+        7.64
+      ],
+      "to": [
+        8.36,
+        8.04,
+        8.36
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            112,
+            32,
+            128,
+            48
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            112,
+            32,
+            128,
+            48
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            112,
+            32,
+            128,
+            48
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            112,
+            32,
+            128,
+            48
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            112,
+            32,
+            128,
+            48
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Lamp lens rib 1",
+      "uuid": "7eaf9a0c-23f3-4217-83f9-6866a9af4f9d",
+      "from": [
+        7.6,
+        7.3,
+        7.6
+      ],
+      "to": [
+        8.4,
+        7.37,
+        8.4
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Lamp lens rib 2",
+      "uuid": "7d046429-49f4-4fb6-afa6-63b85f7868e4",
+      "from": [
+        7.6,
+        7.58,
+        7.6
+      ],
+      "to": [
+        8.4,
+        7.65,
+        8.4
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Lamp lens rib 3",
+      "uuid": "fb39f7b6-a78c-4a52-a468-1e73e104d5e5",
+      "from": [
+        7.6,
+        7.85,
+        7.6
+      ],
+      "to": [
+        8.4,
+        7.92,
+        8.4
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    },
+    {
+      "type": "cube",
+      "name": "Small lamp top cap",
+      "uuid": "ed82d75f-3853-4599-9472-8a20fcbe9b50",
+      "from": [
+        7.62,
+        8.03,
+        7.62
+      ],
+      "to": [
+        8.38,
+        8.17,
+        8.38
+      ],
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            48,
+            16,
+            64
+          ],
+          "texture": 0
+        }
+      },
+      "shade": true
+    }
+  ],
+  "outliner": [
+    {
+      "name": "navigation_light",
+      "uuid": "d4dbcf8a-dd5c-47dc-9f18-dfdb15a12a7f",
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "isOpen": true,
+      "children": [
+        {
+          "name": "mount",
+          "uuid": "6d547fd5-bb19-44e7-bd65-01fddea01a7a",
+          "origin": [
+            8,
+            0,
+            8
+          ],
+          "isOpen": true,
+          "children": [
+            "4a8201d4-97aa-460f-8530-8954a73580a1",
+            "00b03b87-7aec-4a61-b492-b67a146ed856",
+            "744470d2-6d44-4baf-b314-710b4ea9a245",
+            "e3fb888b-6ed2-47a0-a1d8-dc1e1cc1d0eb"
+          ]
+        },
+        {
+          "name": "metal_pole",
+          "uuid": "10da5fb5-2bb0-4a2d-888a-9166cd7be613",
+          "origin": [
+            8,
+            0,
+            8
+          ],
+          "isOpen": true,
+          "children": [
+            "7076b595-f95a-402a-add0-fe7d14743a59",
+            "1acbcb02-94fb-44f8-872b-55c5840c95f8"
+          ]
+        },
+        {
+          "name": "lamp_head",
+          "uuid": "ee55e632-8f63-4e81-93a2-ec6ef0c435a3",
+          "origin": [
+            8,
+            0,
+            8
+          ],
+          "isOpen": true,
+          "children": [
+            "b4953790-d958-407b-89f6-c22c10636e84",
+            "22ad5117-a3f7-46f2-beb4-f665f1c84614",
+            "b4463e3b-4348-4d35-a0b9-ad64c544ad3d",
+            "7eaf9a0c-23f3-4217-83f9-6866a9af4f9d",
+            "7d046429-49f4-4fb6-afa6-63b85f7868e4",
+            "fb39f7b6-a78c-4a52-a468-1e73e104d5e5",
+            "ed82d75f-3853-4599-9472-8a20fcbe9b50"
+          ]
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "mount",
+      "uuid": "6d547fd5-bb19-44e7-bd65-01fddea01a7a",
+      "export": true,
+      "visibility": true,
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "children": [],
+      "shade": true,
+      "mirror_uv": false,
+      "autouv": 0,
+      "isOpen": true
+    },
+    {
+      "name": "metal_pole",
+      "uuid": "10da5fb5-2bb0-4a2d-888a-9166cd7be613",
+      "export": true,
+      "visibility": true,
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "children": [],
+      "shade": true,
+      "mirror_uv": false,
+      "autouv": 0,
+      "isOpen": true
+    },
+    {
+      "name": "lamp_head",
+      "uuid": "ee55e632-8f63-4e81-93a2-ec6ef0c435a3",
+      "export": true,
+      "visibility": true,
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "children": [],
+      "shade": true,
+      "mirror_uv": false,
+      "autouv": 0,
+      "isOpen": true
+    },
+    {
+      "name": "navigation_light",
+      "uuid": "d4dbcf8a-dd5c-47dc-9f18-dfdb15a12a7f",
+      "export": true,
+      "visibility": true,
+      "origin": [
+        8,
+        0,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "children": [],
+      "shade": true,
+      "mirror_uv": false,
+      "autouv": 0,
+      "isOpen": true
+    }
+  ],
+  "textures": [
+    {
+      "name": "boat_accessories_texture.png",
+      "id": "0",
+      "uuid": "a946ae89-4acf-43f9-8915-ed7f972fb47a",
+      "width": 128,
+      "height": 128,
+      "uv_width": 128,
+      "uv_height": 128,
+      "source": "data:image/png;base64,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"
+    }
+  ]
+}

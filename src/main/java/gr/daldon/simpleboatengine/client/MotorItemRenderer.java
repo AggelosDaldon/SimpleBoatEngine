@@ -23,6 +23,9 @@ public final class MotorItemRenderer extends BlockEntityWithoutLevelRenderer {
         if (item.is(EngineItems.FUEL_CANISTER.get())) {
             pose.translate(0.5, 0.36, 0.5);
             CanisterMesh.draw(pose, buffers, packedLight);
+        } else if (item.is(EngineItems.POLE_LIGHT.get())) {
+            pose.translate(0.5, 0.28, 0.5);
+            PoleLightMesh.draw(pose, buffers, false, packedLight);
         } else {
             pose.translate(0.5, 0.5, 0.5);
             MotorMesh.draw(pose, buffers, 0f, packedLight);

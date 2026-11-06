@@ -25,9 +25,15 @@ jobs:
           for ASSET in \
             assets/simpleboatengine/models/item/engine.json \
             assets/simpleboatengine/models/item/fuel_canister.json \
+            assets/simpleboatengine/models/item/pole_light.json \
             assets/simpleboatengine/sounds/motor_loop.ogg \
             assets/simpleboatengine/textures/item/outboard_engine.png \
             assets/simpleboatengine/textures/item/boat_accessories.png; do
+            unzip -l "$JAR" "$ASSET" | grep -F "$ASSET"
+          done
+          for ASSET in \
+            assets/simpleboatengine/textures/item/pole_light.png \
+            data/simpleboatengine/recipes/pole_light.json; do
             unzip -l "$JAR" "$ASSET" | grep -F "$ASSET"
           done
       - name: Upload standalone JAR

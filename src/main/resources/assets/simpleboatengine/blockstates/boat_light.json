@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "waterlogged=false": { "model": "simpleboatengine:block/boat_light" },
+    "waterlogged=true": { "model": "simpleboatengine:block/boat_light" }
+  }
+}
