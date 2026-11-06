@@ -5,7 +5,7 @@ import com.mojang.math.Axis;
 import gr.daldon.simpleboatengine.common.BoatCustomizerBlockEntity;
 import gr.daldon.simpleboatengine.common.BoatPaint;
 import gr.daldon.simpleboatengine.common.SkiffBoatItem;
-import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,11 +16,9 @@ import net.minecraft.network.chat.Component;
 /** Bright boat preview with a legible, camera-facing name above the workbench. */
 public final class BoatCustomizerRenderer implements BlockEntityRenderer<BoatCustomizerBlockEntity> {
     private final Font font;
-    private final Camera camera;
 
     public BoatCustomizerRenderer(BlockEntityRendererProvider.Context context) {
         this.font = context.getFont();
-        this.camera = context.getCamera();
     }
 
     @Override
@@ -46,7 +44,7 @@ public final class BoatCustomizerRenderer implements BlockEntityRenderer<BoatCus
         if (name.isBlank()) return;
         pose.pushPose();
         pose.translate(0.5, 1.78, 0.5);
-        pose.mulPose(camera.rotation());
+        pose.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
         pose.scale(-0.007f, -0.007f, 0.007f);
         Component label = Component.literal(name);
         font.drawInBatch(label, -font.width(label) / 2f, 0,
