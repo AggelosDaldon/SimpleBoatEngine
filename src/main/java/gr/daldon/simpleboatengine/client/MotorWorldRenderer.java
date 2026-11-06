@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.common.MotorData;
+import gr.daldon.simpleboatengine.common.SkiffBoat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.util.Mth;
@@ -39,9 +40,13 @@ public final class MotorWorldRenderer {
                 Mth.lerp(tick, boat.zOld, boat.getZ()) - camera.z);
             pose.mulPose(com.mojang.math.Axis.YP.rotationDegrees(
                 180f - Mth.rotLerp(tick, boat.yRotO, boat.getYRot())));
+            boolean skiff = boat instanceof SkiffBoat;
             float height = boat.getBbHeight() / 3f;
             float stern = 1.24f;
-            if (boat.getVariant() == Boat.Type.BAMBOO) {
+            if (skiff) {
+                height = 0.35f;
+                stern = 2.40f;
+            } else if (boat.getVariant() == Boat.Type.BAMBOO) {
                 height = boat.getBbHeight() * 0.7f;
                 stern = 1.12f;
             }
@@ -60,7 +65,9 @@ public final class MotorWorldRenderer {
                 // Starboard stern: close to the right outer edge of the vanilla hull.
                 // +X is the boat's right side in our stern-relative rendering space.
                 // Pull the canister 0.28 blocks forward along the starboard side.
-                pose.translate(0.73f, boat.getBbHeight() * 0.34f, 0.55f);
+                pose.translate(skiff ? 0.90f : 0.73f,
+                    skiff ? 0.48f : boat.getBbHeight() * 0.34f,
+                    skiff ? 1.48f : 0.55f);
                 // Turn the cap towards the bow without changing the mesh UVs.
                 pose.mulPose(Axis.YP.rotationDegrees(-90f));
                 pose.scale(1.3f, 1.3f, 1.3f);
@@ -70,9 +77,11 @@ public final class MotorWorldRenderer {
             }
             if (status.getBoolean("PoleLightInstalled")) {
                 pose.pushPose();
-                // Rear-left gunwale corner: a touch higher, farther astern,
-                // and outward toward the edge so the base sits on the timber.
-                pose.translate(-0.54f, boat.getBbHeight() * 0.98f, 0.96f);
+                // Standard boat: slightly closer to its center than in v0.1.9.
+                // Skiff: independently positioned over the long port stern rail.
+                pose.translate(skiff ? -0.88f : -0.46f,
+                    skiff ? 0.53f : boat.getBbHeight() * 0.98f,
+                    skiff ? 2.10f : 0.96f);
                 pose.scale(1.3f, 1.3f, 1.3f);
                 PoleLightMesh.draw(pose, buffers,
                     MotorData.isDark(game.level.getDayTime()),

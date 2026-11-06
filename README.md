@@ -7,7 +7,17 @@ this project. It does not require other vehicle mods or use their source/assets.
 ## Features
 
 - Four items: **Boat Engine**, **Fuel Bucket**, **Auxiliary Fuel Canister**
-  and **Automatic Boat Pole Light**.
+  and **Automatic Boat Pole Light**, plus an experimental fifth item:
+  **Large Fishing Skiff (Test)**.
+- The new skiff is a separately spawned boat, placed on a water surface from
+  its Creative-tab item (or `/give @s simpleboatengine:large_fishing_skiff`).
+  It uses the supplied 73-cuboid, 128px Blockbench model, has a driver seat
+  toward the stern and a second seat near the bow, and retains vanilla boat
+  buoyancy and steering. Vanilla boats remain available and unchanged.
+- All three fitted accessories use separate attachment positions on the skiff:
+  motor at the transom, fuel canister on starboard aft, and automatic pole light
+  at the port stern corner. Engine targeting and the light's actual illumination
+  position follow the custom mounts.
 - Equip a vanilla boat with the engine by right-clicking the **boat** while holding
   the engine item. Installation is the only operation performed on the boat hull.
 - After installing, point the crosshair at the visible **motor** at the stern and
@@ -68,6 +78,9 @@ artifact from that workflow's build page.
 - Boat pole light's two editable models: `models/boat_pole_light_off.bbmodel`
   and `models/boat_pole_light_on.bbmodel`.
 - Boat pole light's 128×128 atlas: `src/main/resources/assets/simpleboatengine/textures/item/pole_light.png`
+- Experimental skiff source: `models/large_motor_fishing_skiff.bbmodel`;
+  its 128px texture and render mesh are reproduced with
+  `python3 tools/generate_skiff_mesh.py`.
 - Original engine sound: `assets/simpleboatengine/sounds/motor_loop.ogg`
 - Regenerate the current game's 129-cuboid mesh after editing the Blockbench
   file: `python3 tools/generate_outboard_mesh.py`.

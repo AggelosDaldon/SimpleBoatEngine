@@ -14,9 +14,9 @@ public final class MotorTarget {
         Vec3 end = eye.add(direction.normalize().scale(reach));
         Vec3 a = local(boat, eye, yaw);
         Vec3 b = local(boat, end, yaw);
-        double height = boat.getBbHeight() / 3.0;
-        double stern = 1.24;
-        if (boat.getVariant() == Boat.Type.BAMBOO) {
+        double height = boat instanceof SkiffBoat ? 0.35 : boat.getBbHeight() / 3.0;
+        double stern = boat instanceof SkiffBoat ? 2.40 : 1.24;
+        if (!(boat instanceof SkiffBoat) && boat.getVariant() == Boat.Type.BAMBOO) {
             height = boat.getBbHeight() * 0.7;
             stern = 1.12;
         }

@@ -2,6 +2,7 @@ package gr.daldon.simpleboatengine.client;
 
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.common.EngineSounds;
+import gr.daldon.simpleboatengine.common.SkiffBoat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -52,9 +53,11 @@ public final class MotorAmbience {
             }
 
             int throttle = Math.max(0, Math.min(10, data.getInt("Throttle")));
-            float attachment = boat.getVariant() == Boat.Type.BAMBOO
-                ? boat.getBbHeight() * 0.7f : boat.getBbHeight() / 3.0f;
-            double stern = boat.getVariant() == Boat.Type.BAMBOO ? 1.12 : 1.24;
+            float attachment = boat instanceof SkiffBoat ? 0.35f
+                : boat.getVariant() == Boat.Type.BAMBOO
+                    ? boat.getBbHeight() * 0.7f : boat.getBbHeight() / 3.0f;
+            double stern = boat instanceof SkiffBoat ? 2.40
+                : boat.getVariant() == Boat.Type.BAMBOO ? 1.12 : 1.24;
             double yaw = Math.toRadians(180.0 - boat.getYRot());
 
             if (game.level.random.nextInt(4) == 0) {
@@ -123,7 +126,7 @@ public final class MotorAmbience {
                 return;
             }
             int throttle = data == null ? 0 : Math.max(0, Math.min(10, data.getInt("Throttle")));
-            volume = fade * 0.67f;
+            volume = fade * 0.80f;
             pitch = 0.84f + throttle * 0.039f;
             x = boat.getX();
             y = boat.getY();

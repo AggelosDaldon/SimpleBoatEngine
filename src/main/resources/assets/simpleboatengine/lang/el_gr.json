@@ -3,6 +3,8 @@
   "item.simpleboatengine.fuel_bucket": "Κουβάς καυσίμου",
   "item.simpleboatengine.fuel_canister": "Βοηθητικό δοχείο καυσίμου",
   "item.simpleboatengine.pole_light": "Αυτόματο φως βάρκας",
+  "item.simpleboatengine.large_fishing_skiff": "Μεγάλη ψαρόβαρκα (δοκιμή)",
+  "entity.simpleboatengine.large_fishing_skiff": "Μεγάλη ψαρόβαρκα",
   "itemGroup.simpleboatengine": "Simple Boat Engine",
   "key.simpleboatengine.category": "Simple Boat Engine",
   "key.simpleboatengine.up": "Αύξηση γκαζιού",

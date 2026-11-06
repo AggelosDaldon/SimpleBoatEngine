@@ -60,7 +60,20 @@ public final class BoatPoleLights {
     /** Exact model-space lamps after their attachment transform in MotorWorldRenderer. */
     private static Set<BlockPos> positions(Boat boat, CompoundTag data) {
         if (!data.getBoolean("PoleLightInstalled")) return Set.of();
-        return Set.of(position(boat, -0.54, 0.98, 0.96, 8.17));
+        if (boat instanceof SkiffBoat) {
+            return Set.of(position(boat, -0.88, 0, 2.10, 8.17, 0.53));
+        }
+        return Set.of(position(boat, -0.46, 0.98, 0.96, 8.17));
+    }
+
+    private static BlockPos position(Boat boat, double x, double fraction,
+                                     double z, double top, double baseHeight) {
+        double yaw = Math.toRadians(180f - boat.getYRot());
+        double worldX = boat.getX() + x * Math.cos(yaw) + z * Math.sin(yaw);
+        double worldZ = boat.getZ() - x * Math.sin(yaw) + z * Math.cos(yaw);
+        return BlockPos.containing(worldX,
+            boat.getY() + boat.getBbHeight() * fraction + baseHeight + top / 16.0 * 1.3,
+            worldZ);
     }
 
     private static BlockPos position(Boat boat, double x, double heightFraction,

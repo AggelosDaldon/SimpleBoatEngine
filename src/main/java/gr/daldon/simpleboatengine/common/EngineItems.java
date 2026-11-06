@@ -24,6 +24,8 @@ public final class EngineItems {
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> LARGE_SKIFF = ITEMS.register("large_fishing_skiff",
+        () -> new SkiffBoatItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = TABS.register("main",
         () -> CreativeModeTab.builder()
@@ -34,6 +36,7 @@ public final class EngineItems {
                 output.accept(FUEL_BUCKET.get());
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
+                output.accept(LARGE_SKIFF.get());
             }).build());
 
     private EngineItems() {}

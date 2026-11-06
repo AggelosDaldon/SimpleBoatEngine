@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 /** Renders the same detailed outboard in the inventory and in the world. */
-public final class EngineItem extends Item {
+public class EngineItem extends Item {
     public EngineItem(Properties properties) {
         super(properties);
     }

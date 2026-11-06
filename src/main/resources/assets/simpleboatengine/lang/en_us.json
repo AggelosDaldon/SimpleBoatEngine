@@ -3,6 +3,8 @@
   "item.simpleboatengine.fuel_bucket": "Fuel Bucket",
   "item.simpleboatengine.fuel_canister": "Auxiliary Fuel Canister",
   "item.simpleboatengine.pole_light": "Automatic Boat Pole Light",
+  "item.simpleboatengine.large_fishing_skiff": "Large Fishing Skiff (Test)",
+  "entity.simpleboatengine.large_fishing_skiff": "Large Fishing Skiff",
   "itemGroup.simpleboatengine": "Simple Boat Engine",
   "key.simpleboatengine.category": "Simple Boat Engine",
   "key.simpleboatengine.up": "Increase throttle",
