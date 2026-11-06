@@ -10,10 +10,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.EntityType;
+import java.util.function.Supplier;
 
 /** Places the larger test hull on water without replacing vanilla boat items. */
 public final class SkiffBoatItem extends EngineItem {
-    public SkiffBoatItem(Properties properties) { super(properties); }
+    private final Supplier<? extends EntityType<? extends SkiffBoat>> type;
+
+    public SkiffBoatItem(Properties properties,
+                         Supplier<? extends EntityType<? extends SkiffBoat>> type) {
+        super(properties);
+        this.type = type;
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -26,7 +34,8 @@ public final class SkiffBoatItem extends EngineItem {
         }
 
         Vec3 location = hit.getLocation();
-        SkiffBoat boat = new SkiffBoat(EngineEntities.LARGE_SKIFF.get(), level);
+        SkiffBoat boat = type.get().create(level);
+        if (boat == null) return InteractionResultHolder.fail(held);
         boat.setPos(location.x, location.y, location.z);
         boat.setYRot(player.getYRot());
         if (!level.noCollision(boat, boat.getBoundingBox().inflate(-0.1))) {

@@ -14,16 +14,11 @@ public final class MotorTarget {
         Vec3 end = eye.add(direction.normalize().scale(reach));
         Vec3 a = local(boat, eye, yaw);
         Vec3 b = local(boat, end, yaw);
-        double height = boat instanceof SkiffBoat ? 0.78 : boat.getBbHeight() / 3.0;
-        double stern = boat instanceof SkiffBoat ? 2.70 : 1.24;
-        if (!(boat instanceof SkiffBoat) && boat.getVariant() == Boat.Type.BAMBOO) {
-            height = boat.getBbHeight() * 0.7;
-            stern = 1.12;
-        }
+        BoatMounts.Mount mount = BoatMounts.motor(boat);
         // New Blockbench model bounds: x 4.98..11.02, y -8..8, z 3..12.24;
         // the world renderer scales those pixel coordinates by 1.5.
-        return new AABB(-0.43, height - 0.83, stern - 0.57,
-            0.43, height + 0.83, stern + 0.50).clip(a, b).isPresent();
+        return new AABB(mount.x() - 0.43, mount.y() - 0.83, mount.z() - 0.57,
+            mount.x() + 0.43, mount.y() + 0.83, mount.z() + 0.50).clip(a, b).isPresent();
     }
 
     private static Vec3 local(Boat boat, Vec3 world, double yaw) {

@@ -2,6 +2,8 @@ package gr.daldon.simpleboatengine.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import gr.daldon.simpleboatengine.common.BoatMounts;
+import gr.daldon.simpleboatengine.common.BlueFishingBoat;
 import gr.daldon.simpleboatengine.common.SkiffBoat;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -20,17 +22,17 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
                        MultiBufferSource buffers, int light) {
         pose.pushPose();
         pose.mulPose(Axis.YP.rotationDegrees(180f - yaw));
-        // Raise the hull so its 4.95px-high walking floor is at the
-        // skiff's collision-box top (0.39 blocks above its origin).
-        // The lower keel still sits in the water, while the deck is dry.
-        pose.translate(0f, 0.08f, 0f);
-        SkiffMesh.draw(pose, buffers, light);
+        // The original renderer was placing the entire deck below the waterline.
+        // Both authored hulls use the same 4.95px floor height.
+        pose.translate(0f, BoatMounts.HULL_Y, 0f);
+        if (boat instanceof BlueFishingBoat) BlueBoatMesh.draw(pose, buffers, light);
+        else SkiffMesh.draw(pose, buffers, light);
         pose.popPose();
         super.render(boat, yaw, partialTick, pose, buffers, light);
     }
 
     @Override
     public ResourceLocation getTextureLocation(SkiffBoat boat) {
-        return SkiffMesh.TEXTURE;
+        return boat instanceof BlueFishingBoat ? BlueBoatMesh.TEXTURE : SkiffMesh.TEXTURE;
     }
 }

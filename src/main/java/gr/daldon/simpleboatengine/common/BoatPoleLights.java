@@ -60,30 +60,16 @@ public final class BoatPoleLights {
     /** Exact model-space lamps after their attachment transform in MotorWorldRenderer. */
     private static Set<BlockPos> positions(Boat boat, CompoundTag data) {
         if (!data.getBoolean("PoleLightInstalled")) return Set.of();
-        if (boat instanceof SkiffBoat) {
-            return Set.of(position(boat, -0.74, 0, 2.10, 8.17, 0.96));
-        }
-        return Set.of(position(boat, -0.32, 0.98, 0.83, 8.17));
+        return Set.of(position(boat, BoatMounts.poleLight(boat)));
     }
 
-    private static BlockPos position(Boat boat, double x, double fraction,
-                                     double z, double top, double baseHeight) {
+    private static BlockPos position(Boat boat, BoatMounts.Mount lamp) {
         double yaw = Math.toRadians(180f - boat.getYRot());
-        double worldX = boat.getX() + x * Math.cos(yaw) + z * Math.sin(yaw);
-        double worldZ = boat.getZ() - x * Math.sin(yaw) + z * Math.cos(yaw);
+        double worldX = boat.getX() + lamp.x() * Math.cos(yaw) + lamp.z() * Math.sin(yaw);
+        double worldZ = boat.getZ() - lamp.x() * Math.sin(yaw) + lamp.z() * Math.cos(yaw);
         return BlockPos.containing(worldX,
-            boat.getY() + boat.getBbHeight() * fraction + baseHeight + top / 16.0 * 1.3,
+            boat.getY() + lamp.y() + 8.17 / 16.0 * 1.3,
             worldZ);
-    }
-
-    private static BlockPos position(Boat boat, double x, double heightFraction,
-                                     double z, double modelTopY) {
-        double yaw = Math.toRadians(180f - boat.getYRot());
-        double worldX = boat.getX() + x * Math.cos(yaw) + z * Math.sin(yaw);
-        double worldZ = boat.getZ() - x * Math.sin(yaw) + z * Math.cos(yaw);
-        double worldY = boat.getY() + boat.getBbHeight() * heightFraction
-            + modelTopY / 16.0 * 1.3;
-        return BlockPos.containing(worldX, worldY, worldZ);
     }
 
     /** Called by the self-cleaning block; the boat must still be close and installed. */

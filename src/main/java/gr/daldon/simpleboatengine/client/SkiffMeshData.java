@@ -1,6 +1,6 @@
 package gr.daldon.simpleboatengine.client;
 
-/** Generated from models/large_motor_fishing_skiff.bbmodel; do not hand-edit. */
+/** Generated from the source Blockbench model; do not hand-edit. */
 final class SkiffMeshData {
     // Bounds (6), Y rotation and pivot (4), six sets of 128px face UVs (24).
     static final float[][] PARTS = {

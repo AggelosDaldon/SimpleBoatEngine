@@ -26,8 +26,13 @@ public final class SkiffMesh {
     private SkiffMesh() {}
 
     public static void draw(PoseStack stack, MultiBufferSource buffers, int light) {
-        VertexConsumer output = buffers.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
-        for (float[] part : SkiffMeshData.PARTS) {
+        drawParts(stack, buffers, light, TEXTURE, SkiffMeshData.PARTS);
+    }
+
+    static void drawParts(PoseStack stack, MultiBufferSource buffers, int light,
+                          ResourceLocation texture, float[][] parts) {
+        VertexConsumer output = buffers.getBuffer(RenderType.entityCutoutNoCull(texture));
+        for (float[] part : parts) {
             stack.pushPose();
             if (part[6] != 0f) {
                 stack.translate(part[7] / 16f, part[8] / 16f, part[9] / 16f);

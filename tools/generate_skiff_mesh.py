@@ -10,9 +10,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "models/large_motor_fishing_skiff.bbmodel"
-DEST = ROOT / "src/main/java/gr/daldon/simpleboatengine/client/SkiffMeshData.java"
-TEXTURE = ROOT / "src/main/resources/assets/simpleboatengine/textures/entity/large_motor_fishing_skiff.png"
+SPECS = (
+    ("large_motor_fishing_skiff.bbmodel", "SkiffMeshData", "large_motor_fishing_skiff.png"),
+    ("aggelos_blue_fishing_boat.bbmodel", "BlueBoatMeshData", "aggelos_blue_fishing_boat.png"),
+)
 SIDES = ("north", "south", "west", "east", "up", "down")
 
 
@@ -20,8 +21,11 @@ def fmt(number):
     return (f"{float(number):.6f}".rstrip("0").rstrip(".") or "0") + "f"
 
 
-def main():
-    model = json.loads(SOURCE.read_text(encoding="utf-8"))
+def generate(source_name, class_name, texture_name):
+    source = ROOT / "models" / source_name
+    dest = ROOT / "src/main/java/gr/daldon/simpleboatengine/client" / (class_name + ".java")
+    texture = ROOT / "src/main/resources/assets/simpleboatengine/textures/entity" / texture_name
+    model = json.loads(source.read_text(encoding="utf-8"))
     by_id = {entry["uuid"]: entry for entry in model["elements"]}
     rows = []
 
@@ -43,24 +47,29 @@ def main():
         visit(group)
 
     assert len(rows) == len(model["elements"])
-    DEST.write_text(
+    dest.write_text(
         """package gr.daldon.simpleboatengine.client;
 
-/** Generated from models/large_motor_fishing_skiff.bbmodel; do not hand-edit. */
-final class SkiffMeshData {
+/** Generated from the source Blockbench model; do not hand-edit. */
+final class """ + class_name + """ {
     // Bounds (6), Y rotation and pivot (4), six sets of 128px face UVs (24).
     static final float[][] PARTS = {
 """ + "\n".join(rows) + """
     };
-    private SkiffMeshData() {}
+    private """ + class_name + """() {}
 }
 """,
         encoding="utf-8",
     )
     encoded = model["textures"][0]["source"].split(",", 1)[1]
-    TEXTURE.parent.mkdir(parents=True, exist_ok=True)
-    TEXTURE.write_bytes(base64.b64decode(encoded))
-    print(f"Generated {len(rows)} skiff cuboids and {TEXTURE.stat().st_size} byte texture")
+    texture.parent.mkdir(parents=True, exist_ok=True)
+    texture.write_bytes(base64.b64decode(encoded))
+    print(f"Generated {len(rows)} {class_name} cuboids and {texture.stat().st_size} byte texture")
+
+
+def main():
+    for spec in SPECS:
+        generate(*spec)
 
 
 if __name__ == "__main__":

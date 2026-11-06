@@ -6,9 +6,9 @@ this project. It does not require other vehicle mods or use their source/assets.
 
 ## Features
 
-- Four items: **Boat Engine**, **Fuel Bucket**, **Auxiliary Fuel Canister**
-  and **Automatic Boat Pole Light**, plus an experimental fifth item:
-  **Large Fishing Skiff (Test)**.
+- Four accessories: **Boat Engine**, **Fuel Bucket**, **Auxiliary Fuel Canister**
+  and **Automatic Boat Pole Light**, plus two independent experimental boats:
+  **Large Fishing Skiff (Test)** and **Aggelos' Blue Fishing Boat**.
 - The new skiff is a separately spawned boat, placed on a water surface from
   its Creative-tab item (or `/give @s simpleboatengine:large_fishing_skiff`).
   Its dedicated inventory icon appears in both the mod's creative tab and
@@ -21,12 +21,20 @@ this project. It does not require other vehicle mods or use their source/assets.
   with the skiff collision surface, while both seated riders keep their
   previous position relative to their benches. Vanilla boats remain available
   and unchanged.
+- Aggelos' Blue Fishing Boat has its own 72-cuboid, 128px Blockbench model,
+  deep-blue and white texture, and independent Creative item
+  (`/give @s simpleboatengine:aggelos_blue_fishing_boat`). The driver's seat
+  is at the stern; the passenger seat is port-side, as named in the supplied
+  editable model. Both boats are registered in the mod's creative inventory
+  and the vanilla Tools & Utilities tab.
 - All three fitted accessories use separate attachment positions on the skiff:
   motor at the transom, fuel canister on starboard aft, and automatic pole light
-  at the port stern corner. The motor sits farther aft, and all skiff mounts
-  follow the raised hull. On vanilla boats, the pole light sits slightly farther
-  forward. Engine targeting and the light's actual illumination position follow
-  the custom mounts.
+  at the port stern corner. Both custom boats have individually calibrated
+  mount points: the motor hangs outside the transom, the fuel tank sits low on
+  the interior starboard floor, and the pole light attaches to the aft rail.
+  The hull visual offsets and both riders' positions are raised above the water.
+  On vanilla boats, the pole light sits slightly further inboard. Engine
+  targeting, exhaust particles and actual emitted light follow the mounts.
 - Equip a vanilla boat with the engine by right-clicking the **boat** while holding
   the engine item. Installation is the only operation performed on the boat hull.
 - After installing, point the crosshair at the visible **motor** at the stern and
@@ -88,7 +96,8 @@ artifact from that workflow's build page.
   and `models/boat_pole_light_on.bbmodel`.
 - Boat pole light's 128×128 atlas: `src/main/resources/assets/simpleboatengine/textures/item/pole_light.png`
 - Experimental skiff source: `models/large_motor_fishing_skiff.bbmodel`;
-  its 128px texture and render mesh are reproduced with
+  Aggelos' blue boat source: `models/aggelos_blue_fishing_boat.bbmodel`;
+  their 128px textures and render meshes are reproduced with
   `python3 tools/generate_skiff_mesh.py`.
 - Original engine sound: `assets/simpleboatengine/sounds/motor_loop.ogg`
 - Regenerate the current game's 129-cuboid mesh after editing the Blockbench

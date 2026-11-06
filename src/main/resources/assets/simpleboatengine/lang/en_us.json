@@ -5,6 +5,8 @@
   "item.simpleboatengine.pole_light": "Automatic Boat Pole Light",
   "item.simpleboatengine.large_fishing_skiff": "Large Fishing Skiff (Test)",
   "entity.simpleboatengine.large_fishing_skiff": "Large Fishing Skiff",
+  "item.simpleboatengine.aggelos_blue_fishing_boat": "Aggelos' Blue Fishing Boat",
+  "entity.simpleboatengine.aggelos_blue_fishing_boat": "Aggelos' Blue Fishing Boat",
   "itemGroup.simpleboatengine": "Simple Boat Engine",
   "key.simpleboatengine.category": "Simple Boat Engine",
   "key.simpleboatengine.up": "Increase throttle",

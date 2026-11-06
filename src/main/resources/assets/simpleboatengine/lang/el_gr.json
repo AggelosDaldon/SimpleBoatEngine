@@ -5,6 +5,8 @@
   "item.simpleboatengine.pole_light": "Αυτόματο φως βάρκας",
   "item.simpleboatengine.large_fishing_skiff": "Μεγάλη ψαρόβαρκα (δοκιμή)",
   "entity.simpleboatengine.large_fishing_skiff": "Μεγάλη ψαρόβαρκα",
+  "item.simpleboatengine.aggelos_blue_fishing_boat": "Μπλε ψαρόβαρκα του Άγγελου",
+  "entity.simpleboatengine.aggelos_blue_fishing_boat": "Μπλε ψαρόβαρκα του Άγγελου",
   "itemGroup.simpleboatengine": "Simple Boat Engine",
   "key.simpleboatengine.category": "Simple Boat Engine",
   "key.simpleboatengine.up": "Αύξηση γκαζιού",

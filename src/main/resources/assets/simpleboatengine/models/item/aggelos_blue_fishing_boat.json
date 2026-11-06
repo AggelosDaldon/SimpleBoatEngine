@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "simpleboatengine:item/aggelos_blue_fishing_boat"
+  }
+}

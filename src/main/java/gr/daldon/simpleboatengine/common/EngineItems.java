@@ -30,7 +30,9 @@ public final class EngineItems {
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LARGE_SKIFF = ITEMS.register("large_fishing_skiff",
-        () -> new SkiffBoatItem(new Item.Properties().stacksTo(1)));
+        () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.LARGE_SKIFF));
+    public static final RegistryObject<Item> BLUE_FISHING_BOAT = ITEMS.register("aggelos_blue_fishing_boat",
+        () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.BLUE_FISHING_BOAT));
 
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = TABS.register("main",
         () -> CreativeModeTab.builder()
@@ -42,6 +44,7 @@ public final class EngineItems {
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
                 output.accept(LARGE_SKIFF.get());
+                output.accept(BLUE_FISHING_BOAT.get());
             }).build());
 
     /** Show the skiff in a vanilla tab as well as in Simple Boat Engine's tab. */
@@ -49,6 +52,7 @@ public final class EngineItems {
     public static void populateVanillaTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(LARGE_SKIFF.get());
+            event.accept(BLUE_FISHING_BOAT.get());
         }
     }
 
