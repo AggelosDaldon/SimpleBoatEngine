@@ -4,12 +4,17 @@ import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = SimpleBoatEngine.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class EngineItems {
     public static final DeferredRegister<Item> ITEMS =
         DeferredRegister.create(ForgeRegistries.ITEMS, SimpleBoatEngine.ID);
@@ -38,6 +43,14 @@ public final class EngineItems {
                 output.accept(POLE_LIGHT.get());
                 output.accept(LARGE_SKIFF.get());
             }).build());
+
+    /** Show the skiff in a vanilla tab as well as in Simple Boat Engine's tab. */
+    @SubscribeEvent
+    public static void populateVanillaTab(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            event.accept(LARGE_SKIFF.get());
+        }
+    }
 
     private EngineItems() {}
 }

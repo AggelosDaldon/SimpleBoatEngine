@@ -77,9 +77,9 @@ public final class MotorWorldRenderer {
             }
             if (status.getBoolean("PoleLightInstalled")) {
                 pose.pushPose();
-                // Standard boat: slightly closer to its center than in v0.1.9.
-                // Skiff: independently positioned over the long port stern rail.
-                pose.translate(skiff ? -0.88f : -0.46f,
+                // Bring the pole base inboard so the mount rests fully on the rail.
+                // The skiff keeps its own longer-hull attachment coordinates.
+                pose.translate(skiff ? -0.74f : -0.32f,
                     skiff ? 0.53f : boat.getBbHeight() * 0.98f,
                     skiff ? 2.10f : 0.96f);
                 pose.scale(1.3f, 1.3f, 1.3f);

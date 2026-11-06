@@ -11,6 +11,10 @@ this project. It does not require other vehicle mods or use their source/assets.
   **Large Fishing Skiff (Test)**.
 - The new skiff is a separately spawned boat, placed on a water surface from
   its Creative-tab item (or `/give @s simpleboatengine:large_fishing_skiff`).
+  Its dedicated inventory icon appears in both the mod's creative tab and
+  vanilla **Tools & Utilities**. Use exactly one current Simple Boat Engine
+  JAR in `mods/` when testing; Forge cannot register newer items from an older
+  installed version.
   It uses the supplied 73-cuboid, 128px Blockbench model, has a driver seat
   toward the stern and a second seat near the bow, and retains vanilla boat
   buoyancy and steering. Vanilla boats remain available and unchanged.
