@@ -22,7 +22,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
 
     private BoatCustomizerMenu(int id, Inventory inventory, BlockPos pos) {
         this(id, inventory, inventory.player.level().getBlockEntity(pos) instanceof BoatCustomizerBlockEntity be
-            ? be : new SimpleContainer(3), pos);
+            ? be : new SimpleContainer(4), pos);
     }
 
     public BoatCustomizerMenu(int id, Inventory inventory, BoatCustomizerBlockEntity station) {
@@ -49,6 +49,12 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
                 return EngineItems.woodStyleFor(stack) > 0;
             }
         });
+        addSlot(new Slot(data, 3, 267, 146) {
+            @Override public boolean mayPlace(ItemStack stack) {
+                return stack.getItem() instanceof DyeItem
+                    || stack.is(net.minecraft.world.item.Items.GLOW_INK_SAC);
+            }
+        });
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++)
                 addSlot(new Slot(inventory, col + row * 9 + 9,
@@ -62,6 +68,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     public ItemStack boatItem() { return container.getItem(0); }
     public ItemStack dyeItem() { return container.getItem(1); }
     public ItemStack woodItem() { return container.getItem(2); }
+    public ItemStack nameDyeItem() { return container.getItem(3); }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
@@ -69,8 +76,8 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         if (!slot.hasItem()) return ItemStack.EMPTY;
         ItemStack original = slot.getItem();
         ItemStack copy = original.copy();
-        if (index < 3) {
-            if (!moveItemStackTo(original, 3, 39, true)) return ItemStack.EMPTY;
+        if (index < 4) {
+            if (!moveItemStackTo(original, 4, 40, true)) return ItemStack.EMPTY;
         } else if (original.getItem() instanceof SkiffBoatItem && !slots.get(0).hasItem()) {
             if (!moveItemStackTo(original, 0, 1, false)) return ItemStack.EMPTY;
         } else if (original.getItem() instanceof DyeItem || original.is(net.minecraft.world.item.Items.GLOW_INK_SAC)) {

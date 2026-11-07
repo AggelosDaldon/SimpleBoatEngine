@@ -58,20 +58,32 @@ public final class SkiffMesh {
         String[] woodNames = {"oak","spruce","birch","jungle","acacia",
             "dark_oak","mangrove","cherry","bamboo"};
         ResourceLocation woodAtlas = null;
+        ResourceLocation innerPlanks = null;
         if (woodStyle > 0 && woodStyle <= woodNames.length) {
             String name = woodNames[woodStyle - 1];
             woodAtlas = new ResourceLocation("minecraft", "textures/block/stripped_"
                 + name + (name.equals("bamboo") ? "_block.png" : "_log.png"));
+            innerPlanks = new ResourceLocation("minecraft",
+                "textures/block/" + name + "_planks.png");
         }
         for (int index = 0; index < parts.length; index++) {
             float[] part = parts[index];
             int category = channels[index];
             int selected = category >= 1 && category <= paints.length ? paints[category - 1] : -1;
+            // Only the structural hull and seating use stripped logs. Interior
+            // walls use the native Minecraft planks texture. White trim, floor,
+            // lids and the storage-2 panel retain their original whites.
             boolean strippedWood = selected < 0 && woodAtlas != null
-                && (category == 1 || category == 2 || category == 5 || category == 7);
+                && (category == 1 || category == 5 || category == 7);
+            ResourceLocation material = category == 7 ? innerPlanks : woodAtlas;
+            boolean defaultMarine = selected < 0 && woodStyle > 0 && category == 6;
             VertexConsumer output = buffers.getBuffer(RenderType.entityCutoutNoCull(
-                strippedWood ? woodAtlas : selected < 0 ? original : neutral));
+                defaultMarine ? neutral : strippedWood ? material :
+                selected < 0 ? original : neutral));
             int red = 255, green = 255, blue = 255;
+            if (defaultMarine) {
+                red = 21; green = 52; blue = 92;
+            }
             if (selected >= 0) {
                 if (category == 6) {
                     // Marine antifouling: original teal plus four curated colors.

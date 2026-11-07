@@ -32,8 +32,8 @@ public final class BoatInteractionTarget {
     /** The custom 'storage 2' access area immediately behind the raised bow deck. */
     public static boolean aimedAtStorage2(BlueFishingBoat boat, Vec3 eye, Vec3 view, double reach) {
         return target(boat, eye, view, reach,
-            new AABB(-0.48, BoatMounts.HULL_Y + 6.2 / 16.0,
-                -1.32, 0.48, BoatMounts.HULL_Y + 14.0 / 16.0, -0.44));
+            new AABB(-6.26 / 16.0, BoatMounts.HULL_Y + 6.4 / 16.0,
+                -20.0 / 16.0, 6.06 / 16.0, BoatMounts.HULL_Y + 11.7 / 16.0, -7.4 / 16.0));
     }
 
     /** Extended clickable shape; vanilla boat pick box stops well before the bow. */

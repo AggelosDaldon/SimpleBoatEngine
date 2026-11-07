@@ -10,14 +10,14 @@ public final class BoatMounts {
     // gunwale as a usable surface. The old +0.24 left the antifouling exposed.
     // The source waterline marker rises to 3.65/16 on the underwater hull.
     // Keep the water surface below the 4.95/16 interior floor.
-    public static final float HULL_Y = 0.26f;
+    public static final float HULL_Y = 0.10f;
 
     private BoatMounts() {}
 
     public static Mount motor(Boat boat) {
         // Motor front edge intersects the stern by ~0.15 block; propeller
         // spins below the waterline rather than in the air.
-        if (boat instanceof BlueFishingBoat) return new Mount(0f, 0.27f, 2.55f);
+        if (boat instanceof BlueFishingBoat) return new Mount(0f, 0.38f, 2.55f);
         if (boat instanceof SkiffBoat) return new Mount(0f, 1.18f, 3.12f);
         if (boat.getVariant() == Boat.Type.BAMBOO)
             return new Mount(0f, boat.getBbHeight() * 0.7f, 1.12f);

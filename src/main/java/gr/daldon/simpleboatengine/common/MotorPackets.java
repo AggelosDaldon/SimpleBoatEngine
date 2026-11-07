@@ -193,13 +193,13 @@ public final class MotorPackets {
                         workshop.setItem(2, material);
                     }
                 } else if (msg.channel == -2 || msg.channel == -3) {
-                    ItemStack input = workshop.getItem(1);
+                    ItemStack input = workshop.getItem(3);
                     if (msg.channel == -2 && input.getItem() instanceof DyeItem dye) {
                         if (BoatPaint.nameColor(item) != dye.getDyeColor().getId()) {
                             BoatPaint.setNameColor(item, dye.getDyeColor().getId());
                             if (!player.getAbilities().instabuild) {
                                 input.shrink(1);
-                                workshop.setItem(1, input);
+                                workshop.setItem(3, input);
                             }
                         }
                     } else if (msg.channel == -3 && input.is(net.minecraft.world.item.Items.GLOW_INK_SAC)) {

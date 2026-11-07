@@ -18,7 +18,7 @@ import net.minecraft.world.item.DyeItem;
 /** Small, readable workstation with direct drag-to-rotate boat preview. */
 public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCustomizerMenu> {
     private static final String[] PARTS = {
-        "Hull", "Floor", "Stripe", "Hatch lid", "Seats", "Antifouling", "Inner walls"
+        "Hull", "Floor", "Stripe", "Hatch lid", "Seats", "Antifouling", "Inner walls", "Name"
     };
     private static final int[] MARINE = {0x14585D,0x15345C,0x314238,0x522A32,0x292D35};
     private int selected, marineColor;
@@ -44,9 +44,14 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         addRenderableWidget(Button.builder(Component.literal(">"), b ->
             selected = (selected + 1) % PARTS.length)
             .bounds(leftPos + 108, topPos + 74, 25, 18).build());
-        addRenderableWidget(Button.builder(Component.literal("Apply dye"), b ->
-            send(selected, selected == BoatPaint.ANTIFOUL ? marineColor : -1, ""))
-            .bounds(leftPos + 12, topPos + 96, 121, 18).build());
+        addRenderableWidget(Button.builder(Component.literal("Apply dye / ink"), b -> {
+            if (selected == BoatPaint.CHANNELS) {
+                var ink = menu.nameDyeItem();
+                send(ink.is(net.minecraft.world.item.Items.GLOW_INK_SAC) ? -3 : -2, -1, "");
+            } else {
+                send(selected, selected == BoatPaint.ANTIFOUL ? marineColor : -1, "");
+            }
+        }).bounds(leftPos + 12, topPos + 96, 121, 18).build());
         addRenderableWidget(Button.builder(Component.literal("Apply wood"), b ->
             send(-4, -1, "")).bounds(leftPos + 12, topPos + 117, 121, 18).build());
         nameInput = new EditBox(font, leftPos + 12, topPos + 141,
@@ -58,10 +63,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         addRenderableWidget(nameInput);
         addRenderableWidget(Button.builder(Component.literal("Save"), b -> saveName())
             .bounds(leftPos + 153, topPos + 141, 47, 17).build());
-        addRenderableWidget(Button.builder(Component.literal("Name dye"), b ->
-            send(-2, -1, "")).bounds(leftPos + 207, topPos + 141, 86, 17).build());
-        addRenderableWidget(Button.builder(Component.literal("Glow ink"), b ->
-            send(-3, -1, "")).bounds(leftPos + 207, topPos + 162, 86, 17).build());
+
     }
 
     private void send(int channel, int color, String name) {
@@ -86,6 +88,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     }
     private int[] displayedPaints() {
         int[] paints = BoatPaint.all(menu.boatItem());
+        if (selected >= BoatPaint.CHANNELS) return paints;
         if (menu.dyeItem().getItem() instanceof DyeItem dye) {
             paints[selected] = selected == BoatPaint.ANTIFOUL
                 ? marineColor : dye.getDyeColor().getId();
@@ -108,7 +111,8 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         int style = currentWoodStyle(boat);
         BlueBoatMesh.draw(g.pose(), g.bufferSource(), LightTexture.FULL_BRIGHT,
             style, displayedPaints());
-        if (!(menu.dyeItem().getItem() instanceof DyeItem)) {
+        if (selected < BoatPaint.CHANNELS
+            && !(menu.dyeItem().getItem() instanceof DyeItem)) {
             SkiffMesh.highlight(g.pose(), g.bufferSource(), LightTexture.FULL_BRIGHT,
                 BlueBoatMesh.texture(style), BlueBoatMeshData.PARTS,
                 BlueBoatMeshData.CHANNELS, selected + 1);
@@ -132,6 +136,9 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
             g.fill(leftPos + x - 1, topPos + 26, leftPos + x + 17,
                 topPos + 44, 0xFFC1AF96);
         }
+        // Independent name dye / glow-ink input.
+        g.fill(leftPos + 265, topPos + 144, leftPos + 285, topPos + 164, 0xFF231A14);
+        g.fill(leftPos + 266, topPos + 145, leftPos + 284, topPos + 163, 0xFFC1AF96);
         for (int i = 0; i < 36; i++) {
             int x = leftPos + 74 + (i % 9) * 18;
             int y = topPos + (i < 27 ? 193 + i / 9 * 18 : 251);
@@ -153,8 +160,9 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         g.drawString(font, "Boat", 48, 31, 0xFFFFFFFF, false);
         g.drawString(font, "Dye / Glow", 173, 31, 0xFFFFFFFF, false);
         g.drawString(font, "Wood", 245, 31, 0xFFFFFFFF, false);
-        g.drawString(font, PARTS[selected], 42, 59, 0xFFFFE6AD, false);
+        g.drawCenteredString(font, PARTS[selected], 72, 79, 0xFFFFE6AD);
         g.drawString(font, "Drag to rotate", 176, 57, 0xFFF4E3C5, false);
+        g.drawString(font, "Name dye", 222, 135, 0xFFFFFFFF, false);
         g.drawString(font, playerInventoryTitle, 75, 182, 0xFFFFFFFF, false);
     }
 
@@ -162,7 +170,9 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         if (button == 0 && mx >= leftPos + 145 && mx <= leftPos + 304
             && my >= topPos + 53 && my <= topPos + 139) {
             angle += (float) dx * 1.8f;
-            pitch = Math.max(-78f, Math.min(-15f, pitch + (float)dy * 0.8f));
+            pitch -= (float) dy * 0.8f;
+            if (pitch > 180f) pitch -= 360f;
+            if (pitch < -180f) pitch += 360f;
             return true;
         }
         return super.mouseDragged(mx, my, button, dx, dy);
