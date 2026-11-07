@@ -61,6 +61,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     public BlockPos getBlockPos() { return blockPos; }
     public ItemStack boatItem() { return container.getItem(0); }
     public ItemStack dyeItem() { return container.getItem(1); }
+    public ItemStack woodItem() { return container.getItem(2); }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {

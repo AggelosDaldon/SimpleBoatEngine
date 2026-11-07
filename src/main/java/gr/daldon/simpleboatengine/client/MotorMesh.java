@@ -31,18 +31,32 @@ public final class MotorMesh {
             "textures/block/iron_block.png"), CanisterMeshData.PARTS, 0, 0f, light);
     }
 
+    private static final ResourceLocation FISHING_ATLAS = new ResourceLocation(
+        SimpleBoatEngine.ID, "textures/entity/fishing_motor.png");
+
+    public static void drawFishing(PoseStack stack, MultiBufferSource source, float spin, int light) {
+        drawAtlasWithPivot(stack, source, FISHING_ATLAS, FishingMotorMeshData.PARTS,
+            256, spin, light, -6f, 8f);
+    }
+
     public static void draw(PoseStack stack, MultiBufferSource source, float spin, int light) {
         drawAtlas(stack, source, ATLAS, MotorMeshData.PARTS, 256, spin, light);
     }
 
     static void drawAtlas(PoseStack stack, MultiBufferSource source, ResourceLocation atlas,
                           float[][] pieces, int atlasSize, float spin, int light) {
+        drawAtlasWithPivot(stack, source, atlas, pieces, atlasSize, spin, light, -4f, 6f);
+    }
+
+    private static void drawAtlasWithPivot(PoseStack stack, MultiBufferSource source,
+                          ResourceLocation atlas, float[][] pieces, int atlasSize,
+                          float spin, int light, float pivotY, float pivotZ) {
         VertexConsumer vertices = source.getBuffer(RenderType.entityCutoutNoCull(atlas));
         for (float[] piece : pieces) {
             stack.pushPose();
             if (piece[10] > 0f) {
                 // The propeller group's pivot as authored in Blockbench.
-                rotateAroundZ(stack, 8f, -4f, 6f, spin);
+                rotateAroundZ(stack, 8f, pivotY, pivotZ, spin);
             }
             if (piece[6] != 0f) {
                 // Preserve each blade's resting 120/240 degree orientation.

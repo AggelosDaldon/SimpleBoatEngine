@@ -55,6 +55,21 @@ public final class EngineItems {
         return List.copyOf(boats);
     }
 
+    /** Match actual vanilla stripped wood to each boat material. */
+    public static int woodStyleFor(ItemStack stack) {
+        Item item = stack.getItem();
+        if (item == net.minecraft.world.item.Items.STRIPPED_OAK_LOG) return 1;
+        if (item == net.minecraft.world.item.Items.STRIPPED_SPRUCE_LOG) return 2;
+        if (item == net.minecraft.world.item.Items.STRIPPED_BIRCH_LOG) return 3;
+        if (item == net.minecraft.world.item.Items.STRIPPED_JUNGLE_LOG) return 4;
+        if (item == net.minecraft.world.item.Items.STRIPPED_ACACIA_LOG) return 5;
+        if (item == net.minecraft.world.item.Items.STRIPPED_DARK_OAK_LOG) return 6;
+        if (item == net.minecraft.world.item.Items.STRIPPED_MANGROVE_LOG) return 7;
+        if (item == net.minecraft.world.item.Items.STRIPPED_CHERRY_LOG) return 8;
+        if (item == net.minecraft.world.item.Items.STRIPPED_BAMBOO_BLOCK) return 9;
+        return -1;
+    }
+
     public static Item boatForStyle(int style) {
         return style > 0 && style <= WOOD_BOATS.size()
             ? WOOD_BOATS.get(style - 1).get() : BLUE_FISHING_BOAT.get();
