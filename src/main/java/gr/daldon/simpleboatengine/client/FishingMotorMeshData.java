@@ -1,6 +1,6 @@
 package gr.daldon.simpleboatengine.client;
 
-/** Generated from the dedicated fishing boat motor model. */
+/** Generated from the latest user-supplied fishing boat engine Blockbench model. */
 final class FishingMotorMeshData {
  static final float[][] PARTS = {
         {5.18f, 3.57f, 3.137f, 10.82f, 4.32f, 11.7817f, 0f, 8f, -1f, 7f, 0f, 96f, 0f, 112f, 16f, 96f, 0f, 112f, 16f, 96f, 0f, 112f, 16f, 96f, 0f, 112f, 16f, 32f, 0f, 48f, 16f, 208f, 0f, 224f, 16f}, // Lower cowling skirt
@@ -89,8 +89,9 @@ final class FishingMotorMeshData {
         {8.55f, 4f, 3.7117f, 8.81f, 5.56f, 3.9899f, 0f, 8f, -1f, 4.45f, 0f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f}, // Shift lever shaft
         {8.51f, 5.49f, 3.6368f, 8.87f, 5.88f, 4.0541f, 0f, 8f, -1f, 4.45f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 128f, 0f, 144f, 16f, 112f, 0f, 128f, 16f}, // Shift lever knuckle
         {8.48f, 5.76f, 3.5726f, 8.91f, 6.08f, 4.1183f, 0f, 8f, -1f, 4.45f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f}, // Lever rubber grip
-        {9.17f, 7.88f, 12.14f, 9.27f, 8f, 12.24f, 0f, 8f, -1f, 7f, 0f, 144f, 16f, 160f, 32f, 144f, 16f, 160f, 32f, 144f, 16f, 160f, 32f, 144f, 16f, 160f, 32f, 144f, 16f, 160f, 32f, 144f, 16f, 160f, 32f}, // smoke particle here
         {6.85f, 2.57f, 3.75f, 9.15f, 3.35f, 5.88f, 0f, 8f, -1f, 6.75f, 0f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 192f, 0f, 208f, 16f, 208f, 0f, 224f, 16f}, // Top mounting block
+        {6.85f, 1.57f, 2.75f, 7.15f, 2.35f, 5.88f, 0f, 8f, -2f, 6.75f, 0f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 192f, 0f, 208f, 16f, 208f, 0f, 224f, 16f}, // Top mounting block
+        {8.85f, 1.57f, 2.75f, 9.15f, 2.35f, 5.88f, 0f, 10f, -2f, 6.75f, 0f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 208f, 0f, 224f, 16f, 192f, 0f, 208f, 16f, 208f, 0f, 224f, 16f}, // Top mounting block
         {6.54f, 2.49f, 5.75f, 9.35f, 2.87f, 6.93f, 0f, 8f, -1f, 6.75f, 0f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 192f, 0f, 208f, 16f, 176f, 0f, 192f, 16f}, // Rear mounting arch top
         {7.04f, -0.31f, 5.15f, 8.96f, 3.03f, 7.23f, 0f, 8f, -1f, 8.5f, 0f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 192f, 0f, 208f, 16f, 208f, 0f, 224f, 16f}, // Upper drive column
         {6.91f, 0.53f, 5.56f, 7.25f, 2.52f, 6.93f, 0f, 8f, -1f, 8.5f, 0f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f}, // Upper vertical side rib L
@@ -117,10 +118,10 @@ final class FishingMotorMeshData {
         {7.33f, -9.41f, 4.82f, 8.67f, -8.68f, 5.51f, 0f, 8f, -4f, 10f, 0f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 192f, 0f, 208f, 16f, 224f, 0f, 240f, 16f}, // Gearbox front nose
         {7.28f, -9.46f, 7.89f, 8.72f, -8.81f, 8.34f, 0f, 8f, -4f, 10f, 0f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 176f, 0f, 192f, 16f, 208f, 0f, 224f, 16f}, // Gearbox rear slope
         {7.43f, -9.73f, 5.24f, 8.57f, -9.22f, 7.43f, 0f, 8f, -4f, 10f, 0f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 208f, 0f, 224f, 16f, 224f, 0f, 240f, 16f}, // Rudder skeg broad
-        {7.69f, -12f, 5.54f, 8.31f, -11.69f, 6.5f, 0f, 8f, -6f, 10f, 0f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f}, // Rudder skeg tip
+        {7.69f, -10f, 5.54f, 8.31f, -9.69f, 6.5f, 0f, 8f, -4f, 10f, 0f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f, 224f, 0f, 240f, 16f}, // Rudder skeg tip
         {6.57f, -2.79f, 5.19f, 9.43f, -2.6f, 6.02f, 0f, 8f, -1f, 10f, 0f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 64f, 0f, 80f, 16f, 192f, 0f, 208f, 16f}, // Cavitation plate forward taper
         {7.1f, -8.52f, 7.51f, 8.9f, -8.3f, 7.87f, 0f, 8f, -4f, 10f, 0f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f}, // Gear casing lower detail
-        {7.5f, -6.39f, 7.42f, 8.5f, -5.61f, 7.99f, 0f, 8f, -6f, 8f, 0f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f}, // Propeller rear axle
+        {7.5f, -6.39f, 6.42f, 8.5f, -5.61f, 7.99f, 0f, 8f, -6f, 8f, 0f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f, 192f, 0f, 208f, 16f}, // Propeller rear axle
         {7.72f, -5.61f, 7.8f, 8.33f, -5.08f, 8.19f, 0f, 8f, -6f, 8f, 1f, 240f, 0f, 256f, 16f, 240f, 0f, 256f, 16f, 240f, 0f, 256f, 16f, 16f, 16f, 32f, 32f, 240f, 0f, 256f, 16f, 16f, 16f, 32f, 32f}, // Blade 1 root
         {7.56f, -5.21f, 7.9f, 8.59f, -3.96f, 8.17f, 0f, 8f, -6f, 8f, 1f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 16f, 16f, 32f, 32f, 0f, 16f, 16f, 32f, 16f, 16f, 32f, 32f}, // Blade 1 wide wing
         {7.66f, -3.96f, 7.94f, 8.41f, -3.61f, 8.16f, 0f, 8f, -6f, 8f, 1f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 240f, 0f, 256f, 16f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f}, // Blade 1 shaped tip
