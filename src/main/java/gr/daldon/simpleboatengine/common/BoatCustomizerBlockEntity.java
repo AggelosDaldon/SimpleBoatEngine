@@ -45,7 +45,7 @@ public final class BoatCustomizerBlockEntity extends BlockEntity implements Cont
         return extracted;
     }
     @Override public ItemStack removeItemNoUpdate(int index) {
-        if (index < 0 || index > 1) return ItemStack.EMPTY;
+        if (index < 0 || index > 2) return ItemStack.EMPTY;
         ItemStack old = index == 0 ? boat : index == 1 ? dye : wood;
         if (index == 0) boat = ItemStack.EMPTY;
         else if (index == 1) dye = ItemStack.EMPTY;
