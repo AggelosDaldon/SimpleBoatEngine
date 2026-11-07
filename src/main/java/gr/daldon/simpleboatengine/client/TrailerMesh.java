@@ -28,9 +28,9 @@ public final class TrailerMesh {
         for (float[] part : TrailerMeshData.PARTS) {
             pose.pushPose();
             if (part[12] > 0.5f) {
-                // The two group pivots are (-12.35,-4,-7) and (+12.35,-4,-7).
+                // New Blockbench model: wheel centers at X +/-12.35, Y 3, Z -7.\n                // Their tread segments rotate around the axle's X axis.
                 float x = part[9] < 0 ? -12.35f : 12.35f;
-                rotate(pose, x, 3f, -7f, Axis.ZP, wheelAngle);
+                rotate(pose, x, 3f, -7f, Axis.XP, wheelAngle);
             }
             // Blockbench local cube rotations are around their own pivots.
             if (part[6] != 0) rotate(pose, part[9],part[10],part[11],Axis.XP,part[6]);
