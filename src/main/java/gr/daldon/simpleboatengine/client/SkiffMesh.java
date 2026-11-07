@@ -49,12 +49,28 @@ public final class SkiffMesh {
     static void drawPainted(PoseStack stack, MultiBufferSource buffers, int light,
                             ResourceLocation original, ResourceLocation neutral,
                             float[][] parts, byte[] channels, int[] paints) {
+        drawPainted(stack, buffers, light, original, neutral, parts, channels, paints, 0);
+    }
+
+    static void drawPainted(PoseStack stack, MultiBufferSource buffers, int light,
+                            ResourceLocation original, ResourceLocation neutral,
+                            float[][] parts, byte[] channels, int[] paints, int woodStyle) {
+        String[] woodNames = {"oak","spruce","birch","jungle","acacia",
+            "dark_oak","mangrove","cherry","bamboo"};
+        ResourceLocation woodAtlas = null;
+        if (woodStyle > 0 && woodStyle <= woodNames.length) {
+            String name = woodNames[woodStyle - 1];
+            woodAtlas = new ResourceLocation("minecraft", "textures/block/stripped_"
+                + name + (name.equals("bamboo") ? "_block.png" : "_log.png"));
+        }
         for (int index = 0; index < parts.length; index++) {
             float[] part = parts[index];
             int category = channels[index];
             int selected = category >= 1 && category <= paints.length ? paints[category - 1] : -1;
+            boolean strippedWood = selected < 0 && woodAtlas != null
+                && (category == 1 || category == 2 || category == 5 || category == 7);
             VertexConsumer output = buffers.getBuffer(RenderType.entityCutoutNoCull(
-                selected < 0 ? original : neutral));
+                strippedWood ? woodAtlas : selected < 0 ? original : neutral));
             int red = 255, green = 255, blue = 255;
             if (selected >= 0) {
                 if (category == 6) {
@@ -79,7 +95,7 @@ public final class SkiffMesh {
                 stack.mulPose(Axis.YP.rotationDegrees(part[6]));
                 stack.translate(-part[7] / 16f, -part[8] / 16f, -part[9] / 16f);
             }
-            cube(stack, output, part, light, red, green, blue);
+            cube(stack, output, part, light, red, green, blue, strippedWood);
             stack.popPose();
         }
     }
@@ -105,6 +121,11 @@ public final class SkiffMesh {
 
     private static void cube(PoseStack stack, VertexConsumer output, float[] part, int light,
                              int red, int green, int blue) {
+        cube(stack, output, part, light, red, green, blue, false);
+    }
+
+    private static void cube(PoseStack stack, VertexConsumer output, float[] part, int light,
+                             int red, int green, int blue, boolean strippedWood) {
         float x0 = part[0] / 16f, y0 = part[1] / 16f, z0 = part[2] / 16f;
         float x1 = part[3] / 16f, y1 = part[4] / 16f, z1 = part[5] / 16f;
         float[][] points = {
@@ -115,8 +136,11 @@ public final class SkiffMesh {
         Matrix3f normal = stack.last().normal();
         for (int face = 0; face < 6; face++) {
             int offset = 10 + face * 4;
-            float u0 = part[offset] / 128f, v0 = part[offset + 1] / 128f;
-            float u1 = part[offset + 2] / 128f, v1 = part[offset + 3] / 128f;
+            // Minecraft stripped-log textures are 16px tiles, not the boat's 128px atlas.
+            float u0 = strippedWood ? 0f : part[offset] / 128f;
+            float v0 = strippedWood ? 0f : part[offset + 1] / 128f;
+            float u1 = strippedWood ? 1f : part[offset + 2] / 128f;
+            float v1 = strippedWood ? 1f : part[offset + 3] / 128f;
             for (int index = 0; index < 4; index++) {
                 float[] point = points[CORNERS[face][index]];
                 float u = index <= 1 ? u0 : u1;

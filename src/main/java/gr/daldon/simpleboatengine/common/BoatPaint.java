@@ -14,10 +14,20 @@ public final class BoatPaint {
         "BoatPaintSeats", "BoatPaintAntifoul", "BoatPaintLining"
     };
     private static final String NAME = "BoatCustomName";
+    private static final String WOOD = "BoatWoodStyle";
     private static final String NAME_COLOR = "BoatNameColor";
     private static final String NAME_GLOW = "BoatNameGlowing";
 
     private BoatPaint() {}
+
+    public static int woodStyle(ItemStack stack, int baseStyle) {
+        CompoundTag tag = stack.getTag();
+        return tag != null && tag.contains(WOOD, 3)
+            ? Math.max(0, Math.min(9, tag.getInt(WOOD))) : baseStyle;
+    }
+    public static void setWoodStyle(ItemStack stack, int style) {
+        stack.getOrCreateTag().putInt(WOOD, Math.max(0, Math.min(9, style)));
+    }
 
     public static int hull(ItemStack item) { return get(item, HULL); }
     public static int floor(ItemStack item) { return get(item, FLOOR); }

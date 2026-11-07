@@ -25,6 +25,12 @@ public final class MotorMesh {
     };
     private MotorMesh() {}
 
+    /** Reuse the canister cuboids with Minecraft iron-block surfaces. */
+    public static void drawSteelCanister(PoseStack stack, MultiBufferSource source, int light) {
+        drawAtlas(stack, source, new ResourceLocation("minecraft",
+            "textures/block/iron_block.png"), CanisterMeshData.PARTS, 0, 0f, light);
+    }
+
     public static void draw(PoseStack stack, MultiBufferSource source, float spin, int light) {
         drawAtlas(stack, source, ATLAS, MotorMeshData.PARTS, 256, spin, light);
     }
@@ -66,8 +72,10 @@ public final class MotorMesh {
         Matrix3f normal = stack.last().normal();
         for (int face = 0; face < CORNERS.length; face++) {
             int uvOffset = 11 + face * 4;
-            float u0 = b[uvOffset] / atlasSize, v0 = b[uvOffset + 1] / atlasSize;
-            float u1 = b[uvOffset + 2] / atlasSize, v1 = b[uvOffset + 3] / atlasSize;
+            float u0 = atlasSize == 0 ? 0f : b[uvOffset] / atlasSize;
+            float v0 = atlasSize == 0 ? 0f : b[uvOffset + 1] / atlasSize;
+            float u1 = atlasSize == 0 ? 1f : b[uvOffset + 2] / atlasSize;
+            float v1 = atlasSize == 0 ? 1f : b[uvOffset + 3] / atlasSize;
             for (int vertex = 0; vertex < 4; vertex++) {
                 float[] point = p[CORNERS[face][vertex]];
                 float u = vertex <= 1 ? u0 : u1;

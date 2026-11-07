@@ -105,8 +105,8 @@ public final class ServerMotorEvents {
                 data.getFloat("Fuel") + MotorData.TANK_CAPACITY));
             if (!player.getAbilities().instabuild) {
                 item.shrink(1);
-                ItemStack bucket = new ItemStack(Items.BUCKET);
-                if (!player.getInventory().add(bucket)) player.drop(bucket, false);
+                ItemStack emptyCanister = new ItemStack(EngineItems.EMPTY_FUEL_CANISTER.get());
+                if (!player.getInventory().add(emptyCanister)) player.drop(emptyCanister, false);
             }
             notify(player, "Fuel: " + (int) data.getFloat("Fuel") + " / " + MotorData.capacity(data));
             click(boat);

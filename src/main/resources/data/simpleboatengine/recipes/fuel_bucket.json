@@ -1,10 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [" C ", "RBR", " C "],
+  "pattern": [
+    " C ",
+    "RER",
+    " C "
+  ],
   "key": {
-    "C": { "item": "minecraft:coal" },
-    "B": { "item": "minecraft:bucket" },
-    "R": { "item": "minecraft:redstone" }
+    "C": {
+      "item": "minecraft:coal"
+    },
+    "E": {
+      "item": "simpleboatengine:empty_fuel_canister"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
   },
-  "result": { "item": "simpleboatengine:fuel_bucket", "count": 1 }
+  "result": {
+    "item": "simpleboatengine:fuel_bucket",
+    "count": 1
+  }
 }

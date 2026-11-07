@@ -47,8 +47,12 @@ public final class MotorWorldRenderer {
             int throttle = Math.max(0, Math.min(10, status.getInt("Throttle")));
             float angle = status.getBoolean("Running")
                 ? (boat.tickCount + tick) * (0.12f + throttle * 0.048f) : 0f;
-            MotorMesh.draw(pose, buffers, angle,
-                LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+            if (boat instanceof gr.daldon.simpleboatengine.common.BlueFishingBoat)
+                MotorMesh.drawFishing(pose, buffers, angle,
+                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+            else
+                MotorMesh.draw(pose, buffers, angle,
+                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
             pose.popPose();
 
             if (status.getBoolean("CanisterInstalled")) {

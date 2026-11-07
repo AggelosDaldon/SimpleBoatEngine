@@ -22,7 +22,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
 
     private BoatCustomizerMenu(int id, Inventory inventory, BlockPos pos) {
         this(id, inventory, inventory.player.level().getBlockEntity(pos) instanceof BoatCustomizerBlockEntity be
-            ? be : new SimpleContainer(2), pos);
+            ? be : new SimpleContainer(3), pos);
     }
 
     public BoatCustomizerMenu(int id, Inventory inventory, BoatCustomizerBlockEntity station) {
@@ -33,24 +33,29 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         super(EngineMenus.CUSTOMIZER.get(), id);
         container = data;
         blockPos = pos;
-        addSlot(new Slot(data, 0, 30, 32) {
+        addSlot(new Slot(data, 0, 28, 27) {
             @Override public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof SkiffBoatItem;
             }
             @Override public int getMaxStackSize() { return 1; }
         });
-        addSlot(new Slot(data, 1, 256, 32) {
+        addSlot(new Slot(data, 1, 148, 27) {
             @Override public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof DyeItem || stack.is(net.minecraft.world.item.Items.GLOW_INK_SAC);
+            }
+        });
+        addSlot(new Slot(data, 2, 272, 27) {
+            @Override public boolean mayPlace(ItemStack stack) {
+                return EngineItems.woodStyleFor(stack) > 0;
             }
         });
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++)
                 addSlot(new Slot(inventory, col + row * 9 + 9,
-                    65 + col * 18, 184 + row * 18));
+                    75 + col * 18, 194 + row * 18));
         }
         for (int col = 0; col < 9; col++)
-            addSlot(new Slot(inventory, col, 65 + col * 18, 242));
+            addSlot(new Slot(inventory, col, 75 + col * 18, 252));
     }
 
     public BlockPos getBlockPos() { return blockPos; }
@@ -63,12 +68,14 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         if (!slot.hasItem()) return ItemStack.EMPTY;
         ItemStack original = slot.getItem();
         ItemStack copy = original.copy();
-        if (index < 2) {
-            if (!moveItemStackTo(original, 2, 38, true)) return ItemStack.EMPTY;
+        if (index < 3) {
+            if (!moveItemStackTo(original, 3, 39, true)) return ItemStack.EMPTY;
         } else if (original.getItem() instanceof SkiffBoatItem && !slots.get(0).hasItem()) {
             if (!moveItemStackTo(original, 0, 1, false)) return ItemStack.EMPTY;
         } else if (original.getItem() instanceof DyeItem || original.is(net.minecraft.world.item.Items.GLOW_INK_SAC)) {
             if (!moveItemStackTo(original, 1, 2, false)) return ItemStack.EMPTY;
+        } else if (EngineItems.woodStyleFor(original) > 0) {
+            if (!moveItemStackTo(original, 2, 3, false)) return ItemStack.EMPTY;
         } else return ItemStack.EMPTY;
         if (original.isEmpty()) slot.set(ItemStack.EMPTY);
         else slot.setChanged();

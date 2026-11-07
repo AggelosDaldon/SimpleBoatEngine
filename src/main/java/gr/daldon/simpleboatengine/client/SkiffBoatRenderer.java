@@ -41,10 +41,16 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
             int rgb = DyeColor.byId(blue.getNameColor()).getTextColor();
             int textLight = blue.nameGlows() ? LightTexture.FULL_BRIGHT : light;
             for (int side : new int[]{-1, 1}) {
+                // Named Blockbench panels:
+                // origin (-5.55,9.275,-33) yaw -52.7836 (port)
+                // origin (+5.55,9.275,-33) yaw +52.7836 (starboard).
+                // Rotate around the authored pivot, then step to the outer face.
                 pose.pushPose();
-                pose.translate(side * 0.46, 0.63, -2.06);
-                pose.mulPose(Axis.YP.rotationDegrees(side < 0 ? -127.2f : 127.2f));
-                float size = Math.min(0.009f, 0.72f / Math.max(1, font.width(name)));
+                pose.translate(side * 5.55 / 16.0, 9.275 / 16.0, -33.0 / 16.0);
+                pose.mulPose(Axis.YP.rotationDegrees(side * 52.7836f));
+                pose.translate(side * 1.12 / 16.0, 0, 0);
+                pose.mulPose(Axis.YP.rotationDegrees(side * 90f));
+                float size = Math.min(0.010f, 0.73f / Math.max(1, font.width(name)));
                 pose.scale(size, -size, size);
                 font.drawInBatch(Component.literal(name), -font.width(name) / 2f,
                     -font.lineHeight / 2f, rgb, false, pose.last().pose(),

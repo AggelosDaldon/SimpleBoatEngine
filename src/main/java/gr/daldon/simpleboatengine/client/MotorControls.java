@@ -134,11 +134,11 @@ public final class MotorControls {
         // aboard, even without W. Vanilla player-controlled boats are client-simulated.
         Vec3 motion = boat.getDeltaMovement();
         double yaw = Math.toRadians(boat.getYRot());
-        double acceleration = throttle * 0.0073;
+        double acceleration = throttle * 0.0092;
         double vx = motion.x - Math.sin(yaw) * acceleration;
         double vz = motion.z + Math.cos(yaw) * acceleration;
         double speed = Math.hypot(vx, vz);
-        double maximum = 0.091 * throttle;
+        double maximum = 0.105 * throttle;
         if (speed > maximum) {
             vx *= maximum / speed;
             vz *= maximum / speed;

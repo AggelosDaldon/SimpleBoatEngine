@@ -49,7 +49,7 @@ public class SkiffBoat extends Boat {
             // BlueFishingBoat overrides the two local positions for its side seat.
             move.accept(entity,
                 getX() + local.x * Math.cos(yaw) + local.z * Math.sin(yaw),
-                y + (this instanceof BlueFishingBoat ? 0.54 : 0.71),
+                y + (this instanceof BlueFishingBoat ? 0.33 : 0.71),
                 getZ() - local.x * Math.sin(yaw) + local.z * Math.cos(yaw));
         });
     }

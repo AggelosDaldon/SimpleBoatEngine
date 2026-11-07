@@ -1,9 +1,8 @@
 package gr.daldon.simpleboatengine.client;
 
-/** Generated from aggelos_blue_fishing_boat_v2.bbmodel; 99 elements. */
+/** Generated from Aggelos's latest v2 fishing boat model, 91 named elements. */
 final class BlueBoatMeshData {
-    static final float[][] PARTS = {
-        {-2.35f, 1f, -35.75f, 2.35f, 2.45f, -35.75f, 0f, 0f, 0f, 0f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 48f, 0f, 64f, 16f, 0f, 16f, 16f, 32f}, // FLAT BOTTOM - navy/teal plate 02
+ static final float[][] PARTS = {
         {-1.95f, 1f, -35.75f, 1.95f, 2.45f, -33.6f, 0f, 0f, 0f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f}, // FLAT BOTTOM - navy/teal plate 03
         {-3.5f, 1f, -33.6f, 4.5f, 2.45f, -31.5f, 0f, 0f, 0f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f}, // FLAT BOTTOM - navy/teal plate 04
         {-7.1f, 1f, -31.5f, 7.1f, 2.45f, -29.4f, 0f, 0f, 0f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f}, // FLAT BOTTOM - navy/teal plate 05
@@ -13,7 +12,7 @@ final class BlueBoatMeshData {
         {-12.8f, 1f, -21.2f, 12.8f, 2.45f, 34.45f, 0f, 0f, 0f, 0f, 113f, 0f, 128f, 16f, 113f, 0f, 128f, 16f, 113f, 0f, 128f, 16f, 113f, 0f, 128f, 16f, 113f, 0f, 128f, 16f, 113f, 0f, 128f, 16f}, // FLAT BOTTOM - navy/teal plate 10
         {-13.8f, 2f, 33.8f, 13.8f, 6.45f, 36.45f, 0f, 0f, 0f, 13f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f}, // FLAT BOTTOM - navy/teal plate 11
         {-13.45f, 1.85f, -21.1f, -11.5f, 3.65f, 34.1f, 0f, 0f, 0f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 112f, 0f, 128f, 16f}, // Flat-bottom side connection port
-        {11.5f, 1.85f, -21.1f, 13.45f, 3.65f, 34.1f, 0f, 0f, 0f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 48f, 0f, 64f, 16f, 112f, 0f, 128f, 16f}, // water should not pass this y
+        {11.5f, 1.85f, -21.1f, 13.45f, 3.65f, 34.1f, 0f, 0f, 0f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 48f, 0f, 64f, 16f, 112f, 0f, 128f, 16f}, // to nero na ftanei mexri edo max
         {-5.525f, 2.35f, -39.092f, 2.775f, 6f, -27.908f, -49.9979f, -4.375f, 4.675f, -33f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 0f, 16f, 16f, 32f, 112f, 0f, 128f, 16f}, // Port sea-green underwater hull 1
         {-4.675f, 3.5f, -37.9034f, -3.575f, 4.15f, -28.0966f, -47.9415f, -4.125f, 3.825f, -33f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f}, // Port lower dark edge 1
         {-11.55f, 2.35f, -31.0487f, 2.75f, 6f, -19.9513f, -28.5658f, -10.4f, 4.675f, -25.5f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 0f, 16f, 16f, 32f, 112f, 0f, 128f, 16f}, // Port sea-green underwater hull 2
@@ -28,10 +27,10 @@ final class BlueBoatMeshData {
         {12.1f, 4.35f, -21.4279f, 14.4f, 4.35f, 35.0279f, 0.8243f, 13.25f, 4.675f, 6.8f, 112f, 9.96226f, 128f, 9.96226f, 112f, 9.96226f, 128f, 9.96226f, 64f, 9.96226f, 80f, 9.96226f, 112f, 9.96226f, 128f, 9.96226f, 64f, 0f, 80f, 16f, 112f, 0f, 128f, 16f}, // Starboard sea-green underwater hull 4
         {12.1f, 4.35f, -21.4279f, 14.4f, 6f, 35.0279f, 0.8243f, 13.25f, 4.675f, 6.8f, 112f, 0f, 128f, 9.96226f, 112f, 0f, 128f, 9.96226f, 64f, 0f, 80f, 9.96226f, 112f, 0f, 128f, 9.96226f, 64f, 0f, 80f, 16f, 112f, 0f, 128f, 16f}, // Starboard sea-green underwater hull 4
         {12.2f, 3.5f, -21.4279f, 13.3f, 4.15f, 35.0279f, 0.8243f, 12.75f, 3.825f, 6.8f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f}, // Starboard lower dark edge 3
-        {-6.65f, 5.6f, -40.3851f, -4.45f, 12.95f, -27.6149f, -52.7836f, -5.55f, 9.275f, -33f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // boat name here in the top half
+        {-6.65f, 5.6f, -40.3851f, -4.45f, 12.95f, -27.6149f, -52.7836f, -5.55f, 9.275f, -33f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // boat name here in the top half(y rotation -52.7836)
         {-13.05f, 5.6f, -31.0487f, -10.85f, 12.95f, -19.9513f, -28.5658f, -11.95f, 9.275f, -25.5f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // room for red lamp(upperhalf)
         {-15.9f, 5.6f, -21.4279f, -13.7f, 12.95f, 35.0279f, -0.8243f, -14.8f, 9.275f, 6.8f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // Port deep-blue upper hull 3
-        {4.45f, 5.6f, -40.3851f, 6.65f, 12.95f, -27.6149f, 52.7836f, 5.55f, 9.275f, -33f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // boat name gere in the top half
+        {4.45f, 5.6f, -40.3851f, 6.65f, 12.95f, -27.6149f, 52.7836f, 5.55f, 9.275f, -33f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // boat name gere in the top half (yrotation52.7836)
         {10.85f, 5.6f, -31.0487f, 13.05f, 12.95f, -19.9513f, 28.5658f, 11.95f, 9.275f, -25.5f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // room for green lamp(upperhalf)
         {13.7f, 5.6f, -21.4279f, 15.9f, 12.95f, 35.0279f, 0.8243f, 14.8f, 9.275f, 6.8f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // Starboard deep-blue upper hull 3
         {-7.32f, 8.15f, -41.3851f, -6.31f, 9.65f, -27.6149f, -52.7836f, -6.65f, 8.9f, -33f, 80f, 0f, 96f, 16f, 80f, 0f, 96f, 16f, 80f, 0f, 96f, 16f, 80f, 0f, 96f, 16f, 96f, 0f, 112f, 16f, 80f, 0f, 96f, 16f}, // Port solid white stripe 1
@@ -49,13 +48,6 @@ final class BlueBoatMeshData {
         {13.8f, 12.6f, -21.4279f, 16.1f, 14.25f, 35.0279f, 0.8243f, 14.95f, 13.425f, 6.8f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 16f, 0f, 32f, 16f, 64f, 0f, 80f, 16f}, // Starboard thick blue top gunwale 3
         {-15.8f, 5.9f, 34.2f, 15.8f, 12.85f, 37f, 0f, 0f, 8.375f, 35.6f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // piso meros
         {-16f, 12.5f, 33.8f, 16f, 14.3f, 37.1f, 0f, 0f, 13.4f, 35.45f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 16f, 0f, 32f, 16f, 64f, 0f, 80f, 16f}, // Dark blue stern gunwale
-        {-0.45f, 5.75f, -40.65f, 0.45f, 13.18f, -39.9f, 0f, 0f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // Pointed prow outer blue tip 1
-        {-0.55f, 13.18f, -40.65f, 0.55f, 13.81f, -39.9f, 0f, 0f, 0f, 0f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 16f, 0f, 32f, 16f, 64f, 0f, 80f, 16f}, // Bow top narrow blue prow lip 1
-        {-0.95f, 5.75f, -39.9f, 0.95f, 13.18f, -38.9f, 0f, 0f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // Pointed prow outer blue tip 2
-        {-1.05f, 13.18f, -39.9f, 1.05f, 13.81f, -38.9f, 0f, 0f, 0f, 0f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 64f, 0f, 80f, 16f, 16f, 0f, 32f, 16f, 64f, 0f, 80f, 16f}, // Bow top narrow blue prow lip 2
-        {-1.6f, 5.75f, -38.9f, 1.6f, 13.18f, -37.6f, 0f, 0f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // Pointed prow outer blue tip 3
-        {-0.62f, 8.15f, -40.72f, 0.62f, 9.65f, -39.45f, 0f, 0f, 0f, 0f, 80f, 0f, 96f, 16f, 80f, 0f, 96f, 16f, 80f, 0f, 96f, 16f, 80f, 0f, 96f, 16f, 96f, 0f, 112f, 16f, 80f, 0f, 96f, 16f}, // White stripe wraps around bow tip
-        {-0.58f, 2.45f, -40.52f, 0.58f, 5.45f, -36.2f, 0f, 0f, 0f, 0f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 112f, 0f, 128f, 16f, 0f, 16f, 16f, 32f, 112f, 0f, 128f, 16f}, // Teal lower prow tip
         {-1.65f, 12.64f, -36.2f, 1.65f, 13.27f, -34.5f, 0f, 0f, 0f, 0f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 16f, 0f, 32f, 16f, 32f, 0f, 48f, 16f}, // Dark blue closed forward deck section 01
         {-4.1f, 12.64f, -34.5f, 4.1f, 13.27f, -33.1f, 0f, 0f, 0f, 0f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 16f, 0f, 32f, 16f, 32f, 0f, 48f, 16f}, // Dark blue closed forward deck section 02
         {-5.7f, 12.64f, -33.1f, 5.7f, 13.27f, -31.7f, 0f, 0f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 16f, 0f, 32f, 16f, 0f, 0f, 16f, 16f}, // Dark blue closed forward deck section 03
@@ -95,14 +87,14 @@ final class BlueBoatMeshData {
         {-11.7f, 4.5f, -20f, -7.38f, 4.95f, 33.6f, 0f, -9.54f, 4.725f, 6.8f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // Light interior floor plank 1
         {-6.98f, 4.5f, -20f, -2.66f, 4.95f, 33.6f, 0f, -4.82f, 4.725f, 6.8f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 16f, 16f, 32f, 32f, 48f, 16f, 64f, 32f}, // Light interior floor plank 2
         {-2.26f, 4.5f, -20f, 2.06f, 4.95f, 33.6f, 0f, -0.1f, 4.725f, 6.8f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // Light interior floor plank 3
-        {-6.26f, 6.5f, -20f, 6.06f, 10.95f, -7.4f, 0f, -0.1f, 9.725f, 6.8f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // storage 2
+        {-6.26f, 6.5f, -20f, 6.06f, 10.95f, -7.4f, 0f, -0.1f, 9.725f, 6.8f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // double chest storage here
         {2.46f, 4.5f, -20f, 6.78f, 4.95f, 33.6f, 0f, 4.62f, 4.725f, 6.8f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 16f, 16f, 32f, 32f, 48f, 16f, 64f, 32f}, // Light interior floor plank 4
         {7.18f, 4.5f, -20f, 12.5f, 4.95f, 33.6f, 0f, 9.34f, 4.725f, 6.8f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // Light interior floor plank 5
         {-13.75f, 8.42f, 28.1f, 13.75f, 9.43f, 34.1f, 0f, 0f, 0f, 4f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f}, // drivers_seat
         {-1.2f, 4.95f, 30.2f, 1.2f, 8.42f, 32.65f, 0f, 0f, 0f, 4f, 0f, 32f, 16f, 48f, 0f, 32f, 16f, 48f, 0f, 32f, 16f, 48f, 0f, 32f, 16f, 48f, 32f, 16f, 48f, 32f, 0f, 32f, 16f, 48f}, // drivers_seat_support
         {-11.9f, 8.42f, 9f, -6.3f, 9.43f, 17.6f, 0f, 0f, 0f, 0f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f, 96f, 16f, 112f, 32f}, // passenger_seat
         {-10.5f, 4.95f, 10.5f, -7.55f, 8.42f, 16f, 0f, 0f, 0f, 0f, 0f, 32f, 16f, 48f, 0f, 32f, 16f, 48f, 0f, 32f, 16f, 48f, 0f, 32f, 16f, 48f, 32f, 16f, 48f, 32f, 0f, 32f, 16f, 48f}, // passenger_seat_support
-    };
-    static final byte[] CHANNELS = {6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 0, 1, 1, 0, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 2, 2, 2, 1, 2, 2, 5, 5, 5, 5};
-    private BlueBoatMeshData() {}
+ };
+ static final byte[] CHANNELS = {6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 0, 7, 7, 7, 7, 7, 7, 7, 2, 2, 2, 2, 1, 2, 2, 5, 5, 5, 5};
+ private BlueBoatMeshData() {}
 }

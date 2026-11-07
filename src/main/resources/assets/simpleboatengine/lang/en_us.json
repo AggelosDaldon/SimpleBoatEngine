@@ -1,6 +1,6 @@
 {
   "item.simpleboatengine.engine": "Boat Engine",
-  "item.simpleboatengine.fuel_bucket": "Fuel Bucket",
+  "item.simpleboatengine.fuel_bucket": "Steel Fuel Canister (Filled)",
   "item.simpleboatengine.fuel_canister": "Auxiliary Fuel Canister",
   "item.simpleboatengine.pole_light": "Automatic Boat Pole Light",
   "block.simpleboatengine.boat_customizer": "Boat Customization Station",
@@ -21,5 +21,6 @@
   "key.simpleboatengine.category": "Simple Boat Engine",
   "key.simpleboatengine.up": "Increase throttle",
   "key.simpleboatengine.down": "Decrease throttle",
-  "subtitles.simpleboatengine.motor_loop": "Boat engine humming"
+  "subtitles.simpleboatengine.motor_loop": "Boat engine humming",
+  "item.simpleboatengine.empty_fuel_canister": "Empty Steel Fuel Canister"
 }

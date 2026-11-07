@@ -8,14 +8,16 @@ public final class BoatMounts {
 
     // Lower the authored keel into the water, preserving the top of the blue
     // gunwale as a usable surface. The old +0.24 left the antifouling exposed.
-    public static final float HULL_Y = 0.12f;
+    // The source waterline marker rises to 3.65/16 on the underwater hull.
+    // Keep the water surface below the 4.95/16 interior floor.
+    public static final float HULL_Y = 0.26f;
 
     private BoatMounts() {}
 
     public static Mount motor(Boat boat) {
         // Motor front edge intersects the stern by ~0.15 block; propeller
         // spins below the waterline rather than in the air.
-        if (boat instanceof BlueFishingBoat) return new Mount(0f, 0.28f, 2.97f);
+        if (boat instanceof BlueFishingBoat) return new Mount(0f, 0.27f, 2.55f);
         if (boat instanceof SkiffBoat) return new Mount(0f, 1.18f, 3.12f);
         if (boat.getVariant() == Boat.Type.BAMBOO)
             return new Mount(0f, boat.getBbHeight() * 0.7f, 1.12f);
@@ -32,7 +34,7 @@ public final class BoatMounts {
 
     public static Mount poleLight(Boat boat) {
         // Pole foot sits on TOP of the outer rail, not down on the inner floor.
-        if (boat instanceof BlueFishingBoat) return new Mount(-0.94f, HULL_Y + 14.25f / 16f, 2.26f);
+        if (boat instanceof BlueFishingBoat) return new Mount(-0.935f, HULL_Y + 14.25f / 16f, 2.09f);
         if (boat instanceof SkiffBoat) return new Mount(-0.85f, 1.38f, 2.08f);
         // Slightly further inward, still on the rear rail of a vanilla boat.
         return new Mount(-0.57f, boat.getBbHeight() * 0.98f, 0.90f);

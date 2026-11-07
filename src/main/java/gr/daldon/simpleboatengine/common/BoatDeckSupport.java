@@ -72,6 +72,28 @@ public final class BoatDeckSupport {
             double x = dx * c - dz * s;
             double z = dx * s + dz * c;
 
+            // Player was already walking inside this boat: keep the sidewalls
+            // solid at floor level instead of teleporting a sinking player onto
+            // the top of the rail. Above the rail, players may still jump off.
+            if (track != null && track.boat == boat
+                && player.getY() < boat.getY() + RAIL - 0.15
+                && z >= -1.24 && z <= 2.15 && Math.abs(x) > 0.75
+                && Math.abs(x) < 1.15) {
+                double newX = Math.copySign(0.75, x);
+                double localDX = newX - x;
+                player.setPos(player.getX() + localDX * c,
+                    player.getY(), player.getZ() - localDX * s);
+                x = newX;
+            }
+            if (track != null && track.boat == boat
+                && player.getY() < boat.getY() + RAIL - 0.16
+                && z > 2.08 && z < 2.47 && Math.abs(x) < 0.90) {
+                double localDZ = 2.08 - z;
+                player.setPos(player.getX() + localDZ * s,
+                    player.getY(), player.getZ() + localDZ * c);
+                z = 2.08;
+            }
+
             // Distinct support heights: bow, inner floor, both side rails and
             // full stern transom. A wide flat AABB could not support these.
             boolean bow = z >= -2.42 && z < -0.50 && Math.abs(x) <=

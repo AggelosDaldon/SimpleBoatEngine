@@ -3,6 +3,7 @@ package gr.daldon.simpleboatengine.client;
 import com.mojang.math.Axis;
 import gr.daldon.simpleboatengine.common.BoatCustomizerMenu;
 import gr.daldon.simpleboatengine.common.BoatPaint;
+import gr.daldon.simpleboatengine.common.EngineItems;
 import gr.daldon.simpleboatengine.common.MotorPackets;
 import gr.daldon.simpleboatengine.common.SkiffBoatItem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,51 +15,53 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeItem;
 
-/** Compact workbench GUI: the selection controls its 3D preview and dye application. */
+/** Small, readable workstation with direct drag-to-rotate boat preview. */
 public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCustomizerMenu> {
     private static final String[] PARTS = {
-        "Hull", "Floor", "Stripe", "Hatch", "Seats", "Antifouling", "Inner walls"
+        "Hull", "Floor", "Stripe", "Hatch lid", "Seats", "Antifouling", "Inner walls"
     };
-    private static final int[] MARINE = {0x14585D, 0x15345C, 0x314238, 0x522A32, 0x292D35};
+    private static final int[] MARINE = {0x14585D,0x15345C,0x314238,0x522A32,0x292D35};
     private int selected, marineColor;
+    private float angle = 35f, pitch = -53f;
     private EditBox nameInput;
     private String lastName = "";
 
     public BoatCustomizerScreen(BoatCustomizerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        imageWidth = 294;
-        imageHeight = 267;
-        titleLabelX = 11;
+        imageWidth = 312;
+        imageHeight = 276;
+        inventoryLabelX = 75;
+        inventoryLabelY = 182;
+        titleLabelX = 10;
         titleLabelY = 8;
-        inventoryLabelX = 65;
-        inventoryLabelY = 172;
     }
 
     @Override protected void init() {
         super.init();
-        addRenderableWidget(Button.builder(Component.literal("< Prev"), b ->
-            selected = (selected + PARTS.length - 1) % PARTS.length
-        ).bounds(leftPos + 12, topPos + 56, 59, 18).build());
-        addRenderableWidget(Button.builder(Component.literal("Next >"), b ->
-            selected = (selected + 1) % PARTS.length
-        ).bounds(leftPos + 76, topPos + 56, 59, 18).build());
+        addRenderableWidget(Button.builder(Component.literal("<"), b ->
+            selected = (selected + PARTS.length - 1) % PARTS.length)
+            .bounds(leftPos + 12, topPos + 74, 25, 18).build());
+        addRenderableWidget(Button.builder(Component.literal(">"), b ->
+            selected = (selected + 1) % PARTS.length)
+            .bounds(leftPos + 108, topPos + 74, 25, 18).build());
         addRenderableWidget(Button.builder(Component.literal("Apply dye"), b ->
-            send(selected, selected == BoatPaint.ANTIFOUL ? marineColor : -1, "")
-        ).bounds(leftPos + 12, topPos + 108, 123, 19).build());
-
-        nameInput = new EditBox(font, leftPos + 12, topPos + 135,
-            123, 17, Component.literal("Boat name"));
+            send(selected, selected == BoatPaint.ANTIFOUL ? marineColor : -1, ""))
+            .bounds(leftPos + 12, topPos + 96, 121, 18).build());
+        addRenderableWidget(Button.builder(Component.literal("Apply wood"), b ->
+            send(-4, -1, "")).bounds(leftPos + 12, topPos + 117, 121, 18).build());
+        nameInput = new EditBox(font, leftPos + 12, topPos + 141,
+            136, 17, Component.literal("Boat name"));
         nameInput.setMaxLength(20);
-        nameInput.setHint(Component.literal("Name on bow"));
+        nameInput.setHint(Component.literal("Boat name"));
         nameInput.setValue(BoatPaint.name(menu.boatItem()));
         lastName = nameInput.getValue();
         addRenderableWidget(nameInput);
-        addRenderableWidget(Button.builder(Component.literal("Save name"), b ->
-            saveName()).bounds(leftPos + 141, topPos + 135, 74, 18).build());
+        addRenderableWidget(Button.builder(Component.literal("Save"), b -> saveName())
+            .bounds(leftPos + 153, topPos + 141, 47, 17).build());
         addRenderableWidget(Button.builder(Component.literal("Name dye"), b ->
-            send(-2, -1, "")).bounds(leftPos + 12, topPos + 154, 80, 17).build());
+            send(-2, -1, "")).bounds(leftPos + 207, topPos + 141, 86, 17).build());
         addRenderableWidget(Button.builder(Component.literal("Glow ink"), b ->
-            send(-3, -1, "")).bounds(leftPos + 96, topPos + 154, 80, 17).build());
+            send(-3, -1, "")).bounds(leftPos + 207, topPos + 162, 86, 17).build());
     }
 
     private void send(int channel, int color, String name) {
@@ -68,16 +71,20 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     private void saveName() {
         if (nameInput != null) send(-1, -1, nameInput.getValue());
     }
-    @Override public boolean keyPressed(int code, int scan, int mods) {
+    @Override public boolean keyPressed(int code, int scan, int modifiers) {
         if (nameInput != null && nameInput.isFocused() && (code == 257 || code == 335)) {
             saveName();
             nameInput.setFocused(false);
             return true;
         }
-        return super.keyPressed(code, scan, mods);
+        return super.keyPressed(code, scan, modifiers);
     }
 
-    private int[] previewPaints() {
+    private int currentWoodStyle(SkiffBoatItem boat) {
+        int pending = EngineItems.woodStyleFor(menu.woodItem());
+        return pending > 0 ? pending : BoatPaint.woodStyle(menu.boatItem(), boat.getHullStyle());
+    }
+    private int[] displayedPaints() {
         int[] paints = BoatPaint.all(menu.boatItem());
         if (menu.dyeItem().getItem() instanceof DyeItem dye) {
             paints[selected] = selected == BoatPaint.ANTIFOUL
@@ -88,82 +95,92 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         return paints;
     }
 
-    private void drawPreview(GuiGraphics g) {
+    private void preview(GuiGraphics g) {
         if (!(menu.boatItem().getItem() instanceof SkiffBoatItem boat)) return;
+        // Flush the GUI background before issuing textured 3D triangles.
         g.flush();
+        g.enableScissor(leftPos + 147, topPos + 53, leftPos + 303, topPos + 138);
         g.pose().pushPose();
-        g.pose().translate(leftPos + 219, topPos + 110, 350);
-        // GUI Y grows downward; a negative pitch gives a top-down view rather
-        // than the underside-only view seen in v0.3.0.
-        g.pose().mulPose(Axis.XP.rotationDegrees(-37f));
-        g.pose().mulPose(Axis.YP.rotationDegrees(34f));
-        g.pose().scale(29f, -29f, 29f);
+        g.pose().translate(leftPos + 226, topPos + 102, 330);
+        g.pose().mulPose(Axis.XP.rotationDegrees(pitch));
+        g.pose().mulPose(Axis.YP.rotationDegrees(angle));
+        g.pose().scale(22f, -22f, 22f);
+        int style = currentWoodStyle(boat);
         BlueBoatMesh.draw(g.pose(), g.bufferSource(), LightTexture.FULL_BRIGHT,
-            boat.getHullStyle(), previewPaints());
-        if (!(menu.dyeItem().getItem() instanceof DyeItem)
-            && selected != BoatPaint.ANTIFOUL) {
+            style, displayedPaints());
+        if (!(menu.dyeItem().getItem() instanceof DyeItem)) {
             SkiffMesh.highlight(g.pose(), g.bufferSource(), LightTexture.FULL_BRIGHT,
-                BlueBoatMesh.texture(boat.getHullStyle()), BlueBoatMeshData.PARTS,
+                BlueBoatMesh.texture(style), BlueBoatMeshData.PARTS,
                 BlueBoatMeshData.CHANNELS, selected + 1);
         }
         g.flush();
         g.pose().popPose();
+        g.disableScissor();
     }
 
     @Override protected void renderBg(GuiGraphics g, float tick, int mx, int my) {
-        g.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, 0xFF302820);
-        g.fill(leftPos + 4, topPos + 4, leftPos + imageWidth - 4,
-            topPos + imageHeight - 4, 0xFF987A5D);
-        g.fill(leftPos + 8, topPos + 23, leftPos + 286, topPos + 52, 0xFF44372F);
-        g.fill(leftPos + 8, topPos + 53, leftPos + 140, topPos + 172, 0xFF514337);
-        g.fill(leftPos + 141, topPos + 53, leftPos + 286, topPos + 133, 0xFF6C5C4A);
-        g.fill(leftPos + 8, topPos + 173, leftPos + 286, topPos + 263, 0xFF514337);
-        for (int x : new int[]{30, 256}) {
-            g.fill(leftPos + x - 2, topPos + 29,
-                leftPos + x + 18, topPos + 49, 0xFF21170F);
-            g.fill(leftPos + x - 1, topPos + 30,
-                leftPos + x + 17, topPos + 48, 0xFFBAA994);
+        g.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, 0xFF2A2622);
+        g.fill(leftPos + 4, topPos + 4, leftPos + 308, topPos + 272, 0xFF9C856C);
+        g.fill(leftPos + 8, topPos + 24, leftPos + 304, topPos + 51, 0xFF423A32);
+        g.fill(leftPos + 8, topPos + 53, leftPos + 139, topPos + 138, 0xFF51473B);
+        g.fill(leftPos + 145, topPos + 53, leftPos + 304, topPos + 138, 0xFF695B4B);
+        g.fill(leftPos + 8, topPos + 139, leftPos + 304, topPos + 180, 0xFF51473B);
+        g.fill(leftPos + 8, topPos + 181, leftPos + 304, topPos + 272, 0xFF51473B);
+        for (int x : new int[]{28, 148, 272}) {
+            g.fill(leftPos + x - 2, topPos + 25, leftPos + x + 18,
+                topPos + 45, 0xFF231A14);
+            g.fill(leftPos + x - 1, topPos + 26, leftPos + x + 17,
+                topPos + 44, 0xFFC1AF96);
         }
-        // Precisely match the 36 actual inventory slots in BoatCustomizerMenu.
         for (int i = 0; i < 36; i++) {
-            int x = leftPos + 64 + i % 9 * 18;
-            int y = topPos + (i < 27 ? 183 + i / 9 * 18 : 241);
-            g.fill(x, y, x + 19, y + 19, 0xFF221C16);
-            g.fill(x + 1, y + 1, x + 17, y + 17, 0xFFC5B5A0);
+            int x = leftPos + 74 + (i % 9) * 18;
+            int y = topPos + (i < 27 ? 193 + i / 9 * 18 : 251);
+            g.fill(x, y, x + 19, y + 19, 0xFF241C16);
+            g.fill(x + 1, y + 1, x + 17, y + 17, 0xFFC4B29A);
         }
-        if (selected == BoatPaint.ANTIFOUL) for (int i = 0; i < 5; i++) {
-            int x = leftPos + 153 + i * 25, y = topPos + 139;
-            g.fill(x - 2, y - 2, x + 21, y + 19,
-                marineColor == i ? 0xFFFFFFFF : 0xFF271A15);
-            g.fill(x, y, x + 19, y + 17, 0xFF000000 | MARINE[i]);
-        }
-        drawPreview(g);
+        if (selected == BoatPaint.ANTIFOUL)
+            for (int i = 0; i < MARINE.length; i++) {
+                int x = leftPos + 151 + i * 29, y = topPos + 116;
+                g.fill(x - 2, y - 2, x + 23, y + 22,
+                    marineColor == i ? 0xFFF5EACF : 0xFF292015);
+                g.fill(x, y, x + 21, y + 20, 0xFF000000 | MARINE[i]);
+            }
+        preview(g);
     }
 
     @Override protected void renderLabels(GuiGraphics g, int mx, int my) {
-        g.drawString(font, title, 11, 8, 0xFFFFFFFF, false);
-        g.drawString(font, "BOAT", 51, 34, 0xFFFFFFFF, false);
-        g.drawString(font, "DYE / GLOW", 176, 34, 0xFFFFFFFF, false);
-        g.drawString(font, "Part: " + PARTS[selected], 12, 83, 0xFFFFE6A4, false);
-        g.drawString(font, "Preview before applying", 147, 122, 0xFFEAD8B8, false);
-        g.drawString(font, playerInventoryTitle, 65, 172, 0xFFFFFFFF, false);
+        g.drawString(font, title, 10, 8, 0xFFFFFFFF, false);
+        g.drawString(font, "Boat", 48, 31, 0xFFFFFFFF, false);
+        g.drawString(font, "Dye / Glow", 173, 31, 0xFFFFFFFF, false);
+        g.drawString(font, "Wood", 245, 31, 0xFFFFFFFF, false);
+        g.drawString(font, PARTS[selected], 42, 59, 0xFFFFE6AD, false);
+        g.drawString(font, "Drag to rotate", 176, 57, 0xFFF4E3C5, false);
+        g.drawString(font, playerInventoryTitle, 75, 182, 0xFFFFFFFF, false);
     }
 
-    @Override public boolean mouseClicked(double mx, double my, int button) {
-        if (button == 0 && selected == BoatPaint.ANTIFOUL) {
-            int dx = (int) mx - leftPos - 153;
-            int dy = (int) my - topPos - 139;
-            if (dx >= 0 && dx < 125 && dy >= 0 && dy < 19 && dx % 25 < 19) {
-                marineColor = dx / 25;
+    @Override public boolean mouseDragged(double mx, double my, int button, double dx, double dy) {
+        if (button == 0 && mx >= leftPos + 145 && mx <= leftPos + 304
+            && my >= topPos + 53 && my <= topPos + 139) {
+            angle += (float) dx * 1.8f;
+            pitch = Math.max(-78f, Math.min(-15f, pitch + (float)dy * 0.8f));
+            return true;
+        }
+        return super.mouseDragged(mx, my, button, dx, dy);
+    }
+    @Override public boolean mouseClicked(double mx, double my, int btn) {
+        if (btn == 0 && selected == BoatPaint.ANTIFOUL) {
+            int dx = (int)mx - leftPos - 151, dy = (int)my - topPos - 116;
+            if (dx >= 0 && dx < 145 && dy >= 0 && dy < 22 && dx % 29 < 21) {
+                marineColor = dx / 29;
                 return true;
             }
         }
-        return super.mouseClicked(mx, my, button);
+        return super.mouseClicked(mx, my, btn);
     }
 
-    @Override public void render(GuiGraphics g, int mx, int my, float partial) {
+    @Override public void render(GuiGraphics g, int mx, int my, float tick) {
         renderBackground(g);
-        super.render(g, mx, my, partial);
+        super.render(g, mx, my, tick);
         renderTooltip(g, mx, my);
     }
     @Override protected void containerTick() {

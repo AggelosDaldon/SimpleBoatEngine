@@ -177,6 +177,21 @@ public final class MotorPackets {
                 if (!(item.getItem() instanceof SkiffBoatItem)) return;
                 if (msg.channel == -1) {
                     BoatPaint.setName(item, msg.name);
+                } else if (msg.channel == -4) {
+                    ItemStack material = workshop.getItem(2);
+                    int wood = EngineItems.woodStyleFor(material);
+                    if (wood < 1) return;
+                    int previous = item.getItem() instanceof SkiffBoatItem current
+                        ? BoatPaint.woodStyle(item, current.getHullStyle()) : 0;
+                    if (previous == wood) return;
+                    ItemStack replacement = new ItemStack(EngineItems.boatForStyle(wood));
+                    if (item.hasTag()) replacement.setTag(item.getTag().copy());
+                    BoatPaint.setWoodStyle(replacement, wood);
+                    item = replacement;
+                    if (!player.getAbilities().instabuild) {
+                        material.shrink(1);
+                        workshop.setItem(2, material);
+                    }
                 } else if (msg.channel == -2 || msg.channel == -3) {
                     ItemStack input = workshop.getItem(1);
                     if (msg.channel == -2 && input.getItem() instanceof DyeItem dye) {

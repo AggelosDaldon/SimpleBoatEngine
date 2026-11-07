@@ -37,13 +37,13 @@ public final class BlueBoatMesh {
 
     public static void draw(PoseStack stack, MultiBufferSource buffers, int light,
                             int style, int[] paints) {
-        boolean painted = false;
+        boolean painted = style > 0;
         for (int paint : paints) if (paint >= 0) painted = true;
         if (!painted) {
             draw(stack, buffers, light, style);
             return;
         }
         SkiffMesh.drawPainted(stack, buffers, light, texture(style), NEUTRAL_TEXTURE,
-            BlueBoatMeshData.PARTS, BlueBoatMeshData.CHANNELS, paints);
+            BlueBoatMeshData.PARTS, BlueBoatMeshData.CHANNELS, paints, style);
     }
 }

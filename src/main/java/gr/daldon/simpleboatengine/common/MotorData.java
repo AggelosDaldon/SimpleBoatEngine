@@ -7,7 +7,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 public final class MotorData {
     public static final int TANK_CAPACITY = 3000;
     public static final int EXTRA_CANISTER_CAPACITY = 3000;
-    public static final double FUEL_PER_BLOCK_AT_FULL_THROTTLE = TANK_CAPACITY / 5000.0;
+    public static final double FUEL_PER_BLOCK_AT_FULL_THROTTLE = TANK_CAPACITY / 8000.0;
     private static final String KEY = "SimpleBoatEngine";
 
     private MotorData() {}

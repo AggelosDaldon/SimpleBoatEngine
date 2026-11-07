@@ -59,6 +59,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         BoatPaint.setName(stack, getBoatName());
         BoatPaint.setNameColor(stack, getNameColor());
         BoatPaint.setNameGlow(stack, nameGlows());
+        BoatPaint.setWoodStyle(stack, getHullStyle());
         return stack;
     }
 
@@ -121,6 +122,17 @@ public final class BlueFishingBoat extends SkiffBoat {
     public String getBoatName() { return BoatPaint.name(extrasAsItem()); }
     public int getNameColor() { return BoatPaint.nameColor(extrasAsItem()); }
     public boolean nameGlows() { return BoatPaint.nameGlows(extrasAsItem()); }
+
+    public void setNameColor(int color) {
+        ItemStack temp = extrasAsItem();
+        BoatPaint.setNameColor(temp, color);
+        entityData.set(CUSTOMIZATION, temp.getTag().copy());
+    }
+    public void setNameGlow(boolean glowing) {
+        ItemStack temp = extrasAsItem();
+        BoatPaint.setNameGlow(temp, glowing);
+        entityData.set(CUSTOMIZATION, temp.getTag().copy());
+    }
 
     public void setBoatName(String name) {
         ItemStack temp = extrasAsItem();

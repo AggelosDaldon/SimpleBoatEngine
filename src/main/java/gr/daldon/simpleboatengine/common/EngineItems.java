@@ -26,8 +26,11 @@ public final class EngineItems {
 
     public static final RegistryObject<Item> ENGINE = ITEMS.register("engine",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    // Historical registry id retained so existing worlds and inventories still load.
     public static final RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket",
-        () -> new Item(new Item.Properties().stacksTo(1)));
+        () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> EMPTY_FUEL_CANISTER = ITEMS.register("empty_fuel_canister",
+        () -> new EngineItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> FUEL_CANISTER = ITEMS.register("fuel_canister",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
@@ -64,6 +67,7 @@ public final class EngineItems {
             .displayItems((parameters, output) -> {
                 output.accept(ENGINE.get());
                 output.accept(FUEL_BUCKET.get());
+                output.accept(EMPTY_FUEL_CANISTER.get());
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
                 output.accept(CUSTOMIZER.get());
