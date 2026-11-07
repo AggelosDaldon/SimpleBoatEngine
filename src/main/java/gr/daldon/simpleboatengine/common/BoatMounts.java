@@ -17,7 +17,7 @@ public final class BoatMounts {
     public static Mount motor(Boat boat) {
         // Motor front edge intersects the stern by ~0.15 block; propeller
         // spins below the waterline rather than in the air.
-        if (boat instanceof BlueFishingBoat) return new Mount(0f, 0.38f, 2.55f);
+        if (boat instanceof BlueFishingBoat) return new Mount(0f, 0.56f, 2.76f);
         if (boat instanceof SkiffBoat) return new Mount(0f, 1.18f, 3.12f);
         if (boat.getVariant() == Boat.Type.BAMBOO)
             return new Mount(0f, boat.getBbHeight() * 0.7f, 1.12f);

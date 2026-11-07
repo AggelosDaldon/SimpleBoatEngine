@@ -46,7 +46,7 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
                 // origin (+5.55,9.275,-33) yaw +52.7836 (starboard).
                 // Rotate around the authored pivot, then step to the outer face.
                 pose.pushPose();
-                pose.translate(side * 5.55 / 16.0, 12.1 / 16.0, -33.0 / 16.0);
+                pose.translate(side * 5.55 / 16.0, 10.5 / 16.0, -33.0 / 16.0);
                 pose.mulPose(Axis.YP.rotationDegrees(side * 52.7836f));
                 pose.translate(side * 1.12 / 16.0, 0, 0);
                 pose.mulPose(Axis.YP.rotationDegrees(side * 90f));
