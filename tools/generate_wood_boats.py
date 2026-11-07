@@ -57,9 +57,22 @@ def generate():
             out = Image.new("RGBA", image.size)
             out.putdata([replace(pixel, rgb) for pixel in image.getdata()])
             out.save(ASSETS / f"textures/{folder}/{wood}_fishing_boat.png", optimize=True)
+        # All boat item models must select the BEWLR 3D renderer, otherwise
+        # their painted NBT colors never appear in inventory or the hotbar.
         model = {
-            "parent": "minecraft:item/generated",
-            "textures": {"layer0": f"simpleboatengine:item/{wood}_fishing_boat"},
+            "parent": "minecraft:builtin/entity",
+            "textures": {"particle": f"simpleboatengine:item/{wood}_fishing_boat"},
+            "display": {
+                "gui": {"rotation": [24, 145, 0], "translation": [0, 0, 0],
+                        "scale": [1.35, 1.35, 1.35]},
+                "ground": {"rotation": [0, 90, 0], "translation": [0, 1, 0],
+                           "scale": [0.7, 0.7, 0.7]},
+                "fixed": {"rotation": [0, 180, 0], "scale": [1.1, 1.1, 1.1]},
+                "firstperson_righthand": {"rotation": [0, -45, 0],
+                                          "scale": [0.65, 0.65, 0.65]},
+                "firstperson_lefthand": {"rotation": [0, 45, 0],
+                                         "scale": [0.65, 0.65, 0.65]},
+            },
         }
         (ASSETS / f"models/item/{wood}_fishing_boat.json").write_text(
             json.dumps(model, indent=2) + "\n", encoding="utf-8")
