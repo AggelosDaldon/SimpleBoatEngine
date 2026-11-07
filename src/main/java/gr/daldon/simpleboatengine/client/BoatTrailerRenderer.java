@@ -58,7 +58,7 @@ public final class BoatTrailerRenderer extends EntityRenderer<BoatTrailer> {
             int[] paint = tag.getIntArray("Paints");
             if (paint.length != 7) paint = new int[]{-1,-1,-1,-1,-1,-1,-1};
             pose.pushPose();
-            pose.translate(0, .70f + BoatMounts.HULL_Y, 0);
+            pose.translate(0, .91f + BoatMounts.HULL_Y, 0);
             // Boat bow toward towing vehicle, engine hanging off trailer rear.
             pose.mulPose(Axis.YP.rotationDegrees(180f));
             BlueBoatMesh.draw(pose, buffers, light, style, paint);

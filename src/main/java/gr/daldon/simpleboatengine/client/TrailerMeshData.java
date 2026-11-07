@@ -1,7 +1,7 @@
 package gr.daldon.simpleboatengine.client;
-/** Generated from the newest user-supplied 119-cuboid Blockbench trailer model. */
+/** New 118-element fishing trailer from aggelos_blue_boat_v2_trailer_round_wheels(2).bbmodel. */
 public final class TrailerMeshData {
-    public static final float[][] PARTS = {
+ public static final float[][] PARTS = {
         {-9.5f, 7.5f, -31.5f, -7.5f, 9.5f, 20f, 0f, 0f, 0f, 0f, 9f, 0f, 0f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f}, // side rail left
         {7.5f, 7.5f, -31.5f, 9.5f, 9.5f, 20f, 0f, 0f, 0f, 0f, 9f, 0f, 0f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f}, // side rail right
         {-9.5f, 5.5f, -31.5f, 9.5f, 7.5f, -29.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f}, // rear crossmember
@@ -113,7 +113,6 @@ public final class TrailerMeshData {
         {9.65f, 6.3f, -12.1f, 14.05f, 7.28f, -11.35f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right fixed fender - rear lip
         {9.65f, 6.3f, -2.65f, 14.05f, 7.28f, -1.9f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right fixed fender - front lip
         {9.65f, 6f, -10.2f, 10.25f, 7.28f, -3.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f}, // right fixed fender - chassis mount
-        {-2f, -2f, 43.2f, 2f, -1f, 46.3f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // jack foot
         {-1f, 5.6f, 25f, 1f, 17f, 27f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f}, // winch post
         {-4.5f, 10f, 23.8f, -1f, 12f, 25.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // left bow stop arm
         {1f, 10f, 23.8f, 4.5f, 12f, 25.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // right bow stop arm
@@ -121,6 +120,6 @@ public final class TrailerMeshData {
         {3.5f, 9f, 23.5f, 5f, 13f, 25.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f}, // right bow stop pad
         {-9.3f, 6.5f, -31.8f, -8f, 7.8f, -30.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // left reflector
         {8f, 6.5f, -31.8f, 9.3f, 7.8f, -30.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // right reflector
-    };
-    private TrailerMeshData() {}
+ };
+ private TrailerMeshData() {}
 }

@@ -23,6 +23,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,6 +44,10 @@ public final class BoatTrailer extends Entity {
     private static final EntityDataAccessor<Float> WHEEL_ROT =
         SynchedEntityData.defineId(BoatTrailer.class, EntityDataSerializers.FLOAT);
     private float previousWheelRot;
+    private Vec3 lastTailPosition;
+    private double suspensionVelocity;
+    private static final double DRAWBAR_LENGTH = 3.75;
+    private static final double AXLE_OFFSET = -7.0 / 16.0;
 
     public BoatTrailer(EntityType<? extends BoatTrailer> type, Level level) {
         super(type, level);
@@ -60,7 +67,12 @@ public final class BoatTrailer extends Entity {
         return net.minecraft.util.Mth.lerp(partial, previousWheelRot, entityData.get(WHEEL_ROT));
     }
     public void coupleTo(Entity automobile) {
-        if (automobile(automobile)) towVehicle = automobile.getUUID();
+        if (automobile(automobile)) {
+            towVehicle = automobile.getUUID();
+            setYRot(automobile.getYRot());
+            lastTailPosition = tail(automobile);
+            suspensionVelocity = 0;
+        }
     }
     public static boolean automobile(Entity entity) {
         ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
@@ -68,8 +80,32 @@ public final class BoatTrailer extends Entity {
             && id.getPath().equals("automobile");
     }
     public static Vec3 couplingPosition(Entity car) {
-        return tail(car).add(new Vec3(0, 0, 3.75)
-            .yRot((float)Math.toRadians(180 - car.getYRot())));
+        return tail(car).subtract(tongue(car.getYRot()).scale(DRAWBAR_LENGTH));
+    }
+
+    /** The coupler is at the forward end of the modeled trailer tongue. */
+    private static Vec3 tongue(float yaw) {
+        return new Vec3(0, 0, 1).yRot((float) Math.toRadians(-yaw));
+    }
+
+    /** Sample the two trailer wheels against real block collision surfaces. */
+    private Double surfaceAt(Vec3 pos) {
+        Vec3 start = pos.add(0, 1.3, 0);
+        Vec3 end = pos.add(0, -2.1, 0);
+        var hit = level().clip(new ClipContext(start, end,
+            ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        return hit.getType() == HitResult.Type.BLOCK ? hit.getLocation().y : null;
+    }
+
+    private double desiredWheelHeight(float yaw) {
+        Vec3 axle = position().add(tongue(yaw).scale(AXLE_OFFSET));
+        Vec3 right = new Vec3(0.78, 0, 0).yRot((float)Math.toRadians(-yaw));
+        Double a = surfaceAt(axle.add(right));
+        Double b = surfaceAt(axle.subtract(right));
+        if (a != null && b != null) return (a + b) / 2;
+        if (a != null) return a;
+        if (b != null) return b;
+        return getY() - 0.20;
     }
 
 
@@ -233,14 +269,44 @@ public final class BoatTrailer extends Entity {
         if (towVehicle != null && level() instanceof ServerLevel server)
             tow = server.getEntity(towVehicle);
         if (tow != null && tow.isAlive() && automobile(tow)) {
+            // Automobility v0.4.2.b computes the rear attachment from getTailPos()
+            // and rotates its rear attachment independently. Implement the same
+            // articulated principle for our separate trailer Entity.
             Vec3 hitch = tail(tow);
-            Vec3 target = couplingPosition(tow);
-            // Smooth trailing motion; the car controls direction and speed.
-            Vec3 movement = target.subtract(position());
-            setDeltaMovement(movement.scale(0.55));
-            setPos(getX() + movement.x * 0.55, target.y - 0.35, getZ() + movement.z * 0.55);
-            setYRot(tow.getYRot());
+            Vec3 toHitch = hitch.subtract(position());
+            float carYaw = tow.getYRot();
+            float wantedYaw = (float)Math.toDegrees(Math.atan2(-toHitch.x, toHitch.z));
+            if (toHitch.horizontalDistanceSqr() < .16) wantedYaw = carYaw;
+            // Same 90 degree hinge limit as Automobility's RearAttachment.
+            float relativeYaw = Mth.wrapDegrees(wantedYaw - carYaw);
+            wantedYaw = carYaw + Mth.clamp(relativeYaw, -85f, 85f);
+            float deltaYaw = Mth.wrapDegrees(wantedYaw - getYRot());
+            setYRot(getYRot() + Mth.clamp(deltaYaw, -11f, 11f));
+
+            // Coupler must stay attached to the moving automobile frame,
+            // but the axle follows a different curve through corners.
+            Vec3 target = hitch.subtract(tongue(getYRot()).scale(DRAWBAR_LENGTH));
+            Vec3 displacement = target.subtract(position());
+            Vec3 currentVelocity = getDeltaMovement();
+            double vx = Mth.clamp(displacement.x * .38 + currentVelocity.x * .32, -.90, .90);
+            double vz = Mth.clamp(displacement.z * .38 + currentVelocity.z * .32, -.90, .90);
+
+            // Two-point wheel suspension: spring toward the real collision
+            // surfaces beneath left and right wheels, with vertical damping.
+            double contactY = desiredWheelHeight(getYRot());
+            double targetY = Mth.clamp(contactY, hitch.y - 1.15, hitch.y + 1.15);
+            suspensionVelocity = Mth.clamp(suspensionVelocity * .64
+                + (targetY - getY()) * .23, -.36, .36);
+            setDeltaMovement(vx, suspensionVelocity, vz);
+            move(MoverType.SELF, getDeltaMovement());
+            // Keep the body from stretching excessively on steep turns,
+            // but never teleport through solid block collision.
+            if (position().distanceToSqr(target) > 12.25) {
+                Vec3 extra = target.subtract(position()).scale(.25);
+                move(MoverType.SELF, extra);
+            }
             setXRot(0);
+            lastTailPosition = hitch;
         } else {
             setDeltaMovement(0, Math.max(-0.35, getDeltaMovement().y - 0.055), 0);
             move(MoverType.SELF, getDeltaMovement());
@@ -267,12 +333,14 @@ public final class BoatTrailer extends Entity {
         if (isLoaded()) tag.put("LoadedFishingBoat", loadedBoat.copy());
         tag.put("BoatTrailerDisplay", displayData().copy());
         if (towVehicle != null) tag.putUUID("TowVehicle", towVehicle);
+        tag.putDouble("SuspensionVelocity", suspensionVelocity);
     }
 
     @Override protected void readAdditionalSaveData(CompoundTag tag) {
         loadedBoat = tag.getCompound("LoadedFishingBoat").copy();
         entityData.set(DISPLAY, tag.getCompound("BoatTrailerDisplay").copy());
         towVehicle = tag.hasUUID("TowVehicle") ? tag.getUUID("TowVehicle") : null;
+        suspensionVelocity = tag.getDouble("SuspensionVelocity");
     }
 
     @Override public Packet<ClientGamePacketListener> getAddEntityPacket() {
