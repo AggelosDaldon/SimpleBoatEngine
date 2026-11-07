@@ -177,6 +177,28 @@ public final class MotorPackets {
                 if (!(item.getItem() instanceof SkiffBoatItem)) return;
                 if (msg.channel == -1) {
                     BoatPaint.setName(item, msg.name);
+                } else if (msg.channel == -2 || msg.channel == -3) {
+                    ItemStack input = workshop.getItem(1);
+                    if (msg.channel == -2 && input.getItem() instanceof DyeItem dye) {
+                        if (BoatPaint.nameColor(item) != dye.getDyeColor().getId()) {
+                            BoatPaint.setNameColor(item, dye.getDyeColor().getId());
+                            if (!player.getAbilities().instabuild) {
+                                input.shrink(1);
+                                workshop.setItem(1, input);
+                            }
+                        }
+                    } else if (msg.channel == -3 && input.is(net.minecraft.world.item.Items.GLOW_INK_SAC)) {
+                        if (!BoatPaint.nameGlows(item)) {
+                            BoatPaint.setNameGlow(item, true);
+                            if (!player.getAbilities().instabuild) {
+                                input.shrink(1);
+                                workshop.setItem(1, input);
+                            }
+                        }
+                    } else {
+                        player.displayClientMessage(Component.literal("Place dye or glow ink in the slot."), true);
+                        return;
+                    }
                 } else {
                     if (msg.channel < 0 || msg.channel >= BoatPaint.CHANNELS) return;
                     // Dyes must now be placed in the actual station slot.

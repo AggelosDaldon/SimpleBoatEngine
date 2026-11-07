@@ -37,19 +37,5 @@ public final class BoatCustomizerRenderer implements BlockEntityRenderer<BoatCus
             boat.getHullStyle(), BoatPaint.all(item));
         pose.popPose();
 
-        // The real boat renders the painted text on its bow; this additional
-        // floating label makes the same saved name readable on the small
-        // workstation preview at any camera angle, without editing the texture.
-        String name = BoatPaint.name(item);
-        if (name.isBlank()) return;
-        pose.pushPose();
-        pose.translate(0.5, 1.78, 0.5);
-        pose.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
-        pose.scale(-0.007f, -0.007f, 0.007f);
-        Component label = Component.literal(name);
-        font.drawInBatch(label, -font.width(label) / 2f, 0,
-            0xFFFFFFFF, false, pose.last().pose(), buffers,
-            Font.DisplayMode.NORMAL, 0x88000000, LightTexture.FULL_BRIGHT);
-        pose.popPose();
     }
 }

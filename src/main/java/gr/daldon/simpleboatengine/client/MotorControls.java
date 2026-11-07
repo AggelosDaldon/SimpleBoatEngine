@@ -54,7 +54,8 @@ public final class MotorControls {
         if (event.getHand() == InteractionHand.MAIN_HAND && held.isEmpty()) {
             for (Entity entity : game.level.entitiesForRendering()) {
                 if (!(entity instanceof BlueFishingBoat boat)) continue;
-                if (BoatInteractionTarget.aimedAtHatch(boat, eye, look, 5.5)) {
+                if (BoatInteractionTarget.aimedAtHatch(boat, eye, look, 5.5)
+                    || BoatInteractionTarget.aimedAtStorage2(boat, eye, look, 5.5)) {
                     if (!useHeld) {
                         useHeld = true;
                         MotorPackets.CHANNEL.sendToServer(new MotorPackets.OpenCargo(boat.getId()));

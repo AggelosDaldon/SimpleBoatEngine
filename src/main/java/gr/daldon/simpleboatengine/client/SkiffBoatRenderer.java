@@ -42,9 +42,10 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
             int textLight = blue.nameGlows() ? LightTexture.FULL_BRIGHT : light;
             for (int side : new int[]{-1, 1}) {
                 pose.pushPose();
-                pose.translate(side * 0.36, 0.57, -2.06);
-                pose.mulPose(Axis.YP.rotationDegrees(side < 0 ? -52.8f : 52.8f));
-                pose.scale(0.0075f, -0.0075f, 0.0075f);
+                pose.translate(side * 0.46, 0.63, -2.06);
+                pose.mulPose(Axis.YP.rotationDegrees(side < 0 ? -127.2f : 127.2f));
+                float size = Math.min(0.009f, 0.72f / Math.max(1, font.width(name)));
+                pose.scale(size, -size, size);
                 font.drawInBatch(Component.literal(name), -font.width(name) / 2f,
                     -font.lineHeight / 2f, rgb, false, pose.last().pose(),
                     buffers, Font.DisplayMode.NORMAL, 0, textLight);

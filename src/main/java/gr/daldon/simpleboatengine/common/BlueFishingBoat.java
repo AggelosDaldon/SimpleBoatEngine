@@ -33,6 +33,7 @@ public final class BlueFishingBoat extends SkiffBoat {
     private static final EntityDataAccessor<CompoundTag> CUSTOMIZATION =
         SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.COMPOUND_TAG);
     private final SimpleContainer cargo = new SimpleContainer(108);
+    private final SimpleContainer hatchCargo = new SimpleContainer(27);
     private boolean cargoDropped;
 
     public BlueFishingBoat(EntityType<? extends Boat> type, Level level) {
@@ -127,6 +128,14 @@ public final class BlueFishingBoat extends SkiffBoat {
         entityData.set(CUSTOMIZATION, temp.getTag().copy());
     }
 
+    /** Dedicated 27-slot chest below the white bow hatch. */
+    public void openHatch(ServerPlayer player) {
+        player.openMenu(new SimpleMenuProvider(
+            (id, inventory, owner) -> ChestMenu.threeRows(id, inventory, hatchCargo),
+            Component.literal("Bow hatch - 27 slots")));
+    }
+
+    /** Separate 108-slot storage under the marked STORAGE 2 panel. */
     public void openCargo(ServerPlayer player) {
         net.minecraftforge.network.NetworkHooks.openScreen(player, new SimpleMenuProvider(
             (id, inventory, owner) -> new BoatCargoMenu(id, inventory, this, cargo),
@@ -151,6 +160,16 @@ public final class BlueFishingBoat extends SkiffBoat {
             list.add(entry);
         }
         tag.put("FishingBoatCargo", list);
+        ListTag hatchList = new ListTag();
+        for (int index = 0; index < hatchCargo.getContainerSize(); index++) {
+            ItemStack item = hatchCargo.getItem(index);
+            if (item.isEmpty()) continue;
+            CompoundTag entry = new CompoundTag();
+            entry.putByte("Slot", (byte) index);
+            item.save(entry);
+            hatchList.add(entry);
+        }
+        tag.put("FishingBoatHatchCargo", hatchList);
     }
 
     @Override
@@ -161,6 +180,13 @@ public final class BlueFishingBoat extends SkiffBoat {
         setFloorPaint(tag.contains("FishingBoatFloorPaint") ? tag.getInt("FishingBoatFloorPaint") : -1);
         entityData.set(CUSTOMIZATION, tag.getCompound("FishingBoatCustomization").copy());
         cargo.clearContent();
+        hatchCargo.clearContent();
+        for (Tag value : tag.getList("FishingBoatHatchCargo", Tag.TAG_COMPOUND)) {
+            CompoundTag entry = (CompoundTag) value;
+            int slot = entry.getByte("Slot") & 255;
+            if (slot < hatchCargo.getContainerSize())
+                hatchCargo.setItem(slot, ItemStack.of(entry));
+        }
         for (Tag value : tag.getList("FishingBoatCargo", Tag.TAG_COMPOUND)) {
             CompoundTag entry = (CompoundTag) value;
             int slot = entry.getByte("Slot") & 255;
@@ -174,6 +200,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         if (!level().isClientSide && reason.shouldDestroy() && !cargoDropped) {
             cargoDropped = true;
             Containers.dropContents(level(), blockPosition(), cargo);
+            Containers.dropContents(level(), blockPosition(), hatchCargo);
         }
         super.remove(reason);
     }
@@ -181,7 +208,7 @@ public final class BlueFishingBoat extends SkiffBoat {
     @Override
     protected Vec3 seatPosition(int seat) {
         // Named Blockbench pieces: drivers_seat (center rear), passenger_seat (port).
-        if (seat == 0) return new Vec3(0, 0, 32.10 / 16.0);
+        if (seat == 0) return new Vec3(0, 0, 30.40 / 16.0);
         return new Vec3(-9.1 / 16.0, 0, 13.3 / 16.0);
     }
 }
