@@ -65,7 +65,10 @@ public final class BoatTrailerRenderer extends EntityRenderer<BoatTrailer> {
             if (tag.getBoolean("Engine")) {
                 pose.pushPose();
                 var motor = BoatMounts.motorForFishingTrailer();
-                pose.translate(motor.x(), motor.y(), motor.z());
+                // The hull is already offset by HULL_Y above. Attachments in
+                // MotorWorldRenderer are positioned in the boat's root space,
+                // so remove that same hull offset here to prevent floating parts.
+                pose.translate(motor.x(), motor.y() - BoatMounts.HULL_Y, motor.z());
                 pose.scale(1.5f, 1.5f, 1.5f);
                 MotorMesh.drawFishing(pose, buffers, 0f, light);
                 pose.popPose();
@@ -73,7 +76,7 @@ public final class BoatTrailerRenderer extends EntityRenderer<BoatTrailer> {
             if (tag.getBoolean("PoleLight")) {
                 pose.pushPose();
                 var lamp = BoatMounts.poleLightForFishingTrailer();
-                pose.translate(lamp.x(), lamp.y(), lamp.z());
+                pose.translate(lamp.x(), lamp.y() - BoatMounts.HULL_Y, lamp.z());
                 pose.scale(1.3f, 1.3f, 1.3f);
                 PoleLightMesh.draw(pose, buffers,
                     MotorData.isDark(trailer.level().getDayTime()), light);
@@ -82,7 +85,7 @@ public final class BoatTrailerRenderer extends EntityRenderer<BoatTrailer> {
             if (tag.getBoolean("FuelCanister")) {
                 pose.pushPose();
                 var canister = BoatMounts.canisterForFishingTrailer();
-                pose.translate(canister.x(), canister.y(), canister.z());
+                pose.translate(canister.x(), canister.y() - BoatMounts.HULL_Y, canister.z());
                 pose.mulPose(Axis.YP.rotationDegrees(-90));
                 pose.scale(1.3f, 1.3f, 1.3f);
                 CanisterMesh.draw(pose, buffers, light);
