@@ -74,12 +74,12 @@ public final class BoatDeckSupport {
 
             // Distinct support heights: bow, inner floor, both side rails and
             // full stern transom. A wide flat AABB could not support these.
-            boolean bow = z >= -2.43 && z < -0.49 && Math.abs(x) <=
+            boolean bow = z >= -2.42 && z < -0.50 && Math.abs(x) <=
                 (z < -1.85 ? 0.43 : z < -1.35 ? 0.66 : 0.86);
-            boolean sternRail = z >= 2.14 && z <= 2.39 && Math.abs(x) <= 1.03;
-            boolean sideRail = z >= -1.45 && z <= 2.30
-                && Math.abs(x) > 0.77 && Math.abs(x) <= 1.17;
-            boolean floor = z >= -0.51 && z < 2.16 && Math.abs(x) <= 0.83;
+            boolean sternRail = z >= 2.12 && z <= 2.34 && Math.abs(x) <= 1.03;
+            boolean sideRail = z >= -1.35 && z <= 2.30
+                && Math.abs(x) > 0.73 && Math.abs(x) <= 1.08;
+            boolean floor = z >= -1.25 && z < 2.14 && Math.abs(x) <= 0.82;
             if (!bow && !floor && !sideRail && !sternRail) continue;
 
             double desiredY = boat.getY() + (bow ? BOW_DECK :
@@ -89,7 +89,7 @@ public final class BoatDeckSupport {
             // No automatic climb out of water. A first-time landing must be
             // from above; existing walkers can step over the 0.52-block ledge.
             if (player.isInWater() && (!alreadyOnBoat || feet < desiredY - 0.12)) continue;
-            double minFeet = alreadyOnBoat ? desiredY - 0.80 : desiredY - 0.075;
+            double minFeet = alreadyOnBoat ? desiredY - 0.85 : desiredY - 0.09;
             if (feet < minFeet || feet > desiredY + 0.70) continue;
             // Jumping must not forget the boat underneath: previously clearing
             // TRACKED here caused clipping when walking onto the raised bow.

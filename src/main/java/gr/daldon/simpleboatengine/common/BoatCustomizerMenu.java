@@ -33,24 +33,24 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         super(EngineMenus.CUSTOMIZER.get(), id);
         container = data;
         blockPos = pos;
-        addSlot(new Slot(data, 0, 30, 30) {
+        addSlot(new Slot(data, 0, 30, 32) {
             @Override public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof SkiffBoatItem;
             }
             @Override public int getMaxStackSize() { return 1; }
         });
-        addSlot(new Slot(data, 1, 166, 30) {
+        addSlot(new Slot(data, 1, 256, 32) {
             @Override public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof DyeItem;
+                return stack.getItem() instanceof DyeItem || stack.is(net.minecraft.world.item.Items.GLOW_INK_SAC);
             }
         });
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++)
                 addSlot(new Slot(inventory, col + row * 9 + 9,
-                    14 + col * 18, 223 + row * 18));
+                    65 + col * 18, 235 + row * 18));
         }
         for (int col = 0; col < 9; col++)
-            addSlot(new Slot(inventory, col, 14 + col * 18, 281));
+            addSlot(new Slot(inventory, col, 65 + col * 18, 293));
     }
 
     public BlockPos getBlockPos() { return blockPos; }
@@ -67,7 +67,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             if (!moveItemStackTo(original, 2, 38, true)) return ItemStack.EMPTY;
         } else if (original.getItem() instanceof SkiffBoatItem && !slots.get(0).hasItem()) {
             if (!moveItemStackTo(original, 0, 1, false)) return ItemStack.EMPTY;
-        } else if (original.getItem() instanceof DyeItem) {
+        } else if (original.getItem() instanceof DyeItem || original.is(net.minecraft.world.item.Items.GLOW_INK_SAC)) {
             if (!moveItemStackTo(original, 1, 2, false)) return ItemStack.EMPTY;
         } else return ItemStack.EMPTY;
         if (original.isEmpty()) slot.set(ItemStack.EMPTY);

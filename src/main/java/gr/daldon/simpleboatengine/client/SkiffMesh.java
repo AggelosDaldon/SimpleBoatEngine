@@ -84,6 +84,25 @@ public final class SkiffMesh {
         }
     }
 
+    /** Paint a selected group with a bright overlay in the workbench preview. */
+    static void highlight(PoseStack stack, MultiBufferSource buffers, int light,
+                          ResourceLocation texture, float[][] parts, byte[] channels, int group) {
+        VertexConsumer output = buffers.getBuffer(RenderType.entityCutoutNoCull(texture));
+        for (int i = 0; i < parts.length; i++) {
+            if (channels[i] != group) continue;
+            float[] part = parts[i];
+            stack.pushPose();
+            stack.scale(1.013f, 1.013f, 1.013f);
+            if (part[6] != 0f) {
+                stack.translate(part[7] / 16f, part[8] / 16f, part[9] / 16f);
+                stack.mulPose(Axis.YP.rotationDegrees(part[6]));
+                stack.translate(-part[7] / 16f, -part[8] / 16f, -part[9] / 16f);
+            }
+            cube(stack, output, part, light, 255, 232, 85);
+            stack.popPose();
+        }
+    }
+
     private static void cube(PoseStack stack, VertexConsumer output, float[] part, int light,
                              int red, int green, int blue) {
         float x0 = part[0] / 16f, y0 = part[1] / 16f, z0 = part[2] / 16f;

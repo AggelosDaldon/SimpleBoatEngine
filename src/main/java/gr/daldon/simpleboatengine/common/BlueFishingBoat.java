@@ -32,7 +32,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<CompoundTag> CUSTOMIZATION =
         SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.COMPOUND_TAG);
-    private final SimpleContainer cargo = new SimpleContainer(54);
+    private final SimpleContainer cargo = new SimpleContainer(108);
     private boolean cargoDropped;
 
     public BlueFishingBoat(EntityType<? extends Boat> type, Level level) {
@@ -124,9 +124,10 @@ public final class BlueFishingBoat extends SkiffBoat {
     }
 
     public void openCargo(ServerPlayer player) {
-        player.openMenu(new SimpleMenuProvider(
-            (id, inventory, owner) -> ChestMenu.sixRows(id, inventory, cargo),
-            Component.translatable("container.simpleboatengine.fishing_boat")));
+        net.minecraftforge.network.NetworkHooks.openScreen(player, new SimpleMenuProvider(
+            (id, inventory, owner) -> new BoatCargoMenu(id, inventory, this, cargo),
+            Component.translatable("container.simpleboatengine.fishing_boat")),
+            buf -> buf.writeVarInt(getId()));
     }
 
     @Override

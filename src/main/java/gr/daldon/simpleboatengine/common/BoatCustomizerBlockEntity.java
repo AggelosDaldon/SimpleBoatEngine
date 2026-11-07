@@ -62,7 +62,8 @@ public final class BoatCustomizerBlockEntity extends BlockEntity implements Cont
     }
     @Override public boolean canPlaceItem(int index, ItemStack stack) {
         return index == 0 && stack.getItem() instanceof SkiffBoatItem
-            || index == 1 && stack.getItem() instanceof net.minecraft.world.item.DyeItem;
+            || index == 1 && (stack.getItem() instanceof net.minecraft.world.item.DyeItem
+                || stack.is(net.minecraft.world.item.Items.GLOW_INK_SAC));
     }
     @Override public boolean stillValid(Player player) {
         return level != null && level.getBlockEntity(worldPosition) == this

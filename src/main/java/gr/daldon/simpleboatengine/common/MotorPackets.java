@@ -45,6 +45,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(CustomizeBoat.class, 5, NetworkDirection.PLAY_TO_SERVER)
             .encoder(CustomizeBoat::write).decoder(CustomizeBoat::read)
             .consumerMainThread(CustomizeBoat::receive).add();
+        CHANNEL.messageBuilder(ScrollCargo.class, 6, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ScrollCargo::write).decoder(ScrollCargo::read)
+            .consumerMainThread(ScrollCargo::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -126,6 +129,28 @@ public final class MotorPackets {
                 player.startRiding(boat);
             });
             ctx.get().setPacketHandled(true);
+        }
+    }
+
+    /** Only scroll the inventory of the fishing boat currently open by the sender. */
+    public record ScrollCargo(int boatId, int firstRow) {
+        static void write(ScrollCargo msg, FriendlyByteBuf out) {
+            out.writeVarInt(msg.boatId);
+            out.writeVarInt(msg.firstRow);
+        }
+        static ScrollCargo read(FriendlyByteBuf in) {
+            return new ScrollCargo(in.readVarInt(), in.readVarInt());
+        }
+        static void receive(ScrollCargo msg, Supplier<NetworkEvent.Context> context) {
+            ServerPlayer player = context.get().getSender();
+            context.get().enqueueWork(() -> {
+                if (player == null || !(player.containerMenu instanceof BoatCargoMenu menu)
+                    || menu.boatId() != msg.boatId()
+                    || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
+                    || player.distanceToSqr(boat) > 49 || !boat.isAlive()) return;
+                menu.setStartRow(msg.firstRow());
+            });
+            context.get().setPacketHandled(true);
         }
     }
 

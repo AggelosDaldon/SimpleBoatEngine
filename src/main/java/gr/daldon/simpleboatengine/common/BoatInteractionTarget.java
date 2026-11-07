@@ -25,13 +25,13 @@ public final class BoatInteractionTarget {
     /** Exact five-part white hatch at the bow, not the surrounding blue deck. */
     public static boolean aimedAtHatch(BlueFishingBoat boat, Vec3 eye, Vec3 view, double reach) {
         return target(boat, eye, view, reach,
-            new AABB(-0.34, BoatMounts.HULL_Y + 13.3 / 16.0,
-                -1.92, 0.34, BoatMounts.HULL_Y + 14.8 / 16.0, -1.40));
+            new AABB(-0.38, BoatMounts.HULL_Y + 13.2 / 16.0,
+                -1.98, 0.38, BoatMounts.HULL_Y + 15.0 / 16.0, -1.34));
     }
 
     /** Extended clickable shape; vanilla boat pick box stops well before the bow. */
     public static boolean aimedAtHull(BlueFishingBoat boat, Vec3 eye, Vec3 view, double reach) {
         return target(boat, eye, view, reach,
-            new AABB(-1.08, -0.08, -2.52, 1.08, 1.42, 2.44));
+            new AABB(-1.10, -0.20, -2.58, 1.10, 1.50, 2.46));
     }
 }

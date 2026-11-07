@@ -14,6 +14,8 @@ public final class BoatPaint {
         "BoatPaintSeats", "BoatPaintAntifoul", "BoatPaintLining"
     };
     private static final String NAME = "BoatCustomName";
+    private static final String NAME_COLOR = "BoatNameColor";
+    private static final String NAME_GLOW = "BoatNameGlowing";
 
     private BoatPaint() {}
 
@@ -54,6 +56,21 @@ public final class BoatPaint {
     public static String name(ItemStack item) {
         CompoundTag tag = item.getTag();
         return tag == null ? "" : tag.getString(NAME);
+    }
+
+    public static int nameColor(ItemStack item) {
+        CompoundTag tag = item.getTag();
+        return tag != null && tag.contains(NAME_COLOR, 3)
+            ? Math.max(0, Math.min(15, tag.getInt(NAME_COLOR))) : 0;
+    }
+    public static void setNameColor(ItemStack item, int color) {
+        if (color >= 0 && color < 16) item.getOrCreateTag().putInt(NAME_COLOR, color);
+    }
+    public static boolean nameGlows(ItemStack item) {
+        return item.getTag() != null && item.getTag().getBoolean(NAME_GLOW);
+    }
+    public static void setNameGlow(ItemStack item, boolean glowing) {
+        item.getOrCreateTag().putBoolean(NAME_GLOW, glowing);
     }
 
     public static void setName(ItemStack item, String name) {

@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.client.renderer.LightTexture;
 
 /** Renders the experimental user-authored hull instead of a vanilla boat model. */
 public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
@@ -34,25 +36,18 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
                 blue.getHullStyle(), blue.getPaints());
         else SkiffMesh.draw(pose, buffers, light);
         if (boat instanceof BlueFishingBoat blue && !blue.getBoatName().isBlank()) {
-            String label = blue.getBoatName();
-            // Keep a readable decal on the top of the closed bow deck as well as
-            // both exterior sides. The old x=.82 decals were buried in the hull.
-            pose.pushPose();
-            pose.translate(0f, 13.78f / 16f + 0.018f, -1.65f);
-            pose.mulPose(Axis.XP.rotationDegrees(90f));
-            pose.scale(0.012f, -0.012f, 0.012f);
-            font.drawInBatch(Component.literal(label), -font.width(label) / 2f, 0f,
-                0xFFF5E1, false, pose.last().pose(), buffers, Font.DisplayMode.NORMAL,
-                0, light);
-            pose.popPose();
+            // Match the two angled name plates near the v2 prow.
+            String name = blue.getBoatName();
+            int rgb = DyeColor.byId(blue.getNameColor()).getTextColor();
+            int textLight = blue.nameGlows() ? LightTexture.FULL_BRIGHT : light;
             for (int side : new int[]{-1, 1}) {
                 pose.pushPose();
-                pose.translate(side * 1.09, 0.52, -1.20);
-                pose.mulPose(Axis.YP.rotationDegrees(side < 0 ? -90f : 90f));
-                pose.scale(0.012f, -0.012f, 0.012f);
-                font.drawInBatch(Component.literal(label), -font.width(label) / 2f, 0f,
-                    0xFFF5E1, false, pose.last().pose(), buffers, Font.DisplayMode.NORMAL,
-                    0, light);
+                pose.translate(side * 0.36, 0.57, -2.06);
+                pose.mulPose(Axis.YP.rotationDegrees(side < 0 ? -52.8f : 52.8f));
+                pose.scale(0.0075f, -0.0075f, 0.0075f);
+                font.drawInBatch(Component.literal(name), -font.width(name) / 2f,
+                    -font.lineHeight / 2f, rgb, false, pose.last().pose(),
+                    buffers, Font.DisplayMode.NORMAL, 0, textLight);
                 pose.popPose();
             }
         }

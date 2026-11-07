@@ -19,6 +19,7 @@ public final class BoatCustomizerRegistration {
     public static void onClient(FMLClientSetupEvent event) {
         event.enqueueWork(() -> MenuScreens.register(EngineMenus.CUSTOMIZER.get(),
             BoatCustomizerScreen::new));
+        event.enqueueWork(() -> MenuScreens.register(EngineMenus.CARGO.get(), BoatCargoScreen::new));
     }
 
     @SubscribeEvent

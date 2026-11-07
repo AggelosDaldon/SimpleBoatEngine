@@ -15,6 +15,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.8'
+      - name: Regenerate v2 wooden variants and neutral paint texture
+        run: |
+          python3 -m pip install --quiet Pillow
+          python3 tools/generate_wood_boats.py
       - name: Compile Forge 1.20.1
         run: gradle --no-daemon build --stacktrace
       - name: Verify resource pack metadata is packaged
