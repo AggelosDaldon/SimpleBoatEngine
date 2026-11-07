@@ -33,23 +33,23 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         super(EngineMenus.CUSTOMIZER.get(), id);
         container = data;
         blockPos = pos;
-        addSlot(new Slot(data, 0, 28, 27) {
+        addSlot(new Slot(data, 0, 35, 46) {
             @Override public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof SkiffBoatItem;
             }
             @Override public int getMaxStackSize() { return 1; }
         });
-        addSlot(new Slot(data, 1, 148, 27) {
+        addSlot(new Slot(data, 1, 124, 46) {
             @Override public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof DyeItem || stack.is(net.minecraft.world.item.Items.GLOW_INK_SAC);
             }
         });
-        addSlot(new Slot(data, 2, 272, 27) {
+        addSlot(new Slot(data, 2, 35, 180) {
             @Override public boolean mayPlace(ItemStack stack) {
                 return EngineItems.woodStyleFor(stack) > 0;
             }
         });
-        addSlot(new Slot(data, 3, 267, 146) {
+        addSlot(new Slot(data, 3, 311, 159) {
             @Override public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof DyeItem
                     || stack.is(net.minecraft.world.item.Items.GLOW_INK_SAC);
@@ -58,10 +58,10 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++)
                 addSlot(new Slot(inventory, col + row * 9 + 9,
-                    75 + col * 18, 194 + row * 18));
+                    87 + col * 18, 228 + row * 18));
         }
         for (int col = 0; col < 9; col++)
-            addSlot(new Slot(inventory, col, 75 + col * 18, 252));
+            addSlot(new Slot(inventory, col, 87 + col * 18, 284));
     }
 
     public BlockPos getBlockPos() { return blockPos; }
