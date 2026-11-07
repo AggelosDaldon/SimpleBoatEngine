@@ -38,6 +38,9 @@ public final class BoatTrailer extends Entity {
         SynchedEntityData.defineId(BoatTrailer.class, EntityDataSerializers.COMPOUND_TAG);
     private CompoundTag loadedBoat = new CompoundTag();
     private UUID towVehicle;
+    private static final EntityDataAccessor<Float> WHEEL_ROT =
+        SynchedEntityData.defineId(BoatTrailer.class, EntityDataSerializers.FLOAT);
+    private float previousWheelRot;
 
     public BoatTrailer(EntityType<? extends BoatTrailer> type, Level level) {
         super(type, level);
@@ -45,11 +48,28 @@ public final class BoatTrailer extends Entity {
 
     @Override protected void defineSynchedData() {
         entityData.define(DISPLAY, new CompoundTag());
+        entityData.define(WHEEL_ROT, 0f);
     }
 
     public boolean isLoaded() { return !loadedBoat.isEmpty(); }
     public CompoundTag displayData() { return entityData.get(DISPLAY); }
     public boolean isConnected() { return towVehicle != null; }
+    public float wheelAngle(float partial) {
+        return net.minecraft.util.Mth.lerp(partial, previousWheelRot, entityData.get(WHEEL_ROT));
+    }
+    public void coupleTo(Entity automobile) {
+        if (automobile(automobile)) towVehicle = automobile.getUUID();
+    }
+    public static boolean automobile(Entity entity) {
+        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        return id != null && id.getNamespace().equals("automobility")
+            && id.getPath().equals("automobile");
+    }
+    public static Vec3 couplingPosition(Entity car) {
+        return tail(car).add(new Vec3(0, 0, 3.75)
+            .yRot((float)Math.toRadians(180 - car.getYRot())));
+    }
+
 
     private static CompoundTag visual(BlueFishingBoat boat) {
         CompoundTag tag = new CompoundTag();
@@ -72,19 +92,27 @@ public final class BoatTrailer extends Entity {
                 "The trailer is already loaded."), true);
             return false;
         }
-        if (!rope.hasTag() || !rope.getTag().hasUUID("BoatWinchTarget")) {
-            player.displayClientMessage(net.minecraft.network.chat.Component.literal(
-                "First right-click the fishing boat with the black winch rope."), true);
-            return false;
+        if (!(level() instanceof ServerLevel server)) return false;
+        BlueFishingBoat boat = null;
+        if (rope.hasTag() && rope.getTag().hasUUID("BoatWinchTarget")) {
+            UUID chosen = rope.getTag().getUUID("BoatWinchTarget");
+            if (server.getEntity(chosen) instanceof BlueFishingBoat found
+                && found.isAlive() && found.distanceToSqr(this) <= 256)
+                boat = found;
         }
-        UUID id = rope.getTag().getUUID("BoatWinchTarget");
-        if (!(level() instanceof ServerLevel server) ||
-            !(server.getEntity(id) instanceof BlueFishingBoat boat) ||
-            !boat.isAlive() || boat.distanceToSqr(this) > 144.0) {
-            player.displayClientMessage(net.minecraft.network.chat.Component.literal(
-                "Boat not found within 12 blocks."), true);
-            rope.getTag().remove("BoatWinchTarget");
-            return false;
+        if (boat == null) {
+            // The fishing hull is far larger than vanilla boat's pick box.
+            // A single boat nearby can be winched without the fragile first click.
+            List<BlueFishingBoat> nearby = server.getEntitiesOfClass(
+                BlueFishingBoat.class, getBoundingBox().inflate(16),
+                b -> b.isAlive() && b.distanceToSqr(this) <= 256);
+            if (nearby.size() == 1) boat = nearby.get(0);
+            else {
+                player.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                    nearby.isEmpty() ? "No fishing boat within 16 blocks."
+                        : "Multiple boats nearby: select one with the winch rope first."), true);
+                return false;
+            }
         }
         if (!boat.getPassengers().isEmpty()) {
             player.displayClientMessage(net.minecraft.network.chat.Component.literal(
@@ -97,7 +125,7 @@ public final class BoatTrailer extends Entity {
         loadedBoat = full.copy();
         entityData.set(DISPLAY, visual(boat));
         boat.discard();
-        rope.getTag().remove("BoatWinchTarget");
+        if (rope.hasTag()) rope.getTag().remove("BoatWinchTarget");
         level().playSound(null, blockPosition(), SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 0.8f, 0.9f);
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(
             "Fishing boat winched onto trailer (cargo and equipment preserved)."), true);
@@ -115,8 +143,8 @@ public final class BoatTrailer extends Entity {
             org.slf4j.LoggerFactory.getLogger(BoatTrailer.class).error("Could not restore fishing boat from trailer", error);
             return false;
         }
-        Vec3 behind = position().add(new Vec3(0, 0, 5.6)
-            .yRot((float)Math.toRadians(180.0 - getYRot())));
+        Vec3 behind = position().add(new Vec3(0, 0, -5.6)
+            .yRot((float)Math.toRadians(-getYRot())));
         boat.setPos(behind.x, getY() + 0.3, behind.z);
         boat.setYRot(getYRot());
         if (!server.noCollision(boat, boat.getBoundingBox().inflate(-0.08))) {
@@ -132,12 +160,6 @@ public final class BoatTrailer extends Entity {
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(
             "Fishing boat released behind the trailer."), true);
         return true;
-    }
-
-    private static boolean automobile(Entity entity) {
-        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-        return id != null && id.getNamespace().equals("automobility")
-            && id.getPath().contains("automobile");
     }
 
     /** The 1.20.1 AutomobileEntity exposes getTailPos(); reflection makes
@@ -167,7 +189,7 @@ public final class BoatTrailer extends Entity {
                 "Move the trailer close to an Automobility car."), true);
             return false;
         }
-        towVehicle = nearest.getUUID();
+        coupleTo(nearest);
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(
             "Trailer coupled to Automobility car."), true);
         return true;
@@ -188,9 +210,9 @@ public final class BoatTrailer extends Entity {
             return InteractionResult.PASS;
         }
         if (held.is(EngineItems.WINCH_ROPE.get())) {
-            if (held.hasTag() && held.getTag().hasUUID("BoatWinchTarget"))
-                return loadBoat(serverPlayer, held) ? InteractionResult.CONSUME : InteractionResult.FAIL;
-            return attachNearestAutomobile(serverPlayer) ? InteractionResult.CONSUME : InteractionResult.FAIL;
+            // A winch rope means load a nearby boat, even if first click
+            // failed because of vanilla boat's undersized selection hit box.
+            return loadBoat(serverPlayer, held) ? InteractionResult.CONSUME : InteractionResult.FAIL;
         }
         if (held.is(Items.LEAD))
             return attachNearestAutomobile(serverPlayer) ? InteractionResult.CONSUME : InteractionResult.FAIL;
@@ -202,15 +224,15 @@ public final class BoatTrailer extends Entity {
 
     @Override public void tick() {
         super.tick();
+        previousWheelRot = entityData.get(WHEEL_ROT);
         if (level().isClientSide) return;
+        Vec3 beforeMove = position();
         Entity tow = null;
         if (towVehicle != null && level() instanceof ServerLevel server)
             tow = server.getEntity(towVehicle);
         if (tow != null && tow.isAlive() && automobile(tow)) {
             Vec3 hitch = tail(tow);
-            Vec3 behind = new Vec3(0, 0, 2.70)
-                .yRot((float)Math.toRadians(180 - tow.getYRot()));
-            Vec3 target = hitch.add(behind);
+            Vec3 target = couplingPosition(tow);
             // Smooth trailing motion; the car controls direction and speed.
             Vec3 movement = target.subtract(position());
             setDeltaMovement(movement.scale(0.55));
@@ -221,6 +243,12 @@ public final class BoatTrailer extends Entity {
             setDeltaMovement(0, Math.max(-0.35, getDeltaMovement().y - 0.055), 0);
             move(MoverType.SELF, getDeltaMovement());
             if (onGround()) setDeltaMovement(Vec3.ZERO);
+        }
+        double traveled = Math.hypot(getX() - beforeMove.x, getZ() - beforeMove.z);
+        if (traveled > .0005) {
+            float next = entityData.get(WHEEL_ROT)
+                + (float)(traveled * (360.0 / (2.0 * Math.PI * (3.30 / 16.0))));
+            entityData.set(WHEEL_ROT, next % 360f);
         }
     }
 

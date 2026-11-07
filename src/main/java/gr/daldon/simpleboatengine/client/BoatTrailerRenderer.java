@@ -43,34 +43,14 @@ public final class BoatTrailerRenderer extends EntityRenderer<BoatTrailer> {
     public void render(BoatTrailer trailer, float yaw, float partial,
                        PoseStack pose, MultiBufferSource buffers, int light) {
         pose.pushPose();
-        pose.mulPose(Axis.YP.rotationDegrees(180f - yaw));
-
-        // Chassis, double drawbar/tongue, two axle wheels and four bunks.
-        part(pose, buffers, light, Blocks.IRON_BLOCK,
-            -1.05f, .25f, -2.25f, -0.94f, .40f, 2.50f);
-        part(pose, buffers, light, Blocks.IRON_BLOCK,
-            .94f, .25f, -2.25f, 1.05f, .40f, 2.50f);
-        for (float z : new float[]{-1.65f, -.55f, .85f, 1.9f}) {
-            part(pose, buffers, light, Blocks.DARK_OAK_PLANKS,
-                -1.01f, .36f, z, 1.01f, .49f, z + .22f);
-        }
-        part(pose, buffers, light, Blocks.IRON_BLOCK,
-            -.95f, .28f, .50f, .95f, .37f, .65f);
-        for (int side : new int[]{-1,1}) {
-            float a = side < 0 ? -1.35f : 1.07f;
-            part(pose, buffers, light, Blocks.BLACK_CONCRETE,
-                a, .03f, .90f, a + .28f, .70f, 1.55f);
-            part(pose, buffers, light, Blocks.IRON_BLOCK,
-                a + .07f, .20f, 1.08f, a + .21f, .53f, 1.37f);
-        }
-        // Front tow tongue/hitch; position is aligned with the car's rear end.
-        part(pose, buffers, light, Blocks.IRON_BLOCK,
-            -.08f, .23f, -3.10f, .08f, .39f, -1.85f);
-        part(pose, buffers, light, Blocks.POLISHED_BLACKSTONE,
-            -.14f, .29f, -3.25f, .14f, .48f, -3.02f);
-        // The short black winch housing where the loading rope attaches.
-        part(pose, buffers, light, Blocks.POLISHED_BLACKSTONE,
-            -.23f, .48f, -2.18f, .23f, .76f, -1.80f);
+        // The new Blockbench trailer points its tow tongue along +Z,
+        // unlike the fishing boat (whose bow faces -Z).
+        pose.mulPose(Axis.YP.rotationDegrees(-yaw));
+        pose.pushPose();
+        // Wheels in the .bbmodel center around Y=-4, with a 3.3px radius.
+        pose.translate(0, 0.46, 0);
+        TrailerMesh.draw(pose, buffers, light, trailer.wheelAngle(partial));
+        pose.popPose();
 
         CompoundTag tag = trailer.displayData();
         if (!tag.isEmpty()) {
@@ -78,7 +58,9 @@ public final class BoatTrailerRenderer extends EntityRenderer<BoatTrailer> {
             int[] paint = tag.getIntArray("Paints");
             if (paint.length != 7) paint = new int[]{-1,-1,-1,-1,-1,-1,-1};
             pose.pushPose();
-            pose.translate(0, .56f + BoatMounts.HULL_Y, 0);
+            pose.translate(0, .70f + BoatMounts.HULL_Y, 0);
+            // Boat bow toward towing vehicle, engine hanging off trailer rear.
+            pose.mulPose(Axis.YP.rotationDegrees(180f));
             BlueBoatMesh.draw(pose, buffers, light, style, paint);
             if (tag.getBoolean("Engine")) {
                 pose.pushPose();

@@ -42,7 +42,7 @@ public final class EngineItems {
     public static final RegistryObject<Item> BOAT_TRAILER = ITEMS.register("boat_trailer",
         () -> new BoatTrailerItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> WINCH_ROPE = ITEMS.register("winch_rope",
-        () -> new Item(new Item.Properties().stacksTo(1)));
+        () -> new WinchRopeItem(new Item.Properties().stacksTo(1)));
 
     public static final String[] WOODS = {
         "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo"
