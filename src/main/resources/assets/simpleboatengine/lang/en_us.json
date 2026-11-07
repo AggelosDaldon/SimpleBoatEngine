@@ -22,5 +22,8 @@
   "key.simpleboatengine.up": "Increase throttle",
   "key.simpleboatengine.down": "Decrease throttle",
   "subtitles.simpleboatengine.motor_loop": "Boat engine humming",
-  "item.simpleboatengine.empty_fuel_canister": "Empty Steel Fuel Canister"
+  "item.simpleboatengine.empty_fuel_canister": "Empty Steel Fuel Canister",
+  "item.simpleboatengine.boat_trailer": "Fishing Boat Trailer",
+  "entity.simpleboatengine.boat_trailer": "Fishing Boat Trailer",
+  "item.simpleboatengine.winch_rope": "Black Winch Rope"
 }

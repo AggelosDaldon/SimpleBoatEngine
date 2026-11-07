@@ -14,6 +14,18 @@ public final class BoatMounts {
 
     private BoatMounts() {}
 
+    // Exact same attachment points as the normal fishing boat, reused
+    // while the hull is stored and rendered on the trailer.
+    public static Mount motorForFishingTrailer() {
+        return new Mount(0f, 0.56f, 2.76f);
+    }
+    public static Mount canisterForFishingTrailer() {
+        return new Mount(0.59f, HULL_Y + 4.95f / 16f, 0.70f);
+    }
+    public static Mount poleLightForFishingTrailer() {
+        return new Mount(-0.935f, HULL_Y + 14.25f / 16f, 2.09f);
+    }
+
     public static Mount motor(Boat boat) {
         // Motor front edge intersects the stern by ~0.15 block; propeller
         // spins below the waterline rather than in the air.

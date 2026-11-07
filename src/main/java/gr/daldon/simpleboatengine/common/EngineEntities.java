@@ -19,5 +19,12 @@ public final class EngineEntities {
                 .updateInterval(3)
                 .build(SimpleBoatEngine.ID + ":aggelos_blue_fishing_boat"));
 
+    public static final RegistryObject<EntityType<BoatTrailer>> BOAT_TRAILER =
+        ENTITIES.register("boat_trailer", () ->
+            EntityType.Builder.<BoatTrailer>of(BoatTrailer::new, MobCategory.MISC)
+                .sized(2.75f, 1.05f)
+                .clientTrackingRange(12).updateInterval(2)
+                .build(SimpleBoatEngine.ID + ":boat_trailer"));
+
     private EngineEntities() {}
 }
