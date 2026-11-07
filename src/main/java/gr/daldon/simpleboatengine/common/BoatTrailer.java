@@ -44,13 +44,16 @@ public final class BoatTrailer extends Entity {
     private static final EntityDataAccessor<Float> WHEEL_ROT =
         SynchedEntityData.defineId(BoatTrailer.class, EntityDataSerializers.FLOAT);
     private float previousWheelRot;
-    private Vec3 lastTailPosition;
     private double suspensionVelocity;
     private static final double DRAWBAR_LENGTH = 3.75;
     private static final double AXLE_OFFSET = -7.0 / 16.0;
+    private static final double MAX_HITCH_DISTANCE = 5.75;
+    private int disconnectedTicks;
 
     public BoatTrailer(EntityType<? extends BoatTrailer> type, Level level) {
         super(type, level);
+        // A trailer must be able to climb a whole block as the car does.
+        setMaxUpStep(1.20f);
     }
 
     @Override protected void defineSynchedData() {
@@ -70,8 +73,8 @@ public final class BoatTrailer extends Entity {
         if (automobile(automobile)) {
             towVehicle = automobile.getUUID();
             setYRot(automobile.getYRot());
-            lastTailPosition = tail(automobile);
             suspensionVelocity = 0;
+            disconnectedTicks = 0;
         }
     }
     public static boolean automobile(Entity entity) {
@@ -90,8 +93,10 @@ public final class BoatTrailer extends Entity {
 
     /** Sample the two trailer wheels against real block collision surfaces. */
     private Double surfaceAt(Vec3 pos) {
-        Vec3 start = pos.add(0, 1.3, 0);
-        Vec3 end = pos.add(0, -2.1, 0);
+        // Cast from above a full-block rise, otherwise the ray can miss
+        // the block we are about to climb.
+        Vec3 start = pos.add(0, 2.0, 0);
+        Vec3 end = pos.add(0, -2.25, 0);
         var hit = level().clip(new ClipContext(start, end,
             ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
         return hit.getType() == HitResult.Type.BLOCK ? hit.getLocation().y : null;
@@ -269,45 +274,55 @@ public final class BoatTrailer extends Entity {
         if (towVehicle != null && level() instanceof ServerLevel server)
             tow = server.getEntity(towVehicle);
         if (tow != null && tow.isAlive() && automobile(tow)) {
-            // Automobility v0.4.2.b computes the rear attachment from getTailPos()
-            // and rotates its rear attachment independently. Implement the same
-            // articulated principle for our separate trailer Entity.
+            disconnectedTicks = 0;
+            // Automobility's rear attachment uses the actual getTailPos(),
+            // with a separate yaw and an articulated drawbar.
             Vec3 hitch = tail(tow);
             Vec3 toHitch = hitch.subtract(position());
             float carYaw = tow.getYRot();
             float wantedYaw = (float)Math.toDegrees(Math.atan2(-toHitch.x, toHitch.z));
-            if (toHitch.horizontalDistanceSqr() < .16) wantedYaw = carYaw;
-            // Same 90 degree hinge limit as Automobility's RearAttachment.
+            if (toHitch.horizontalDistanceSqr() < 0.01) wantedYaw = carYaw;
             float relativeYaw = Mth.wrapDegrees(wantedYaw - carYaw);
             wantedYaw = carYaw + Mth.clamp(relativeYaw, -85f, 85f);
-            float deltaYaw = Mth.wrapDegrees(wantedYaw - getYRot());
-            setYRot(getYRot() + Mth.clamp(deltaYaw, -11f, 11f));
-
-            // Coupler must stay attached to the moving automobile frame,
-            // but the axle follows a different curve through corners.
+            setYRot(getYRot() + Mth.clamp(
+                Mth.wrapDegrees(wantedYaw - getYRot()), -20f, 20f));
             Vec3 target = hitch.subtract(tongue(getYRot()).scale(DRAWBAR_LENGTH));
-            Vec3 displacement = target.subtract(position());
-            Vec3 currentVelocity = getDeltaMovement();
-            double vx = Mth.clamp(displacement.x * .38 + currentVelocity.x * .32, -.90, .90);
-            double vz = Mth.clamp(displacement.z * .38 + currentVelocity.z * .32, -.90, .90);
 
-            // Two-point wheel suspension: spring toward the real collision
-            // surfaces beneath left and right wheels, with vertical damping.
+            // The rear axle trails behind the rigid hitch, but is free to climb
+            // geometry. Keep the actual Minecraft collision solver and step-up
+            // behavior rather than directly teleporting the entity into blocks.
+            Vec3 error = target.subtract(position());
+            Vec3 oldVelocity = getDeltaMovement();
+            double vx = Mth.clamp(error.x * .58 + oldVelocity.x * .22, -1.85, 1.85);
+            double vz = Mth.clamp(error.z * .58 + oldVelocity.z * .22, -1.85, 1.85);
+
+            // Suspension is responsive to a 1-block stair, with damping.
             double contactY = desiredWheelHeight(getYRot());
-            double targetY = Mth.clamp(contactY, hitch.y - 1.15, hitch.y + 1.15);
-            suspensionVelocity = Mth.clamp(suspensionVelocity * .64
-                + (targetY - getY()) * .23, -.36, .36);
+            double desiredY = Mth.clamp(contactY, hitch.y - 1.0, hitch.y + 1.45);
+            suspensionVelocity = Mth.clamp(
+                suspensionVelocity * .45 + (desiredY - getY()) * .65, -.55, .85);
+            // Force upward motion before collision resolves the horizontal move.
+            if (horizontalCollision && contactY > getY() + .12)
+                suspensionVelocity = Math.max(suspensionVelocity, .33);
             setDeltaMovement(vx, suspensionVelocity, vz);
             move(MoverType.SELF, getDeltaMovement());
-            // Keep the body from stretching excessively on steep turns,
-            // but never teleport through solid block collision.
-            if (position().distanceToSqr(target) > 12.25) {
-                Vec3 extra = target.subtract(position()).scale(.25);
-                move(MoverType.SELF, extra);
+            if (onGround() && suspensionVelocity < 0) suspensionVelocity = 0;
+
+            // Recover the hitch if a car pulls away faster than the entity
+            // could step up a steep obstacle. This is an emergency correction,
+            // not the normal continuous movement path.
+            Vec3 hitchError = hitch.subtract(
+                position().add(tongue(getYRot()).scale(DRAWBAR_LENGTH)));
+            if (hitchError.horizontalDistanceSqr() >
+                    MAX_HITCH_DISTANCE * MAX_HITCH_DISTANCE) {
+                Vec3 correction = hitchError.scale(.65);
+                // Translate in XZ, then let regular movement handle vertical.
+                move(MoverType.SELF, new Vec3(correction.x, .50, correction.z));
             }
             setXRot(0);
-            lastTailPosition = hitch;
         } else {
+            // Keep the hitch UUID for parked cars in temporarily unloaded chunks.
+            if (towVehicle != null) disconnectedTicks++;
             setDeltaMovement(0, Math.max(-0.35, getDeltaMovement().y - 0.055), 0);
             move(MoverType.SELF, getDeltaMovement());
             if (onGround()) setDeltaMovement(Vec3.ZERO);

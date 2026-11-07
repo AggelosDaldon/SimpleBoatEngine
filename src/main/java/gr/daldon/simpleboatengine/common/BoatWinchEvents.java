@@ -31,6 +31,7 @@ public final class BoatWinchEvents {
                 trailer.setPos(target.x, target.y, target.z);
                 trailer.setYRot(event.getTarget().getYRot());
                 trailer.coupleTo(event.getTarget());
+                trailer.setMaxUpStep(1.20f);
                 if (player.level().addFreshEntity(trailer)) {
                     if (!player.getAbilities().instabuild) stack.shrink(1);
                     player.displayClientMessage(Component.literal(
