@@ -1,43 +1,126 @@
 package gr.daldon.simpleboatengine.client;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.zip.InflaterInputStream;
-
-/**
- * All 120 original Blockbench cuboids, including two independently spinning wheel
- * groups, from Aggelos_Blue_Boat_V2_Trailer_Round_Animated_Wheels.bbmodel.
- * Each row: min xyz, max xyz, element rotation xyz, pivot xyz, wheel flag, 6 face UVs.
- * Zlib packing keeps the original geometry and 64x64 texture atlas compact.
- */
+/** Generated from the newest user-supplied 119-cuboid Blockbench trailer model. */
 public final class TrailerMeshData {
-    private static final String MODEL = "eNrNmwly6zAIhi8ka7QvZ+m8+1/jAZK8JE3GTYzFtHXlduLvB2GEiPPzs1Qd1WLx4OmY4WDgxxlt1POXTfj959E/9ZOPoMrFebRogBZHo0eKUd6tV/nz8MgrYMqKS9pw0Mqg2QiH0mk289hmwQg4ePAeGoenRsM/w5Nx8BKjQsHXfzZEnGu4oGzFEaIMwKO/OEbwwhvHkVUMGAoIch/Mj8GQiOQ+8uWVoNSConNKn6XLMYBIig7kKhwYPCk80WB0UXRoABigVfH5NoZXGJUCXuGzIdIyhIOhSMfgXiJGB5w6r393IGhd75iPxgCNB2a+AwnT55pXF5doEp1qZ5YnYSVdVYNSqgfH1mazLSzAeOQlZtzOvnIwLzFbV/bGJWbbwt40ZsvCzjBuu2zaG8YdkURLvLB2a1OE2LImzQXQ7tq1YOOkDRPYKBsk4+9LVzUqcIKOVP7CX+nc60BVXGBb2jAAQuhLG5VaIT6tbV/aRhUVFjnBY0WAZ4RNYOLFpUEv3VzshaLF9Ovy1TUIzJPCBRJWye41BLqrPYcXXjHIZKEssdefgMENCxxS45TnsGsly7qofzQGJkJWZKSMxEyEAPRYc7QtWY98CnpvnrDtdoGyDK7xxRiwpe0hBhVF8EMX63VyVI6bbikmGJMjavFuv1Yv1mkfMfUYzDwQFteUsqckeAEakgANVYAG6ySIiBJEFAEinJUgIkgQkUVkKgki+PNlNHTdQGVoraTC1th36yDCvl43rmwQnFLi5UhJcqRUOVLerCn3a4mCtBQ5Wt4sNPdrCYK0ZEmJTpCWu7JuQRUOuVnDErXKc9Tv0T69XYkueN/pjIQQ52uoAvxgvQBHvE+rN4lwToAn3ievm0R4y+6J6qhjFUiFIxHBNRHUOMVu7UtPfNttPIPPbi7fhjBXgLNpsoBSWAUkumJq90EhBb6QqLZt88d3I+z+ndTPhtgZ7nvDbbs4NpCP/T2ereIZvp8tIM0WUGcLGPuviQridAVltoKxw5qoIExXkOeno+kKuDMi7dR2u7dRkj327jh3bqdkeCE6khAdVYiO1+vF3UKiFCFFiJDXi8jdQoIUIVlMNpMi5I68um7zx85/6wUc+3I8u/4z/N6UmyegzvbAaMdNVFBm+2A04iYqyLN9MFpwbArCsf8yOjLP/berey9n2GvzbQZ867zNoG9ttyn0tefGQKfu2q7jNppwrA23BT9uRJ+cKfSmWMUnWhP+oZLl9uInWYkGS3umrqVdaR3veT5ptaM65B2o+Mw4A9Po/tyLovGB6X97IPTrJ5+PrqxqTC3HTBJrN48PYcQyjzsmzeKByTKLjbjNYZtUvjn89x93aiOU";
-    public static final float[][] PARTS = decode();
+    public static final float[][] PARTS = {
+        {-9.5f, 7.5f, -31.5f, -7.5f, 9.5f, 20f, 0f, 0f, 0f, 0f, 9f, 0f, 0f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f}, // side rail left
+        {7.5f, 7.5f, -31.5f, 9.5f, 9.5f, 20f, 0f, 0f, 0f, 0f, 9f, 0f, 0f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f, 0f, 0f, 5f, 5f}, // side rail right
+        {-9.5f, 5.5f, -31.5f, 9.5f, 7.5f, -29.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f, 16f, 0f, 24f, 7f}, // rear crossmember
+        {-9.5f, 5.5f, -8f, 9.5f, 7.5f, -6f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // axle crossmember
+        {-8.5f, 5.5f, 15.5f, 8.5f, 7.5f, 17.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 22f, 6f, 16f, 0f, 22f, 6f, 16f, 0f, 22f, 6f, 16f, 0f, 22f, 6f, 16f, 0f, 22f, 6f, 16f, 0f, 22f, 6f}, // front crossmember
+        {-1f, 6.7f, -28f, 1f, 8.2f, 14f, 0f, 0f, 0f, 0f, 8f, 0f, 0f, 32f, 0f, 37f, 4f, 32f, 0f, 37f, 4f, 32f, 0f, 37f, 4f, 32f, 0f, 37f, 4f, 32f, 0f, 37f, 4f, 32f, 0f, 37f, 4f}, // center keel support
+        {-2f, 5.6f, 19f, -0.2f, 7.3f, 53f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f}, // tongue left beam
+        {0.2f, 5.6f, 19f, 2f, 7.3f, 53f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f}, // tongue right beam
+        {-8f, 5.7f, 17f, -6.5f, 7.2f, 28f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // tongue rear spread left
+        {6.5f, 5.7f, 17f, 8f, 7.2f, 28f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // tongue rear spread right
+        {-1.6f, 5.4f, 53f, 1.6f, 7.6f, 58f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f}, // coupler body
+        {-0.8f, 1.2f, 58f, 0.8f, 7.2f, 59.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // coupler cap
+        {-0.8f, 1.2f, 59f, 0.8f, 2.2f, 62.5f, 0f, 0f, 0f, 0f, 7f, 1f, 0f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // coupler cap
+        {-7.4f, 7.3f, -24f, -5.4f, 8.3f, 23f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // bunk left
+        {5.4f, 7.3f, -24f, 7.4f, 8.3f, 23f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 16f, 21f, 21f, 16f, 16f, 21f, 21f, 16f, 16f, 21f, 21f, 16f, 16f, 21f, 21f, 16f, 16f, 21f, 21f, 16f, 16f, 21f, 21f}, // bunk right
+        {-1.2f, 6.2f, -26f, 1.2f, 7.8f, -21f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // rear center support
+        {-6.9f, 5.8f, -20f, -5.9f, 7.3f, -18f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left bunk post -20.0
+        {5.9f, 5.8f, -20f, 6.9f, 7.3f, -18f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right bunk post -20.0
+        {5.9f, 2.8f, -8f, 6.9f, 6.3f, -6f, 0f, 0f, 0f, 0f, 4f, 12f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right bunk post -21.1
+        {-9.1f, 2.8f, -8f, -8.1f, 6.3f, -6f, 0f, 0f, 0f, -15f, 4f, 12f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right bunk post -22.2
+        {-6.9f, 5.8f, -8f, -5.9f, 7.3f, -6f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left bunk post -8.0
+        {5.9f, 5.8f, -8f, 6.9f, 7.3f, -6f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right bunk post -8.0
+        {-6.9f, 5.8f, 4f, -5.9f, 7.3f, 6f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left bunk post 4.0
+        {5.9f, 5.8f, 4f, 6.9f, 7.3f, 6f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right bunk post 4.0
+        {-6.9f, 5.8f, 16f, -5.9f, 7.3f, 18f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left bunk post 16.0
+        {5.9f, 5.8f, 16f, 6.9f, 7.3f, 18f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right bunk post 16.0
+        {-11.3f, 2.45f, -7.6f, 11.3f, 3.55f, -6.4f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f}, // axle beam
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 0f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 01
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 30f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 02
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 60f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 03
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 90f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 04
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 120f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 05
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 150f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 06
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 180f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 07
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 210f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 08
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 240f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 09
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 270f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 10
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 300f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 11
+        {-13.625f, 5.92f, -8f, -11.075f, 6.68f, -6f, 330f, 0f, 0f, -12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // left wheel - tread 12
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 0f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 01
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 30f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 02
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 60f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 03
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 90f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 04
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 120f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 05
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 150f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 06
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 180f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 07
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 210f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 08
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 240f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 09
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 270f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 10
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 300f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 11
+        {-13.505f, 2.55f, -7.99f, -11.195f, 6.2f, -6.01f, 330f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // left wheel - solid sidewall panel 12
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 0f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 01
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 45f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 02
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 90f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 03
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 135f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 04
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 180f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 05
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 225f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 06
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 270f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 07
+        {-13.845f, 4.2f, -7.64f, -13.505f, 4.8f, -6.36f, 315f, 0f, 0f, -12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left wheel - rim segment 08
+        {-13.925f, 3.52f, -7.2f, -13.425f, 4.75f, -6.8f, 0f, 0f, 0f, -12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // left wheel - silver spoke 01
+        {-13.925f, 3.52f, -7.2f, -13.425f, 4.75f, -6.8f, 72f, 0f, 0f, -12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // left wheel - silver spoke 02
+        {-13.925f, 3.52f, -7.2f, -13.425f, 4.75f, -6.8f, 144f, 0f, 0f, -12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // left wheel - silver spoke 03
+        {-13.925f, 3.52f, -7.2f, -13.425f, 4.75f, -6.8f, 216f, 0f, 0f, -12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // left wheel - silver spoke 04
+        {-13.925f, 3.52f, -7.2f, -13.425f, 4.75f, -6.8f, 288f, 0f, 0f, -12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // left wheel - silver spoke 05
+        {-13.965f, 2.32f, -7.68f, -13.385f, 3.68f, -6.32f, 0f, 0f, 0f, 0f, 7f, 0f, 1f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f}, // left wheel - center hub
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 0f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 01
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 30f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 02
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 60f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 03
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 90f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 04
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 120f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 05
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 150f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 06
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 180f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 07
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 210f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 08
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 240f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 09
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 270f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 10
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 300f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 11
+        {11.075f, 5.92f, -8f, 13.625f, 6.68f, -6f, 330f, 0f, 0f, 12.35f, 3f, -7f, 1f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f, 48f, 0f, 64f, 16f}, // right wheel - tread 12
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 0f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 01
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 30f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 02
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 60f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 03
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 90f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 04
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 120f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 05
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 150f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 06
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 180f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 07
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 210f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 08
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 240f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 09
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 270f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 10
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 300f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 11
+        {11.195f, 2.55f, -7.99f, 13.505f, 6.2f, -6.01f, 330f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f, 16f, 16f, 32f, 32f}, // right wheel - solid sidewall panel 12
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 0f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 01
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 45f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 02
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 90f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 03
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 135f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 04
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 180f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 05
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 225f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 06
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 270f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 07
+        {13.505f, 4.2f, -7.64f, 13.845f, 4.8f, -6.36f, 315f, 0f, 0f, 12.35f, 3f, -7f, 1f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right wheel - rim segment 08
+        {13.425f, 3.52f, -7.2f, 13.925f, 4.75f, -6.8f, 0f, 0f, 0f, 12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // right wheel - silver spoke 01
+        {13.425f, 3.52f, -7.2f, 13.925f, 4.75f, -6.8f, 72f, 0f, 0f, 12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // right wheel - silver spoke 02
+        {13.425f, 3.52f, -7.2f, 13.925f, 4.75f, -6.8f, 144f, 0f, 0f, 12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // right wheel - silver spoke 03
+        {13.425f, 3.52f, -7.2f, 13.925f, 4.75f, -6.8f, 216f, 0f, 0f, 12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // right wheel - silver spoke 04
+        {13.425f, 3.52f, -7.2f, 13.925f, 4.75f, -6.8f, 288f, 0f, 0f, 12.35f, 3f, -7f, 1f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // right wheel - silver spoke 05
+        {13.385f, 2.32f, -7.68f, 13.965f, 3.68f, -6.32f, 0f, 0f, 0f, 0f, 7f, 0f, 1f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f, 0f, 16f, 16f, 32f}, // right wheel - center hub
+        {-14.05f, 7.28f, -11.9f, -9.65f, 7.95f, -2.1f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 8f, 8f, 0f, 0f, 16f, 16f}, // left fixed fender - top
+        {-14.05f, 6.3f, -12.1f, -9.65f, 7.28f, -11.35f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left fixed fender - rear lip
+        {-14.05f, 6.3f, -2.65f, -9.65f, 7.28f, -1.9f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // left fixed fender - front lip
+        {-10.25f, 6f, -10.2f, -9.65f, 7.28f, -3.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f}, // left fixed fender - chassis mount
+        {9.65f, 7.28f, -11.9f, 14.05f, 7.95f, -2.1f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 9f, 8f, 0f, 0f, 9f, 8f, 0f, 0f, 9f, 8f, 0f, 0f, 9f, 8f, 0f, 0f, 9f, 8f, 0f, 0f, 9f, 8f}, // right fixed fender - top
+        {9.65f, 6.3f, -12.1f, 14.05f, 7.28f, -11.35f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right fixed fender - rear lip
+        {9.65f, 6.3f, -2.65f, 14.05f, 7.28f, -1.9f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f, 16f, 0f, 32f, 16f}, // right fixed fender - front lip
+        {9.65f, 6f, -10.2f, 10.25f, 7.28f, -3.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f, 32f, 0f, 48f, 16f}, // right fixed fender - chassis mount
+        {-2f, -2f, 43.2f, 2f, -1f, 46.3f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // jack foot
+        {-1f, 5.6f, 25f, 1f, 17f, 27f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f, 0f, 0f, 8f, 7f}, // winch post
+        {-4.5f, 10f, 23.8f, -1f, 12f, 25.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // left bow stop arm
+        {1f, 10f, 23.8f, 4.5f, 12f, 25.5f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f, 0f, 0f, 16f, 16f}, // right bow stop arm
+        {-5f, 9f, 23.5f, -3.5f, 13f, 25.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f}, // left bow stop pad
+        {3.5f, 9f, 23.5f, 5f, 13f, 25.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f, 32f, 16f, 48f, 32f}, // right bow stop pad
+        {-9.3f, 6.5f, -31.8f, -8f, 7.8f, -30.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // left reflector
+        {8f, 6.5f, -31.8f, 9.3f, 7.8f, -30.8f, 0f, 0f, 0f, 0f, 7f, 0f, 0f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f, 48f, 16f, 64f, 32f}, // right reflector
+    };
     private TrailerMeshData() {}
-
-    private static float[][] decode() {
-        try {
-            byte[] compressed = Base64.getDecoder().decode(MODEL);
-            byte[] decoded;
-            try (var stream = new InflaterInputStream(new ByteArrayInputStream(compressed))) {
-                decoded = stream.readAllBytes();
-            }
-            JsonArray all = JsonParser.parseString(
-                new String(decoded, StandardCharsets.UTF_8)).getAsJsonArray();
-            float[][] result = new float[all.size()][];
-            for (int i = 0; i < all.size(); i++) {
-                JsonArray values = all.get(i).getAsJsonArray();
-                result[i] = new float[values.size()];
-                for (int j = 0; j < values.size(); j++)
-                    result[i][j] = values.get(j).getAsFloat();
-            }
-            return result;
-        } catch (IOException | RuntimeException ex) {
-            throw new IllegalStateException("Invalid fishing boat trailer model data", ex);
-        }
-    }
 }

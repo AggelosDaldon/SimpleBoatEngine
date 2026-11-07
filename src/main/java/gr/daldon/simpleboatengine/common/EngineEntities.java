@@ -22,7 +22,7 @@ public final class EngineEntities {
     public static final RegistryObject<EntityType<BoatTrailer>> BOAT_TRAILER =
         ENTITIES.register("boat_trailer", () ->
             EntityType.Builder.<BoatTrailer>of(BoatTrailer::new, MobCategory.MISC)
-                .sized(2.75f, 1.05f)
+                .sized(3.25f, 1.45f)
                 .clientTrackingRange(12).updateInterval(2)
                 .build(SimpleBoatEngine.ID + ":boat_trailer"));
 

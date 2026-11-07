@@ -51,6 +51,8 @@ public final class BoatTrailer extends Entity {
         entityData.define(WHEEL_ROT, 0f);
     }
 
+    @Override public boolean isPickable() { return true; }
+    @Override public boolean canBeCollidedWith() { return true; }
     public boolean isLoaded() { return !loadedBoat.isEmpty(); }
     public CompoundTag displayData() { return entityData.get(DISPLAY); }
     public boolean isConnected() { return towVehicle != null; }

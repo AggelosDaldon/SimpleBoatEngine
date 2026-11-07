@@ -30,7 +30,7 @@ public final class TrailerMesh {
             if (part[12] > 0.5f) {
                 // The two group pivots are (-12.35,-4,-7) and (+12.35,-4,-7).
                 float x = part[9] < 0 ? -12.35f : 12.35f;
-                rotate(pose, x, -4f, -7f, Axis.XP, wheelAngle);
+                rotate(pose, x, 3f, -7f, Axis.ZP, wheelAngle);
             }
             // Blockbench local cube rotations are around their own pivots.
             if (part[6] != 0) rotate(pose, part[9],part[10],part[11],Axis.XP,part[6]);

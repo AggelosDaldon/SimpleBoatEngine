@@ -48,6 +48,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(ScrollCargo.class, 6, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ScrollCargo::write).decoder(ScrollCargo::read)
             .consumerMainThread(ScrollCargo::receive).add();
+        CHANNEL.messageBuilder(TrailerInteract.class, 7, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(TrailerInteract::write).decoder(TrailerInteract::read)
+            .consumerMainThread(TrailerInteract::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -129,6 +132,64 @@ public final class MotorPackets {
                 player.startRiding(boat);
             });
             ctx.get().setPacketHandled(true);
+        }
+    }
+
+    /**
+     * Reliable interaction for the full 3D hull and trailer instead of relying
+     * on Minecraft's much smaller default entity selection boxes.
+     * 0 = mark boat with rope, 1 = winch boat, 2 = attach trailer to car,
+     * 3 = unload trailer. Every action is validated server-side.
+     */
+    public record TrailerInteract(int targetId, int action) {
+        static void write(TrailerInteract m, FriendlyByteBuf b) {
+            b.writeVarInt(m.targetId);
+            b.writeVarInt(m.action);
+        }
+        static TrailerInteract read(FriendlyByteBuf b) {
+            return new TrailerInteract(b.readVarInt(), b.readVarInt());
+        }
+        static void receive(TrailerInteract m, Supplier<NetworkEvent.Context> context) {
+            ServerPlayer player = context.get().getSender();
+            context.get().enqueueWork(() -> {
+                if (player == null || m.action < 0 || m.action > 3) return;
+                var entity = player.level().getEntity(m.targetId());
+                if (entity == null || !entity.isAlive() ||
+                    player.distanceToSqr(entity) > 100.0) return;
+                var hand = player.getMainHandItem();
+                var eye = player.getEyePosition();
+                var view = player.getViewVector(1f);
+                if (m.action == 0 && hand.is(EngineItems.WINCH_ROPE.get())
+                    && entity instanceof BlueFishingBoat boat
+                    && BoatInteractionTarget.aimedAtHull(boat, eye, view, 7.5)) {
+                    hand.getOrCreateTag().putUUID("BoatWinchTarget", boat.getUUID());
+                    player.displayClientMessage(Component.literal(
+                        "Boat selected. Right-click the trailer with the rope."), true);
+                } else if (m.action == 1 && hand.is(EngineItems.WINCH_ROPE.get())
+                    && entity instanceof BoatTrailer trailer
+                    && TrailerTargets.aimedAtTrailer(trailer, eye, view, 7.5)) {
+                    trailer.loadBoat(player, hand);
+                } else if (m.action == 2 && hand.is(EngineItems.BOAT_TRAILER.get())
+                    && BoatTrailer.automobile(entity)
+                    && TrailerTargets.aimedAtCar(entity, eye, view, 7.5)) {
+                    BoatTrailer trailer = EngineEntities.BOAT_TRAILER.get().create(player.level());
+                    if (trailer == null) return;
+                    var hitch = BoatTrailer.couplingPosition(entity);
+                    trailer.setPos(hitch.x, hitch.y, hitch.z);
+                    trailer.setYRot(entity.getYRot());
+                    trailer.coupleTo(entity);
+                    if (player.level().addFreshEntity(trailer)) {
+                        if (!player.getAbilities().instabuild) hand.shrink(1);
+                        player.displayClientMessage(Component.literal(
+                            "Fishing boat trailer attached to car."), true);
+                    }
+                } else if (m.action == 3 && hand.isEmpty()
+                    && player.isShiftKeyDown() && entity instanceof BoatTrailer trailer
+                    && TrailerTargets.aimedAtTrailer(trailer, eye, view, 7.5)) {
+                    trailer.unloadBoat(player);
+                }
+            });
+            context.get().setPacketHandled(true);
         }
     }
 
