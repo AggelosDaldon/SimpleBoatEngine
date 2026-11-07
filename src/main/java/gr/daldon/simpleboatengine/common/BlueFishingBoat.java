@@ -56,6 +56,8 @@ public final class BlueFishingBoat extends SkiffBoat {
         for (int channel = 2; channel < BoatPaint.CHANNELS; channel++)
             BoatPaint.set(stack, channel, getPaint(channel));
         BoatPaint.setName(stack, getBoatName());
+        BoatPaint.setNameColor(stack, getNameColor());
+        BoatPaint.setNameGlow(stack, nameGlows());
         return stack;
     }
 
@@ -116,6 +118,8 @@ public final class BlueFishingBoat extends SkiffBoat {
     }
 
     public String getBoatName() { return BoatPaint.name(extrasAsItem()); }
+    public int getNameColor() { return BoatPaint.nameColor(extrasAsItem()); }
+    public boolean nameGlows() { return BoatPaint.nameGlows(extrasAsItem()); }
 
     public void setBoatName(String name) {
         ItemStack temp = extrasAsItem();
