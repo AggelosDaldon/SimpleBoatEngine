@@ -25,5 +25,7 @@
   "item.simpleboatengine.empty_fuel_canister": "Empty Steel Fuel Canister",
   "item.simpleboatengine.boat_trailer": "Fishing Boat Trailer",
   "entity.simpleboatengine.boat_trailer": "Fishing Boat Trailer",
-  "item.simpleboatengine.winch_rope": "Black Winch Rope"
+  "item.simpleboatengine.winch_rope": "Black Winch Rope",
+  "block.simpleboatengine.lift_buoy": "Lifting Buoy",
+  "item.simpleboatengine.lift_buoy": "Lifting Buoy"
 }
