@@ -52,6 +52,10 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
 
     @Override protected void init() {
         super.init();
+        addRenderableWidget(Button.builder(Component.literal("◀ Stand"), b ->
+            navigate(-1)).bounds(leftPos + 167, topPos + 205, 75, 18).build());
+        addRenderableWidget(Button.builder(Component.literal("Stand ▶"), b ->
+            navigate(1)).bounds(leftPos + 255, topPos + 205, 75, 18).build());
         addRenderableWidget(Button.builder(Component.literal("<"), b -> {
             selected = (selected + PARTS.length - 1) % PARTS.length;
             updatePart();
@@ -83,6 +87,11 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         addRenderableWidget(Button.builder(Component.literal("Apply name dye"), b ->
             send(menu.nameDyeItem().is(Items.GLOW_INK_SAC) ? -3 : -2, -1, "")
         ).bounds(leftPos + 248, topPos + 181, 81, 18).build());
+    }
+
+    private void navigate(int delta) {
+        if (menu.standCount()<=0) return;
+        MotorPackets.CHANNEL.sendToServer(new MotorPackets.SelectPaintStand(menu.getBlockPos(),delta));
     }
 
     private void send(int channel, int color, String name) {
@@ -197,6 +206,9 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         g.drawString(font, "NAME", 170, 145, 0xFFF8E8CF, false);
         g.drawString(font, "DYE", 294, 145, 0xFFF8E8CF, false);
         g.drawString(font, "WOOD", 57, 183, 0xFFF8E8CF, false);
+        if(menu.standCount()>0)
+            g.drawString(font, "Stand "+(menu.standIndex()+1)+"/"+menu.standCount(),
+                170, 212, 0xFFF8E8CF, false);
         g.drawString(font, playerInventoryTitle, 87, 213, 0xFFF8E8CF, false);
     }
 
