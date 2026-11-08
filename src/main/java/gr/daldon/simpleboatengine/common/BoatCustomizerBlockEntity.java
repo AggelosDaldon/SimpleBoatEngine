@@ -20,6 +20,8 @@ public class BoatCustomizerBlockEntity extends BlockEntity implements Container,
     private ItemStack dye = ItemStack.EMPTY;
     private ItemStack wood = ItemStack.EMPTY;
     private ItemStack nameDye = ItemStack.EMPTY;
+    private BlockPos selectedStand;
+
 
     public BoatCustomizerBlockEntity(BlockPos pos, BlockState state) {
         this(EngineBlockEntities.CUSTOMIZER.get(), pos, state);
@@ -27,6 +29,42 @@ public class BoatCustomizerBlockEntity extends BlockEntity implements Container,
     protected BoatCustomizerBlockEntity(net.minecraft.world.level.block.entity.BlockEntityType<?> type,
                                         BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public java.util.List<BlockPos> nearbyStands() {
+        if (level == null) return java.util.List.of();
+        java.util.List<BlockPos> found = new java.util.ArrayList<>();
+        BlockPos.betweenClosedStream(worldPosition.offset(-10,-10,-10), worldPosition.offset(10,10,10))
+            .filter(p -> p.distSqr(worldPosition) <= 100 && level.getBlockEntity(p) instanceof BoatStandBlockEntity)
+            .forEach(p -> found.add(p.immutable()));
+        found.sort(java.util.Comparator.comparingDouble((BlockPos p) -> p.distSqr(worldPosition))
+            .thenComparingInt(BlockPos::getX).thenComparingInt(BlockPos::getY).thenComparingInt(BlockPos::getZ));
+        return found;
+    }
+
+    public BlockPos getSelectedStand() {
+        var stands = nearbyStands();
+        if (stands.isEmpty()) return null;
+        return selectedStand != null && stands.contains(selectedStand) ? selectedStand : stands.get(0);
+    }
+
+    public int selectionIndex() {
+        return nearbyStands().indexOf(getSelectedStand());
+    }
+
+    public int selectionCount() { return nearbyStands().size(); }
+
+    public void selectRelative(int delta) {
+        var stands = nearbyStands();
+        if (stands.isEmpty()) { selectedStand=null; setChanged(); return; }
+        int index=stands.indexOf(getSelectedStand());
+        selectedStand=stands.get(Math.floorMod(index + Integer.signum(delta), stands.size()));
+        setChanged();
+    }
+
+    public BoatStandBlockEntity linkedStand() {
+        BlockPos pos = getSelectedStand();
+        return pos != null && level.getBlockEntity(pos) instanceof BoatStandBlockEntity stand ? stand : null;
     }
 
     @Override
@@ -107,6 +145,7 @@ public class BoatCustomizerBlockEntity extends BlockEntity implements Container,
         if (!dye.isEmpty()) tag.put("DyeItem", dye.save(new CompoundTag()));
         if (!wood.isEmpty()) tag.put("WoodItem", wood.save(new CompoundTag()));
         if (!nameDye.isEmpty()) tag.put("NameDyeItem", nameDye.save(new CompoundTag()));
+        if (selectedStand != null) tag.putLong("SelectedBoatStand",selectedStand.asLong());
     }
 
     @Override
@@ -116,6 +155,7 @@ public class BoatCustomizerBlockEntity extends BlockEntity implements Container,
         dye = tag.contains("DyeItem") ? ItemStack.of(tag.getCompound("DyeItem")) : ItemStack.EMPTY;
         wood = tag.contains("WoodItem") ? ItemStack.of(tag.getCompound("WoodItem")) : ItemStack.EMPTY;
         nameDye = tag.contains("NameDyeItem") ? ItemStack.of(tag.getCompound("NameDyeItem")) : ItemStack.EMPTY;
+        selectedStand = tag.contains("SelectedBoatStand") ? BlockPos.of(tag.getLong("SelectedBoatStand")) : null;
     }
 
     @Override
