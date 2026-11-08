@@ -9,6 +9,19 @@
           "children": [
             {
               "type": "minecraft:item",
+              "name": "simpleboatengine:white_lift_buoy",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "simpleboatengine:lift_buoy",
+                  "properties": {
+                    "white": "true"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
               "name": "simpleboatengine:yellow_lift_buoy",
               "conditions": [
                 {

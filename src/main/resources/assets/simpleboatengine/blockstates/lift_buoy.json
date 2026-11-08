@@ -1,16 +1,28 @@
 {
   "variants": {
-    "waterlogged=true,yellow=true": {
+    "waterlogged=true,yellow=true,white=true": {
+      "model": "simpleboatengine:block/lift_buoy_white"
+    },
+    "waterlogged=true,yellow=true,white=false": {
       "model": "simpleboatengine:block/lift_buoy_yellow"
     },
-    "waterlogged=true,yellow=false": {
-      "model": "simpleboatengine:block/lift_buoy_red"
+    "waterlogged=true,yellow=false,white=true": {
+      "model": "simpleboatengine:block/lift_buoy_white"
     },
-    "waterlogged=false,yellow=true": {
+    "waterlogged=true,yellow=false,white=false": {
+      "model": "simpleboatengine:block/lift_buoy_orange"
+    },
+    "waterlogged=false,yellow=true,white=true": {
+      "model": "simpleboatengine:block/lift_buoy_white"
+    },
+    "waterlogged=false,yellow=true,white=false": {
       "model": "simpleboatengine:block/lift_buoy_yellow"
     },
-    "waterlogged=false,yellow=false": {
-      "model": "simpleboatengine:block/lift_buoy_red"
+    "waterlogged=false,yellow=false,white=true": {
+      "model": "simpleboatengine:block/lift_buoy_white"
+    },
+    "waterlogged=false,yellow=false,white=false": {
+      "model": "simpleboatengine:block/lift_buoy_orange"
     }
   }
 }

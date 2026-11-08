@@ -3,8 +3,8 @@
   "item.simpleboatengine.fuel_bucket": "Steel Fuel Canister (Filled)",
   "item.simpleboatengine.fuel_canister": "Auxiliary Fuel Canister",
   "item.simpleboatengine.pole_light": "Automatic Boat Pole Light",
-  "block.simpleboatengine.boat_customizer": "Boat Customization Station",
-  "container.simpleboatengine.boat_customizer": "Boat Customization Station",
+  "block.simpleboatengine.boat_customizer": "Boat Painting Table",
+  "container.simpleboatengine.boat_customizer": "Boat Painting Table",
   "item.simpleboatengine.aggelos_blue_fishing_boat": "Blue Fishing Boat",
   "entity.simpleboatengine.aggelos_blue_fishing_boat": "Fishing Boat",
   "container.simpleboatengine.fishing_boat": "Fishing Boat Storage",
@@ -26,9 +26,11 @@
   "item.simpleboatengine.boat_trailer": "Fishing Boat Trailer",
   "entity.simpleboatengine.boat_trailer": "Fishing Boat Trailer",
   "item.simpleboatengine.winch_rope": "Black Winch Rope",
-  "block.simpleboatengine.lift_buoy": "Lifting Buoy",
-  "item.simpleboatengine.lift_buoy": "Lifting Buoy",
-  "block.simpleboatengine.boat_stand": "Boat Stand & Paint Bench",
-  "item.simpleboatengine.boat_stand": "Boat Stand & Paint Bench",
-  "item.simpleboatengine.yellow_lift_buoy": "Yellow Lifting Buoy"
+  "block.simpleboatengine.lift_buoy": "Orange Lifting Buoy",
+  "item.simpleboatengine.lift_buoy": "Orange Lifting Buoy",
+  "block.simpleboatengine.boat_stand": "Boat Parking Stand",
+  "item.simpleboatengine.boat_stand": "Boat Parking Stand",
+  "item.simpleboatengine.yellow_lift_buoy": "Yellow Lifting Buoy",
+  "item.simpleboatengine.white_lift_buoy": "White Lifting Buoy",
+  "item.simpleboatengine.boat_customizer": "Boat Painting Table"
 }

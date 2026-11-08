@@ -3,8 +3,8 @@
   "item.simpleboatengine.fuel_bucket": "Κουβάς καυσίμου",
   "item.simpleboatengine.fuel_canister": "Βοηθητικό δοχείο καυσίμου",
   "item.simpleboatengine.pole_light": "Αυτόματο φως βάρκας",
-  "block.simpleboatengine.boat_customizer": "Σταθμός βαφής βάρκας",
-  "container.simpleboatengine.boat_customizer": "Σταθμός βαφής βάρκας",
+  "block.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας",
+  "container.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας",
   "item.simpleboatengine.aggelos_blue_fishing_boat": "Μπλε ψαρόβαρκα",
   "entity.simpleboatengine.aggelos_blue_fishing_boat": "Ψαρόβαρκα",
   "container.simpleboatengine.fishing_boat": "Αποθήκη ψαρόβαρκας",
@@ -22,9 +22,11 @@
   "key.simpleboatengine.up": "Αύξηση γκαζιού",
   "key.simpleboatengine.down": "Μείωση γκαζιού",
   "subtitles.simpleboatengine.motor_loop": "Ήχος μηχανής βάρκας",
-  "block.simpleboatengine.lift_buoy": "Σημαδούρα Ανύψωσης",
-  "item.simpleboatengine.lift_buoy": "Σημαδούρα Ανύψωσης",
-  "block.simpleboatengine.boat_stand": "Βάση Βάρκας & Πάγκος Βαφής",
-  "item.simpleboatengine.boat_stand": "Βάση Βάρκας & Πάγκος Βαφής",
-  "item.simpleboatengine.yellow_lift_buoy": "Κίτρινη Σημαδούρα Ανύψωσης"
+  "block.simpleboatengine.lift_buoy": "Πορτοκαλί Σημαδούρα",
+  "item.simpleboatengine.lift_buoy": "Πορτοκαλί Σημαδούρα",
+  "block.simpleboatengine.boat_stand": "Βάση Στάθμευσης Βάρκας",
+  "item.simpleboatengine.boat_stand": "Βάση Στάθμευσης Βάρκας",
+  "item.simpleboatengine.yellow_lift_buoy": "Κίτρινη Σημαδούρα Ανύψωσης",
+  "item.simpleboatengine.white_lift_buoy": "Λευκή Σημαδούρα",
+  "item.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας"
 }

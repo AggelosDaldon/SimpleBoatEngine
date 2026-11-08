@@ -48,7 +48,8 @@ public final class BoatStandBlock extends BaseEntityBlock {
             if (!server.getInventory().add(fullBoat)) server.drop(fullBoat, false);
             return InteractionResult.CONSUME;
         }
-        NetworkHooks.openScreen(server, station, pos);
+        server.displayClientMessage(net.minecraft.network.chat.Component.literal(
+            "Use a nearby Boat Painting Table to customize this parked boat."), true);
         return InteractionResult.CONSUME;
     }
 
