@@ -12,8 +12,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public final class LiftBuoyItem extends BlockItem {
-    public LiftBuoyItem(Properties properties) {
+    private final boolean yellow;
+    public LiftBuoyItem(Properties properties) { this(properties, false); }
+    public LiftBuoyItem(Properties properties, boolean yellow) {
         super(EngineBlocks.LIFT_BUOY.get(), properties);
+        this.yellow = yellow;
     }
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack held=player.getItemInHand(hand);
@@ -25,7 +28,8 @@ public final class LiftBuoyItem extends BlockItem {
                 !level.getFluidState(pos).isSource()) return InteractionResultHolder.pass(held);
         if (!level.isClientSide) {
             if (!level.setBlock(pos,EngineBlocks.LIFT_BUOY.get().defaultBlockState()
-                    .setValue(LiftBuoyBlock.WATERLOGGED,true),3))
+                    .setValue(LiftBuoyBlock.WATERLOGGED,true)
+                    .setValue(LiftBuoyBlock.YELLOW,yellow),3))
                 return InteractionResultHolder.fail(held);
             if (!player.getAbilities().instabuild) held.shrink(1);
         }

@@ -18,5 +18,9 @@ public final class EngineBlockEntities {
         TYPES.register("lift_buoy", () -> BlockEntityType.Builder.of(
             LiftBuoyBlockEntity::new, EngineBlocks.LIFT_BUOY.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<BoatStandBlockEntity>> BOAT_STAND =
+        TYPES.register("boat_stand", () -> BlockEntityType.Builder.of(
+            BoatStandBlockEntity::new, EngineBlocks.BOAT_STAND.get()).build(null));
+
     private EngineBlockEntities() {}
 }

@@ -23,5 +23,9 @@ public final class EngineBlocks {
     public static final RegistryObject<Block> LIFT_BUOY = BLOCKS.register("lift_buoy",
         () -> new LiftBuoyBlock(BlockBehaviour.Properties.of()
             .strength(1.5f).noCollission().noOcclusion()));
+    public static final RegistryObject<Block> BOAT_STAND = BLOCKS.register("boat_stand",
+        () -> new BoatStandBlock(BlockBehaviour.Properties.of()
+            .strength(3.0f).noOcclusion()));
+
     private EngineBlocks() {}
 }

@@ -15,14 +15,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 /** Persistent boat and dye slots for the customization workbench. */
-public final class BoatCustomizerBlockEntity extends BlockEntity implements Container, MenuProvider {
+public class BoatCustomizerBlockEntity extends BlockEntity implements Container, MenuProvider {
     private ItemStack boat = ItemStack.EMPTY;
     private ItemStack dye = ItemStack.EMPTY;
     private ItemStack wood = ItemStack.EMPTY;
     private ItemStack nameDye = ItemStack.EMPTY;
 
     public BoatCustomizerBlockEntity(BlockPos pos, BlockState state) {
-        super(EngineBlockEntities.CUSTOMIZER.get(), pos, state);
+        this(EngineBlockEntities.CUSTOMIZER.get(), pos, state);
+    }
+    protected BoatCustomizerBlockEntity(net.minecraft.world.level.block.entity.BlockEntityType<?> type,
+                                        BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
