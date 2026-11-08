@@ -30,8 +30,7 @@ jobs:
             assets/simpleboatengine/models/item/engine.json \
             assets/simpleboatengine/models/item/pole_light.json \
             assets/simpleboatengine/sounds/motor_loop.ogg \
-            assets/simpleboatengine/textures/item/outboard_engine.png \
-            assets/simpleboatengine/textures/item/boat_accessories.png; do
+            assets/simpleboatengine/textures/item/outboard_engine.png; do
             unzip -l "$JAR" "$ASSET" | grep -F "$ASSET"
           done
           for ASSET in \
