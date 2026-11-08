@@ -48,6 +48,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(ScrollCargo.class, 6, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ScrollCargo::write).decoder(ScrollCargo::read)
             .consumerMainThread(ScrollCargo::receive).add();
+        CHANNEL.messageBuilder(SelectPaintStand.class, 7, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(SelectPaintStand::write).decoder(SelectPaintStand::read)
+            .consumerMainThread(SelectPaintStand::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -154,6 +157,28 @@ public final class MotorPackets {
         }
     }
 
+    public record SelectPaintStand(BlockPos table, int direction) {
+        static void write(SelectPaintStand msg, FriendlyByteBuf out) {
+            out.writeBlockPos(msg.table); out.writeVarInt(msg.direction);
+        }
+        static SelectPaintStand read(FriendlyByteBuf in) {
+            return new SelectPaintStand(in.readBlockPos(), in.readVarInt());
+        }
+        static void receive(SelectPaintStand msg, Supplier<NetworkEvent.Context> context) {
+            ServerPlayer player=context.get().getSender();
+            context.get().enqueueWork(() -> {
+                if (player==null || !(player.containerMenu instanceof BoatCustomizerMenu menu)
+                    || !menu.getBlockPos().equals(msg.table)
+                    || player.distanceToSqr(msg.table.getX()+.5,msg.table.getY()+.5,msg.table.getZ()+.5)>64
+                    || !(player.level().getBlockEntity(msg.table) instanceof BoatCustomizerBlockEntity table))
+                    return;
+                table.selectRelative(msg.direction);
+                menu.broadcastChanges();
+            });
+            context.get().setPacketHandled(true);
+        }
+    }
+
     /** Server accepts edits only while the requesting player has this station open. */
     public record CustomizeBoat(BlockPos pos, int channel, int color, String name) {
         static void write(CustomizeBoat msg, FriendlyByteBuf out) {
@@ -172,7 +197,8 @@ public final class MotorPackets {
                     || !msg.pos.equals(menu.getBlockPos())
                     || player.distanceToSqr(msg.pos.getX() + 0.5, msg.pos.getY() + 0.5,
                         msg.pos.getZ() + 0.5) > 64
-                    || !(player.level().getBlockEntity(msg.pos) instanceof BoatCustomizerBlockEntity workshop)) return;
+                    || !(player.level().getBlockEntity(msg.pos) instanceof BoatCustomizerBlockEntity table)) return;
+                BoatCustomizerBlockEntity workshop = table.linkedStand() == null ? table : table.linkedStand();
                 ItemStack item = workshop.getItem(0);
                 if (!(item.getItem() instanceof SkiffBoatItem)) return;
                 if (msg.channel == -1) {
