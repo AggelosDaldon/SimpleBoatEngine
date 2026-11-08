@@ -52,7 +52,8 @@ public final class LiftBuoyItem extends BlockItem {
         if (!level.isClientSide) {
             if (!level.setBlock(pos,EngineBlocks.LIFT_BUOY.get().defaultBlockState()
                     .setValue(LiftBuoyBlock.WATERLOGGED,true)
-                    .setValue(LiftBuoyBlock.YELLOW,yellow),3))
+                    .setValue(LiftBuoyBlock.YELLOW,color==1)
+                    .setValue(LiftBuoyBlock.WHITE,color==2),3))
                 return InteractionResultHolder.fail(held);
             if (!player.getAbilities().instabuild) held.shrink(1);
         }
