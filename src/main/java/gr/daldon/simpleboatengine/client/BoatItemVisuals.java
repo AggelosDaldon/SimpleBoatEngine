@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.network.chat.Component;
 
 /** Shared visual state for a packed boat in the world, workshop and inventory. */
 public final class BoatItemVisuals {
@@ -29,6 +33,7 @@ public final class BoatItemVisuals {
         BlueBoatMesh.draw(pose,buffers,light,
             BoatPaint.woodStyle(item,boat.getHullStyle()),BoatPaint.all(item));
         drawAccessories(item,pose,buffers,light);
+        drawName(item,pose,buffers,light);
     }
 
     public static void drawAccessories(ItemStack item, PoseStack pose,
@@ -58,4 +63,26 @@ public final class BoatItemVisuals {
             }
         }
     }
+    /** Align the painted name to the two angled bow panels, like SkiffBoatRenderer. */
+    public static void drawName(ItemStack item, PoseStack pose, MultiBufferSource buffers, int light) {
+        String name = BoatPaint.name(item);
+        if (name.isBlank()) return;
+        Font font = Minecraft.getInstance().font;
+        int color = DyeColor.byId(BoatPaint.nameColor(item)).getTextColor();
+        int textLight = BoatPaint.nameGlows(item) ? LightTexture.FULL_BRIGHT : light;
+        for (int side : new int[]{-1,1}) {
+            pose.pushPose();
+            pose.translate(side*5.55/16.0,10.5/16.0,-33.0/16.0);
+            pose.mulPose(Axis.YP.rotationDegrees(side*52.7836f));
+            pose.translate(side*1.12/16.0,0,0);
+            pose.mulPose(Axis.YP.rotationDegrees(side*90f));
+            float size = Math.min(.010f,.73f/Math.max(1,font.width(name)));
+            pose.scale(size,-size,size);
+            font.drawInBatch(Component.literal(name),-font.width(name)/2f,
+                -font.lineHeight/2f,color,false,pose.last().pose(),
+                buffers,Font.DisplayMode.NORMAL,0,textLight);
+            pose.popPose();
+        }
+    }
+
 }
