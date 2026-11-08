@@ -208,7 +208,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         g.drawString(font, "WOOD", 57, 183, 0xFFF8E8CF, false);
         if(menu.standCount()>0)
             g.drawString(font, "Stand "+(menu.standIndex()+1)+"/"+menu.standCount(),
-                170, 212, 0xFFF8E8CF, false);
+                170, 142, 0xFFF8E8CF, false);
         g.drawString(font, playerInventoryTitle, 87, 213, 0xFFF8E8CF, false);
     }
 
