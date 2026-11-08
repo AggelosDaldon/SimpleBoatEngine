@@ -21,5 +21,7 @@
   "key.simpleboatengine.category": "Simple Boat Engine",
   "key.simpleboatengine.up": "Αύξηση γκαζιού",
   "key.simpleboatengine.down": "Μείωση γκαζιού",
-  "subtitles.simpleboatengine.motor_loop": "Ήχος μηχανής βάρκας"
+  "subtitles.simpleboatengine.motor_loop": "Ήχος μηχανής βάρκας",
+  "block.simpleboatengine.lift_buoy": "Σημαδούρα Ανύψωσης",
+  "item.simpleboatengine.lift_buoy": "Σημαδούρα Ανύψωσης"
 }
