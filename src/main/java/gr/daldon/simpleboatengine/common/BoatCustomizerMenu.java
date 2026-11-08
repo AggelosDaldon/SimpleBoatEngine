@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 public final class BoatCustomizerMenu extends AbstractContainerMenu {
     private final Container container;
     private final BlockPos blockPos;
+    private final BoatCustomizerBlockEntity table;
 
     // This constructor runs clientside with the BlockPos sent via openScreen.
     public BoatCustomizerMenu(int id, Inventory inventory, FriendlyByteBuf data) {
@@ -22,20 +23,25 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
 
     private BoatCustomizerMenu(int id, Inventory inventory, BlockPos pos) {
         this(id, inventory, inventory.player.level().getBlockEntity(pos) instanceof BoatCustomizerBlockEntity be
-            ? be : new SimpleContainer(4), pos);
+            ? be : null, pos);
     }
 
     public BoatCustomizerMenu(int id, Inventory inventory, BoatCustomizerBlockEntity station) {
         this(id, inventory, station, station.getBlockPos());
     }
 
-    private BoatCustomizerMenu(int id, Inventory inventory, Container data, BlockPos pos) {
+    private BoatCustomizerMenu(int id, Inventory inventory, BoatCustomizerBlockEntity station, BlockPos pos) {
         super(EngineMenus.CUSTOMIZER.get(), id);
+        table = station;
+        Container data = station == null ? new SimpleContainer(4) : new SelectedStandContainer(station);
         container = data;
         blockPos = pos;
         addSlot(new Slot(data, 0, 35, 46) {
             @Override public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof SkiffBoatItem;
+                return table != null && table.selectionCount()==0 && stack.getItem() instanceof SkiffBoatItem;
+            }
+            @Override public boolean mayPickup(Player player) {
+                return table == null || table.selectionCount()==0;
             }
             @Override public int getMaxStackSize() { return 1; }
         });
@@ -65,6 +71,9 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     }
 
     public BlockPos getBlockPos() { return blockPos; }
+    public int standCount(){return table==null?0:table.selectionCount();}
+    public int standIndex(){return table==null?-1:table.selectionIndex();}
+    public BoatCustomizerBlockEntity table(){return table;}
     public ItemStack boatItem() { return container.getItem(0); }
     public ItemStack dyeItem() { return container.getItem(1); }
     public ItemStack woodItem() { return container.getItem(2); }
@@ -76,9 +85,10 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         if (!slot.hasItem()) return ItemStack.EMPTY;
         ItemStack original = slot.getItem();
         ItemStack copy = original.copy();
+        if (index == 0 && standCount()>0) return ItemStack.EMPTY;
         if (index < 4) {
             if (!moveItemStackTo(original, 4, 40, true)) return ItemStack.EMPTY;
-        } else if (original.getItem() instanceof SkiffBoatItem && !slots.get(0).hasItem()) {
+        } else if (standCount()==0 && original.getItem() instanceof SkiffBoatItem && !slots.get(0).hasItem()) {
             if (!moveItemStackTo(original, 0, 1, false)) return ItemStack.EMPTY;
         } else if (original.getItem() instanceof DyeItem || original.is(net.minecraft.world.item.Items.GLOW_INK_SAC)) {
             if (!moveItemStackTo(original, 1, 2, false)) return ItemStack.EMPTY;
