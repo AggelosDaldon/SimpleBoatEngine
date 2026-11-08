@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.Blocks;
 public final class MarineFuelMesh {
     private MarineFuelMesh(){}
     private static void part(PoseStack p, MultiBufferSource b, int light, Block block,
-                             float x,float y,float z,float w,float h,float d){
-        p.pushPose();p.translate(x,y,z);p.scale(w,h,d);
+                             double x,double y,double z,double w,double h,double d){
+        p.pushPose();p.translate(x,y,z);p.scale((float)w,(float)h,(float)d);
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
             block.defaultBlockState(),p,b,light,OverlayTexture.NO_OVERLAY);
         p.popPose();
