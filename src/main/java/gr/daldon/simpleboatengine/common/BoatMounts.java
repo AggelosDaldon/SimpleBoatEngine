@@ -28,6 +28,12 @@ public final class BoatMounts {
     }
 
 
+    public static Mount canister(Boat boat) {
+        if (boat instanceof BlueFishingBoat) return new Mount(.59f,HULL_Y + 4.95f/16f,.70f);
+        if (boat instanceof SkiffBoat) return new Mount(.60f,.79f,.82f);
+        return new Mount(.73f,boat.getBbHeight()*.34f,.55f);
+    }
+
     public static Mount poleLight(Boat boat) {
         // Pole foot sits on TOP of the outer rail, not down on the inner floor.
         if (boat instanceof BlueFishingBoat) return new Mount(-0.935f, HULL_Y + 14.25f / 16f, 2.09f);

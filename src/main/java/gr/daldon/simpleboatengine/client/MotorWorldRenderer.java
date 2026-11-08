@@ -55,6 +55,16 @@ public final class MotorWorldRenderer {
                     LevelRenderer.getLightColor(game.level, boat.blockPosition()));
             pose.popPose();
 
+            if (status.getBoolean("CanisterInstalled")) {
+                pose.pushPose();
+                var canister=BoatMounts.canister(boat);
+                pose.translate(canister.x(),canister.y(),canister.z());
+                pose.mulPose(Axis.YP.rotationDegrees(-90f));
+                pose.scale(1.3f,1.3f,1.3f);
+                CanisterMesh.draw(pose,buffers,
+                    LevelRenderer.getLightColor(game.level,boat.blockPosition()));
+                pose.popPose();
+            }
             if (status.getBoolean("PoleLightInstalled")) {
                 pose.pushPose();
                 var lamp = BoatMounts.poleLight(boat);

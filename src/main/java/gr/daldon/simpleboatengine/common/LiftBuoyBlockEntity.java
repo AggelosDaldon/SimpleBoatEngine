@@ -2,72 +2,97 @@ package gr.daldon.simpleboatengine.common;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.level.material.FluidState;
 
-/** Only transfers a single safe block on the same vertical axis. */
+/** One-block vertical lift, synchronized to clients for the visible rope. */
 public final class LiftBuoyBlockEntity extends BlockEntity {
-    private BlockPos linked;
+    private BlockPos origin;
+    private boolean raised;
+    private boolean upperWasWater;
+
     public LiftBuoyBlockEntity(BlockPos pos, BlockState state) {
         super(EngineBlockEntities.LIFT_BUOY.get(), pos, state);
     }
+    public boolean isRaised() { return raised; }
+    public BlockPos ropeTarget() { return origin; }
 
-    private boolean movable(BlockPos source) {
-        if (level == null || !level.hasChunkAt(source)) return false;
-        BlockState state = level.getBlockState(source);
-        return !state.isAir() && !state.is(Blocks.BEDROCK) &&
-            state.getDestroySpeed(level, source) >= 0 && !state.hasBlockEntity() &&
-            !state.is(Blocks.WATER) && !state.is(Blocks.LAVA) &&
-            !state.is(EngineBlocks.LIFT_BUOY.get()) &&
-            state.getFluidState().isEmpty();
+    private boolean movable(BlockPos pos) {
+        if (level == null || !level.hasChunkAt(pos)) return false;
+        BlockState block = level.getBlockState(pos);
+        return !block.isAir() && !block.is(Blocks.BEDROCK) &&
+            block.getDestroySpeed(level,pos) >= 0f && !block.hasBlockEntity() &&
+            block.getFluidState().isEmpty() &&
+            !block.is(EngineBlocks.LIFT_BUOY.get()) &&
+            block.isCollisionShapeFullBlock(level, pos);
     }
-    public boolean bindClosestUnderneath() {
-        if (level == null) return false;
-        for (int i = 2; i <= 32; i++) {
-            BlockPos found = worldPosition.below(i);
-            if (movable(found)) {
-                linked = found.immutable();
-                setChanged();
-                return true;
+    private boolean replaceable(BlockPos pos) {
+        if (level == null || !level.hasChunkAt(pos)) return false;
+        BlockState state = level.getBlockState(pos);
+        return state.isAir() || state.is(Blocks.WATER);
+    }
+    private void synchronize() {
+        setChanged();
+        if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+    }
+    public boolean toggle() {
+        if (!(level instanceof ServerLevel server)) return false;
+        BlockPos upper = worldPosition.below();
+        if (!raised) {
+            if (!replaceable(upper)) return false;
+            BlockPos found = origin;
+            if (found == null || !movable(found)) {
+                found = null;
+                for (int depth=2; depth<=32; depth++) {
+                    BlockPos candidate=worldPosition.below(depth);
+                    if (movable(candidate)) { found=candidate.immutable(); break; }
+                }
             }
+            if (found == null) return false;
+            BlockState state=server.getBlockState(found);
+            boolean wet=server.getFluidState(upper).is(Fluids.WATER);
+            if (!server.setBlock(upper,state,3)) return false;
+            if (!server.setBlock(found,Blocks.AIR.defaultBlockState(),3)) {
+                server.setBlock(upper,wet ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState(),3);
+                return false;
+            }
+            origin=found;
+            upperWasWater=wet;
+            raised=true;
+            synchronize();
+            return true;
         }
-        return false;
-    }
-    public boolean raise() {
-        if (!(level instanceof ServerLevel server) || linked == null) return false;
-        BlockPos dest = worldPosition.below();
-        if (linked.getX() != dest.getX() || linked.getZ() != dest.getZ()) return false;
-        if (linked.equals(dest)) return true;
-        if (!movable(linked) || !server.hasChunkAt(dest)) return false;
-        BlockState previous = server.getBlockState(dest);
-        if (!previous.canBeReplaced() && !previous.isAir()) return false;
-        BlockState moving = server.getBlockState(linked);
-        // Reject connected inventories, block entities and multiblock structures.
-        // Move only after confirming placement and keep the existing fluid beneath.
-        BlockState sourceReplacement = server.getFluidState(linked).is(Fluids.WATER)
-            ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
-        if (!server.setBlock(dest, moving, 3)) return false;
-        if (!server.setBlock(linked, sourceReplacement, 3)) {
-            server.setBlock(dest, previous, 3);
+        if (origin == null || !movable(upper) || !replaceable(origin)) return false;
+        BlockState state=server.getBlockState(upper);
+        boolean originWet=server.getFluidState(origin).is(Fluids.WATER);
+        if (!server.setBlock(origin,state,3)) return false;
+        if (!server.setBlock(upper,upperWasWater ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState(),3)) {
+            server.setBlock(origin,originWet ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState(),3);
             return false;
         }
-        linked = dest.immutable();
-        setChanged();
-        server.playSound(null, worldPosition, SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, .7f, 1.3f);
+        raised=false;
+        synchronize();
         return true;
     }
     @Override protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (linked != null) tag.putLong("LinkedBlock", linked.asLong());
+        if (origin!=null) tag.putLong("Origin",origin.asLong());
+        tag.putBoolean("Raised",raised);
+        tag.putBoolean("UpperWater",upperWasWater);
     }
     @Override public void load(CompoundTag tag) {
         super.load(tag);
-        linked = tag.contains("LinkedBlock") ? BlockPos.of(tag.getLong("LinkedBlock")) : null;
+        origin=tag.contains("Origin") ? BlockPos.of(tag.getLong("Origin")) : null;
+        raised=tag.getBoolean("Raised");
+        upperWasWater=tag.getBoolean("UpperWater");
+    }
+    @Override public CompoundTag getUpdateTag() { return saveWithoutMetadata(); }
+    @Override public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

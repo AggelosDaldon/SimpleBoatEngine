@@ -2,6 +2,7 @@ package gr.daldon.simpleboatengine.client;
 
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.common.EngineEntities;
+import gr.daldon.simpleboatengine.common.EngineBlockEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,5 +16,6 @@ public final class SkiffRenderRegistration {
     @SubscribeEvent
     public static void register(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EngineEntities.BLUE_FISHING_BOAT.get(), SkiffBoatRenderer::new);
+        event.registerBlockEntityRenderer(EngineBlockEntities.LIFT_BUOY.get(), LiftBuoyRopeRenderer::new);
     }
 }

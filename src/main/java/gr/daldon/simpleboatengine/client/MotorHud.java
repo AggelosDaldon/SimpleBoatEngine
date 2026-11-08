@@ -29,7 +29,7 @@ public final class MotorHud {
         if (data == null || !data.getBoolean("Running")) return;
 
         int throttle = Math.max(0, Math.min(10, data.getInt("Throttle")));
-        int capacity = 3000;
+        int capacity = data.getBoolean("CanisterInstalled") ? 6000 : 3000;
         float fuel = Math.max(0f, Math.min(capacity, data.getFloat("Fuel")));
         float fraction = fuel / capacity;
         double speed = boat.getDeltaMovement().horizontalDistance() * 20.0;

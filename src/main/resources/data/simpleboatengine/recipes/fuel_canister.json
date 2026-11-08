@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["IRI", "IBI", "III"],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "R": { "item": "minecraft:red_dye" },
+    "B": { "item": "minecraft:bucket" }
+  },
+  "result": { "item": "simpleboatengine:fuel_canister", "count": 1 }
+}

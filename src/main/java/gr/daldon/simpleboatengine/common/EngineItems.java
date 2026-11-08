@@ -29,6 +29,8 @@ public final class EngineItems {
     // Historical registry id retained so existing worlds and inventories still load.
     public static final RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> FUEL_CANISTER = ITEMS.register("fuel_canister",
+        () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> CUSTOMIZER = ITEMS.register("boat_customizer",
@@ -37,7 +39,7 @@ public final class EngineItems {
         () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.BLUE_FISHING_BOAT));
 
     public static final RegistryObject<Item> LIFT_BUOY = ITEMS.register("lift_buoy",
-        () -> new BlockItem(EngineBlocks.LIFT_BUOY.get(), new Item.Properties()));
+        () -> new LiftBuoyItem(new Item.Properties()));
     public static final String[] WOODS = {
         "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo"
     };
@@ -81,6 +83,7 @@ public final class EngineItems {
             .displayItems((parameters, output) -> {
                 output.accept(ENGINE.get());
                 output.accept(FUEL_BUCKET.get());
+                output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
                 output.accept(CUSTOMIZER.get());
                 output.accept(LIFT_BUOY.get());

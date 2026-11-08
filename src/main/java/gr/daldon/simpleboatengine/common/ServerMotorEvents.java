@@ -51,6 +51,24 @@ public final class ServerMotorEvents {
             event.setCanceled(true);
             return;
         }
+        if (held.is(EngineItems.FUEL_CANISTER.get())) {
+            if (!boat.level().isClientSide) {
+                CompoundTag data = MotorData.writable(boat);
+                if (!data.getBoolean("Installed")) {
+                    notify(event.getEntity(), "Install an engine before fitting the red fuel canister.");
+                } else if (data.getBoolean("CanisterInstalled")) {
+                    notify(event.getEntity(), "This boat already has a red fuel canister.");
+                } else {
+                    data.putBoolean("CanisterInstalled",true);
+                    if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
+                    notify(event.getEntity(), "Red fuel canister mounted: 6000 total fuel capacity.");
+                    click(boat);
+                }
+            }
+            event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
+            event.setCanceled(true);
+            return;
+        }
         if (!held.is(EngineItems.ENGINE.get()) || MotorData.installed(boat)) return;
         if (!boat.level().isClientSide) {
             CompoundTag data = MotorData.writable(boat);
@@ -59,6 +77,7 @@ public final class ServerMotorEvents {
             data.putInt("Throttle", 0);
             data.putFloat("Fuel", 0f);
             data.putBoolean("PoleLightInstalled", false);
+            data.putBoolean("CanisterInstalled", false);
             if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
             notify(event.getEntity(), "Motor installed! Point at the motor to refuel and switch it on.");
             click(boat);
