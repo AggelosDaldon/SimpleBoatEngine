@@ -1,6 +1,7 @@
 package gr.daldon.simpleboatengine.common;
 
 import net.minecraft.tags.FluidTags;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -54,6 +55,23 @@ public final class SkiffBoatItem extends EngineItem {
             blue.setBoatName(BoatPaint.name(held));
             blue.setNameColor(BoatPaint.nameColor(held));
             blue.setNameGlow(BoatPaint.nameGlows(held));
+        }
+        if (!level.isClientSide && held.hasTag()
+                && held.getTag().contains("PackedFishingBoat", 10)) {
+            CompoundTag saved = held.getTag().getCompound("PackedFishingBoat").copy();
+            // A fresh entity needs its own identity; do not restore the old UUID.
+            saved.remove("UUID");
+            try {
+                boat.load(saved);
+            } catch (RuntimeException error) {
+                org.slf4j.LoggerFactory.getLogger(SkiffBoatItem.class)
+                    .error("Could not unpack the stored fishing boat", error);
+                return InteractionResultHolder.fail(held);
+            }
+            // A stored running engine must never restart autonomously.
+            var engine = MotorData.writable(boat);
+            engine.putBoolean("Running", false);
+            engine.putInt("Throttle", 0);
         }
         boat.setPos(location.x, location.y, location.z);
         boat.setYRot(player.getYRot());

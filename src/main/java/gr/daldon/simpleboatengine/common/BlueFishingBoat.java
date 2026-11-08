@@ -35,6 +35,7 @@ public final class BlueFishingBoat extends SkiffBoat {
     private final SimpleContainer cargo = new SimpleContainer(108);
     private final SimpleContainer hatchCargo = new SimpleContainer(27);
     private boolean cargoDropped;
+    private static final String PACKED_BOAT = "PackedFishingBoat";
 
     public BlueFishingBoat(EntityType<? extends Boat> type, Level level) {
         super(type, level);
@@ -60,15 +61,23 @@ public final class BlueFishingBoat extends SkiffBoat {
         BoatPaint.setNameColor(stack, getNameColor());
         BoatPaint.setNameGlow(stack, nameGlows());
         BoatPaint.setWoodStyle(stack, getHullStyle());
+        // Store the entire entity, including both chests, engine, fuel, light,
+        // dyes and custom boat name. Never split cargo into separate drops.
+        CompoundTag snapshot = new CompoundTag();
+        saveWithoutId(snapshot);
+        stack.getOrCreateTag().put(PACKED_BOAT, snapshot);
         return stack;
     }
 
     /** A harvested boat remembers both dyes instead of reverting to the base item. */
     @Override
     protected void destroy(DamageSource source) {
+        // Snapshot before removing the entity; its removal must not spill cargo.
+        ItemStack packed = paintedItem();
+        cargoDropped = true;
         kill();
-        if (level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))
-            spawnAtLocation(paintedItem());
+        if (!level().isClientSide && level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))
+            spawnAtLocation(packed);
     }
 
     @Override

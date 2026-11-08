@@ -29,20 +29,12 @@ public final class EngineItems {
     // Historical registry id retained so existing worlds and inventories still load.
     public static final RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> EMPTY_FUEL_CANISTER = ITEMS.register("empty_fuel_canister",
-        () -> new EngineItem(new Item.Properties().stacksTo(16)));
-    public static final RegistryObject<Item> FUEL_CANISTER = ITEMS.register("fuel_canister",
-        () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> CUSTOMIZER = ITEMS.register("boat_customizer",
         () -> new BlockItem(EngineBlocks.CUSTOMIZER.get(), new Item.Properties()));
     public static final RegistryObject<Item> BLUE_FISHING_BOAT = ITEMS.register("aggelos_blue_fishing_boat",
         () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.BLUE_FISHING_BOAT));
-    public static final RegistryObject<Item> BOAT_TRAILER = ITEMS.register("boat_trailer",
-        () -> new BoatTrailerItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> WINCH_ROPE = ITEMS.register("winch_rope",
-        () -> new WinchRopeItem(new Item.Properties().stacksTo(1)));
 
     public static final String[] WOODS = {
         "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo"
@@ -87,12 +79,8 @@ public final class EngineItems {
             .displayItems((parameters, output) -> {
                 output.accept(ENGINE.get());
                 output.accept(FUEL_BUCKET.get());
-                output.accept(EMPTY_FUEL_CANISTER.get());
-                output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
                 output.accept(CUSTOMIZER.get());
-                output.accept(BOAT_TRAILER.get());
-                output.accept(WINCH_ROPE.get());
                 output.accept(BLUE_FISHING_BOAT.get());
                 for (RegistryObject<Item> boat : WOOD_BOATS) output.accept(boat.get());
             }).build());
@@ -102,7 +90,6 @@ public final class EngineItems {
     public static void populateVanillaTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(BLUE_FISHING_BOAT.get());
-            event.accept(BOAT_TRAILER.get());
             for (RegistryObject<Item> boat : WOOD_BOATS) event.accept(boat.get());
         }
     }

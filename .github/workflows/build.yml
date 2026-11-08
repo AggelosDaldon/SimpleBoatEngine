@@ -28,7 +28,6 @@ jobs:
           unzip -p "$JAR" pack.mcmeta
           for ASSET in \
             assets/simpleboatengine/models/item/engine.json \
-            assets/simpleboatengine/models/item/fuel_canister.json \
             assets/simpleboatengine/models/item/pole_light.json \
             assets/simpleboatengine/sounds/motor_loop.ogg \
             assets/simpleboatengine/textures/item/outboard_engine.png \

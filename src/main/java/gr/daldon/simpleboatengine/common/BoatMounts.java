@@ -16,15 +16,6 @@ public final class BoatMounts {
 
     // Exact same attachment points as the normal fishing boat, reused
     // while the hull is stored and rendered on the trailer.
-    public static Mount motorForFishingTrailer() {
-        return new Mount(0f, 0.56f, 2.76f);
-    }
-    public static Mount canisterForFishingTrailer() {
-        return new Mount(0.59f, HULL_Y + 4.95f / 16f, 0.70f);
-    }
-    public static Mount poleLightForFishingTrailer() {
-        return new Mount(-0.935f, HULL_Y + 14.25f / 16f, 2.09f);
-    }
 
     public static Mount motor(Boat boat) {
         // Motor front edge intersects the stern by ~0.15 block; propeller
@@ -36,13 +27,6 @@ public final class BoatMounts {
         return new Mount(0f, boat.getBbHeight() / 3f, 1.24f);
     }
 
-    public static Mount canister(Boat boat) {
-        // Both custom boats carry the auxiliary tank down on the starboard cabin floor,
-        // clear of the gunwale and the passenger seats.
-        if (boat instanceof BlueFishingBoat) return new Mount(0.59f, HULL_Y + 4.95f / 16f, 0.70f);
-        if (boat instanceof SkiffBoat) return new Mount(0.60f, 0.79f, 0.82f);
-        return new Mount(0.73f, boat.getBbHeight() * 0.34f, 0.55f);
-    }
 
     public static Mount poleLight(Boat boat) {
         // Pole foot sits on TOP of the outer rail, not down on the inner floor.
