@@ -36,6 +36,8 @@ public final class EngineItems {
     public static final RegistryObject<Item> BLUE_FISHING_BOAT = ITEMS.register("aggelos_blue_fishing_boat",
         () -> new SkiffBoatItem(new Item.Properties().stacksTo(1), EngineEntities.BLUE_FISHING_BOAT));
 
+    public static final RegistryObject<Item> LIFT_BUOY = ITEMS.register("lift_buoy",
+        () -> new BlockItem(EngineBlocks.LIFT_BUOY.get(), new Item.Properties()));
     public static final String[] WOODS = {
         "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo"
     };
@@ -81,6 +83,7 @@ public final class EngineItems {
                 output.accept(FUEL_BUCKET.get());
                 output.accept(POLE_LIGHT.get());
                 output.accept(CUSTOMIZER.get());
+                output.accept(LIFT_BUOY.get());
                 output.accept(BLUE_FISHING_BOAT.get());
                 for (RegistryObject<Item> boat : WOOD_BOATS) output.accept(boat.get());
             }).build());
