@@ -26,5 +26,7 @@ public final class BoatCustomizerRegistration {
     public static void onRegister(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(EngineBlockEntities.CUSTOMIZER.get(),
             BoatCustomizerRenderer::new);
+        event.registerBlockEntityRenderer(EngineBlockEntities.BOAT_STAND.get(),
+            BoatStandRenderer::new);
     }
 }

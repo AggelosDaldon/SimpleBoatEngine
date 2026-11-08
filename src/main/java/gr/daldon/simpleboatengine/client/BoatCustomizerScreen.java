@@ -132,6 +132,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         int style = currentWoodStyle(boat);
         BlueBoatMesh.draw(g.pose(), g.bufferSource(), LightTexture.FULL_BRIGHT,
             style, displayedPaints());
+        BoatItemVisuals.drawAccessories(menu.boatItem(),g.pose(),g.bufferSource(),LightTexture.FULL_BRIGHT);
         if (selected < BoatPaint.CHANNELS
             && !(menu.dyeItem().getItem() instanceof DyeItem)) {
             SkiffMesh.highlight(g.pose(), g.bufferSource(), LightTexture.FULL_BRIGHT,

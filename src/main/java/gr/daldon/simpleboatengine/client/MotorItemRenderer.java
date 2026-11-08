@@ -28,12 +28,9 @@ public final class MotorItemRenderer extends BlockEntityWithoutLevelRenderer {
             pose.mulPose(Axis.YP.rotationDegrees(-35f));
             pose.mulPose(Axis.XP.rotationDegrees(25f));
             pose.scale(0.19f, 0.19f, 0.19f);
-            BlueBoatMesh.draw(pose, buffers, packedLight,
-                boatItem.getHullStyle(), BoatPaint.all(item));
+            BoatItemVisuals.drawBoat(item,pose,buffers,packedLight);
         } else if (item.is(EngineItems.FUEL_BUCKET.get())) {
-            pose.translate(0.5, 0.36, 0.5);
-            pose.scale(1.15f, 1.15f, 1.15f);
-            MotorMesh.drawSteelCanister(pose, buffers, packedLight);
+            MarineFuelMesh.draw(pose,buffers,packedLight);
         } else if (item.is(EngineItems.FUEL_CANISTER.get())) {
             pose.translate(.5,.36,.5);
             CanisterMesh.draw(pose,buffers,packedLight);

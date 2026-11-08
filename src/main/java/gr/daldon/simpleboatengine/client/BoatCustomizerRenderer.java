@@ -33,8 +33,7 @@ public final class BoatCustomizerRenderer implements BlockEntityRenderer<BoatCus
         pose.translate(0.5, 1.10, 0.5);
         pose.mulPose(Axis.YP.rotationDegrees(90f));
         pose.scale(0.35f, 0.35f, 0.35f);
-        BlueBoatMesh.draw(pose, buffers, LightTexture.FULL_BRIGHT,
-            boat.getHullStyle(), BoatPaint.all(item));
+        BoatItemVisuals.drawBoat(item,pose,buffers,LightTexture.FULL_BRIGHT);
         pose.popPose();
 
     }
