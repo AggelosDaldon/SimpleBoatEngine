@@ -7,8 +7,6 @@ import gr.daldon.simpleboatengine.common.MotorPackets;
 import gr.daldon.simpleboatengine.common.MotorTarget;
 import gr.daldon.simpleboatengine.common.BlueFishingBoat;
 import gr.daldon.simpleboatengine.common.BoatInteractionTarget;
-import gr.daldon.simpleboatengine.common.BoatTrailer;
-import gr.daldon.simpleboatengine.common.TrailerTargets;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -53,48 +51,6 @@ public final class MotorControls {
 
         Vec3 eye = game.player.getEyePosition();
         Vec3 look = game.player.getViewVector(1f);
-        // Large visual trailers and fishing boats cannot reliably be clicked via
-        // their small vanilla Entity.hitboxes. Pick by ray and send a validated
-        // packet, even when the crosshair is targeting a background block.
-        if (event.getHand() == InteractionHand.MAIN_HAND
-            && (held.is(EngineItems.WINCH_ROPE.get())
-                || held.is(EngineItems.BOAT_TRAILER.get())
-                || (held.isEmpty() && game.player.isShiftKeyDown()))) {
-            Entity picked = null;
-            int action = -1;
-            double best = 100.0;
-            for (Entity entity : game.level.entitiesForRendering()) {
-                int candidate = -1;
-                if (held.is(EngineItems.WINCH_ROPE.get())) {
-                    if (entity instanceof BoatTrailer trailer &&
-                        TrailerTargets.aimedAtTrailer(trailer, eye, look, 7.5))
-                        candidate = 1;
-                    else if (entity instanceof BlueFishingBoat boat &&
-                        BoatInteractionTarget.aimedAtHull(boat, eye, look, 7.5))
-                        candidate = 0;
-                } else if (held.is(EngineItems.BOAT_TRAILER.get())) {
-                    if (BoatTrailer.automobile(entity) &&
-                        TrailerTargets.aimedAtCar(entity, eye, look, 7.5))
-                        candidate = 2;
-                } else if (entity instanceof BoatTrailer trailer
-                    && TrailerTargets.aimedAtTrailer(trailer, eye, look, 7.5))
-                    candidate = 3;
-                if (candidate >= 0) {
-                    double dist = eye.distanceToSqr(entity.position());
-                    if (dist < best) { best = dist; action = candidate; picked = entity; }
-                }
-            }
-            if (picked != null) {
-                if (!useHeld) {
-                    useHeld = true;
-                    MotorPackets.CHANNEL.sendToServer(
-                        new MotorPackets.TrailerInteract(picked.getId(), action));
-                }
-                event.setSwingHand(true);
-                event.setCanceled(true);
-                return;
-            }
-        }
         if (event.getHand() == InteractionHand.MAIN_HAND && held.isEmpty()) {
             for (Entity entity : game.level.entitiesForRendering()) {
                 if (!(entity instanceof BlueFishingBoat boat)) continue;
@@ -151,7 +107,7 @@ public final class MotorControls {
         CompoundTag data = ClientMotorState.get(boat);
         if (data == null || !data.getBoolean("Running")) return;
         int old = data.getInt("Throttle");
-        int tank = data.getBoolean("CanisterInstalled") ? 6000 : 3000;
+        int tank = 3000;
         int limit = data.getFloat("Fuel") < tank * 0.2f ? 3 : 10;
         int next = Math.max(0, Math.min(limit, old + Integer.signum(direction)));
         if (next != old) {
