@@ -68,6 +68,18 @@ public final class SkiffBoatItem extends EngineItem {
                     .error("Could not unpack the stored fishing boat", error);
                 return InteractionResultHolder.fail(held);
             }
+            // Item customizations can change after the boat was packed.
+            // Apply them after loading the saved engine and cargo.
+            if (boat instanceof BlueFishingBoat packedBlue) {
+                packedBlue.setHullStyle(BoatPaint.woodStyle(held, style));
+                packedBlue.setHullPaint(BoatPaint.hull(held));
+                packedBlue.setFloorPaint(BoatPaint.floor(held));
+                for (int channel = 2; channel < BoatPaint.CHANNELS; channel++)
+                    packedBlue.setPaint(channel, BoatPaint.get(held, channel));
+                packedBlue.setBoatName(BoatPaint.name(held));
+                packedBlue.setNameColor(BoatPaint.nameColor(held));
+                packedBlue.setNameGlow(BoatPaint.nameGlows(held));
+            }
             // A stored running engine must never restart autonomously.
             var engine = MotorData.writable(boat);
             engine.putBoolean("Running", false);
