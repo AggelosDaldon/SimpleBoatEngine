@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
-      "model": "simpleboatengine:block/lift_buoy"
+    "waterlogged=true,yellow=true": {
+      "model": "simpleboatengine:block/lift_buoy_yellow"
+    },
+    "waterlogged=true,yellow=false": {
+      "model": "simpleboatengine:block/lift_buoy_red"
+    },
+    "waterlogged=false,yellow=true": {
+      "model": "simpleboatengine:block/lift_buoy_yellow"
+    },
+    "waterlogged=false,yellow=false": {
+      "model": "simpleboatengine:block/lift_buoy_red"
     }
   }
 }

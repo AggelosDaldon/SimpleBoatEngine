@@ -27,5 +27,8 @@
   "entity.simpleboatengine.boat_trailer": "Fishing Boat Trailer",
   "item.simpleboatengine.winch_rope": "Black Winch Rope",
   "block.simpleboatengine.lift_buoy": "Lifting Buoy",
-  "item.simpleboatengine.lift_buoy": "Lifting Buoy"
+  "item.simpleboatengine.lift_buoy": "Lifting Buoy",
+  "block.simpleboatengine.boat_stand": "Boat Stand & Paint Bench",
+  "item.simpleboatengine.boat_stand": "Boat Stand & Paint Bench",
+  "item.simpleboatengine.yellow_lift_buoy": "Yellow Lifting Buoy"
 }

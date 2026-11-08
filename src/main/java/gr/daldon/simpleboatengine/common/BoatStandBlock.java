@@ -26,7 +26,7 @@ public final class BoatStandBlock extends BaseEntityBlock {
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BoatStandBlockEntity(pos, state);
     }
-    @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.INVISIBLE; }
+    @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
 
     @Override public InteractionResult use(BlockState state, Level level, BlockPos pos,
                          Player player, InteractionHand hand, BlockHitResult hit) {

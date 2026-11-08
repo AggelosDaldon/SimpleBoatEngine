@@ -19,6 +19,7 @@ jobs:
         run: |
           python3 -m pip install --quiet Pillow
           python3 tools/generate_wood_boats.py
+          python3 tools/generate_marine_assets.py
       - name: Compile Forge 1.20.1
         run: gradle --no-daemon build --stacktrace
       - name: Verify resource pack metadata is packaged

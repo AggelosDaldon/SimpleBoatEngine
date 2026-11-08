@@ -23,5 +23,8 @@
   "key.simpleboatengine.down": "Μείωση γκαζιού",
   "subtitles.simpleboatengine.motor_loop": "Ήχος μηχανής βάρκας",
   "block.simpleboatengine.lift_buoy": "Σημαδούρα Ανύψωσης",
-  "item.simpleboatengine.lift_buoy": "Σημαδούρα Ανύψωσης"
+  "item.simpleboatengine.lift_buoy": "Σημαδούρα Ανύψωσης",
+  "block.simpleboatengine.boat_stand": "Βάση Βάρκας & Πάγκος Βαφής",
+  "item.simpleboatengine.boat_stand": "Βάση Βάρκας & Πάγκος Βαφής",
+  "item.simpleboatengine.yellow_lift_buoy": "Κίτρινη Σημαδούρα Ανύψωσης"
 }
