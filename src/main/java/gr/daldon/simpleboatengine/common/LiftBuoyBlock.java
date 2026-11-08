@@ -25,13 +25,14 @@ import net.minecraft.world.phys.BlockHitResult;
 public final class LiftBuoyBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty YELLOW = BooleanProperty.create("yellow");
+    public static final BooleanProperty WHITE = BooleanProperty.create("white");
 
     public LiftBuoyBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false).setValue(YELLOW, false));
+        registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false).setValue(YELLOW, false).setValue(WHITE, false));
     }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
-        builder.add(WATERLOGGED, YELLOW);
+        builder.add(WATERLOGGED, YELLOW, WHITE);
     }
     @Override public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);

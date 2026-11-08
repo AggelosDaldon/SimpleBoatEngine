@@ -49,7 +49,7 @@ public final class BoatStandRenderer implements BlockEntityRenderer<BoatStandBlo
         pose.translate(.5,.52,-1.45);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.scale(.94f,.94f,.94f);
-        BoatItemVisuals.drawBoat(item,pose,buffers,light);
+        BoatItemVisuals.drawBoat(item,pose,buffers,light,-.14f);
         pose.popPose();
     }
     @Override public boolean shouldRenderOffScreen(BoatStandBlockEntity stand){return true;}

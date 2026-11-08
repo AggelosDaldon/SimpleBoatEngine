@@ -14,11 +14,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public final class LiftBuoyItem extends BlockItem {
-    private final boolean yellow;
-    public LiftBuoyItem(Properties properties) { this(properties, false); }
-    public LiftBuoyItem(Properties properties, boolean yellow) {
+    private final int color;
+    public LiftBuoyItem(Properties properties) { this(properties, 0); }
+    public LiftBuoyItem(Properties properties, boolean yellow) { this(properties, yellow ? 1 : 0); }
+    public LiftBuoyItem(Properties properties, int color) {
         super(EngineBlocks.LIFT_BUOY.get(), properties);
-        this.yellow = yellow;
+        this.color = color;
     }
     /** BlockItem normally handles a click on a block before Item.use(). */
     @Override public InteractionResult useOn(UseOnContext context) {
@@ -31,7 +32,8 @@ public final class LiftBuoyItem extends BlockItem {
         if (!level.isClientSide) {
             boolean ok=level.setBlock(pos,EngineBlocks.LIFT_BUOY.get().defaultBlockState()
                 .setValue(LiftBuoyBlock.WATERLOGGED,true)
-                .setValue(LiftBuoyBlock.YELLOW,yellow),3);
+                .setValue(LiftBuoyBlock.YELLOW,color == 1)
+                .setValue(LiftBuoyBlock.WHITE,color == 2),3);
             if (!ok) return InteractionResult.FAIL;
             if (!player.getAbilities().instabuild)
                 context.getItemInHand().shrink(1);

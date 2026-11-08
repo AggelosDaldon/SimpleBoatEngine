@@ -44,6 +44,9 @@ public final class EngineItems {
     public static final RegistryObject<Item> YELLOW_LIFT_BUOY = ITEMS.register("yellow_lift_buoy",
         () -> new LiftBuoyItem(new Item.Properties(), true));
 
+    public static final RegistryObject<Item> WHITE_LIFT_BUOY = ITEMS.register("white_lift_buoy",
+        () -> new LiftBuoyItem(new Item.Properties(), 2));
+
     public static final RegistryObject<Item> LIFT_BUOY = ITEMS.register("lift_buoy",
         () -> new LiftBuoyItem(new Item.Properties()));
     public static final String[] WOODS = {
@@ -94,6 +97,7 @@ public final class EngineItems {
                 output.accept(CUSTOMIZER.get());
                 output.accept(LIFT_BUOY.get());
                 output.accept(YELLOW_LIFT_BUOY.get());
+                output.accept(WHITE_LIFT_BUOY.get());
                 output.accept(BOAT_STAND.get());
                 output.accept(BLUE_FISHING_BOAT.get());
                 for (RegistryObject<Item> boat : WOOD_BOATS) output.accept(boat.get());
