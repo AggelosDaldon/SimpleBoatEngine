@@ -15,11 +15,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.resources.ResourceLocation;
 
 /** A floating marker that retrieves one vertically linked block with one click.
- *  Sneak-right-click with a Supplementaries wrench to establish the link.
+ *  No wrench or manual binding: right-click immediately pulls the closest block below.
  */
 public final class LiftBuoyBlock extends BaseEntityBlock {
     public LiftBuoyBlock(BlockBehaviour.Properties properties) { super(properties); }
@@ -36,13 +34,10 @@ public final class LiftBuoyBlock extends BaseEntityBlock {
         if (!(player instanceof ServerPlayer server) ||
                 !(level.getBlockEntity(pos) instanceof LiftBuoyBlockEntity lift)) return InteractionResult.PASS;
 
-        ResourceLocation heldId = ForgeRegistries.ITEMS.getKey(player.getItemInHand(hand).getItem());
-        boolean wrench = heldId != null && heldId.toString().equals("supplementaries:wrench");
-        if (player.isShiftKeyDown() && wrench) {
-            if (lift.bindClosestUnderneath()) {
-                player.displayClientMessage(Component.literal("Buoy linked to block below."), true);
-                level.playSound(null, pos, SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 0.7f, 1f);
-            } else player.displayClientMessage(Component.literal(
+        // One-click lift: automatically locate the nearest eligible block directly
+        // underneath on each click. No wrench, manual connection or lever.
+        if (!lift.bindClosestUnderneath()) {
+            server.displayClientMessage(Component.literal(
                 "No movable block directly underneath within 32 blocks."), true);
             return InteractionResult.CONSUME;
         }
