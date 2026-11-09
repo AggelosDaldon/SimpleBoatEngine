@@ -38,6 +38,24 @@ for col in ("orange","yellow","white"):
     image=root/"textures"/"block"/f"user_buoy_{col}.png"
     image.parent.mkdir(parents=True,exist_ok=True)
     image.write_bytes(base64.b64decode(TEXTURES[col]))
+    if col=="white":
+        # Original white PNG in the uploaded pack has a truncated IDAT stream.
+        # Repair the physical texture, not just the inventory icon, by
+        # recoloring the intact matching UV atlas from the orange version.
+        from PIL import Image
+        try:
+            with Image.open(image) as check: check.load()
+        except (OSError, ValueError):
+            with Image.open(root/"textures"/"block"/"user_buoy_orange.png") as original:
+                original=original.convert("RGBA")
+                restored=Image.new("RGBA",original.size,(0,0,0,0))
+                src=original.load();dest=restored.load()
+                for yy in range(original.height):
+                    for xx in range(original.width):
+                        red,green,blue,alpha=src[xx,yy]
+                        grey=max(140,min(252,int((red+green+blue)*.18+150)))
+                        dest[xx,yy]=(grey,min(255,grey+2),min(255,grey+3),alpha)
+                restored.save(image,optimize=True)
 # The user's 32-cuboid 64px UV model, retained as a dedicated item mesh.
 pieces=json.loads(zlib.decompress(base64.b64decode(MODELS["refuel"])))
 lines=["package gr.daldon.simpleboatengine.client;","public final class RefuelCanisterMeshData {","  public static final float[][] PARTS = {"]
