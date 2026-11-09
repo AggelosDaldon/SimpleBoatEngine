@@ -14,5 +14,7 @@ public final class EngineMenus {
         MENUS.register("boat_customizer", () -> IForgeMenuType.create(BoatCustomizerMenu::new));
     public static final RegistryObject<MenuType<BoatCargoMenu>> CARGO =
         MENUS.register("fishing_boat_cargo", () -> IForgeMenuType.create(BoatCargoMenu::new));
+    public static final RegistryObject<MenuType<ParkedBoatCargoMenu>> PARKED_CARGO =
+        MENUS.register("parked_boat_cargo",() -> IForgeMenuType.create(ParkedBoatCargoMenu::new));
     private EngineMenus() {}
 }
