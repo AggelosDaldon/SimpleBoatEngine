@@ -68,6 +68,13 @@ public final class BoatCustomizerBlock extends BaseEntityBlock {
             if (!player.getInventory().add(retrieved)) player.drop(retrieved, false);
             return InteractionResult.CONSUME;
         }
+        // Return legacy input-slot materials from older painter versions.
+        // The new graphical editor reads directly from player inventory.
+        for(int slot=1;slot<4;slot++){
+            ItemStack legacy=workshop.removeItemNoUpdate(slot);
+            if(!legacy.isEmpty() && !player.getInventory().add(legacy))
+                player.drop(legacy,false);
+        }
         ItemStack held = player.getMainHandItem();
         if (workshop.getItem(0).isEmpty() && held.getItem() instanceof SkiffBoatItem) {
             ItemStack placed = held.copy();
