@@ -51,6 +51,13 @@ public final class BoatIceBreakerEvents {
             if(!(e instanceof Boat boat) || !boat.isAlive())continue;
             CompoundTag data=MotorData.read(boat);
             if(!data.getBoolean("IceBreakerInstalled"))continue;
+            // Vanilla boats have no built-in synchronized motor data. Keep the
+            // ice-breaker visuals updated via our status packet, without an engine.
+            if(level.getGameTime()%10==0){
+                for(net.minecraft.server.level.ServerPlayer observer:level.players())
+                    if(observer.distanceToSqr(boat)<64*64)
+                        MotorPackets.sendStatus(boat,observer);
+            }
             Vec3 velocity=boat.getDeltaMovement();
             if(velocity.x*velocity.x + velocity.z*velocity.z < .00015)continue;
             // Velocity determines which side is really forward even in reversing turns.
