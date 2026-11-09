@@ -40,6 +40,7 @@ public final class BoatRecoveryItem extends BlockItem {
             }
             return InteractionResult.FAIL;
         }
-        return super.useOn(context);
+        // A loaded kit must not turn into an empty placed block and lose its boat.
+        return loaded(context.getItemInHand())?InteractionResult.FAIL:super.useOn(context);
     }
 }
