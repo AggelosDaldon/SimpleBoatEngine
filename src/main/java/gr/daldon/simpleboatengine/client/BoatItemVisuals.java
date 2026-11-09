@@ -71,6 +71,12 @@ public final class BoatItemVisuals {
                 pose.popPose();
             }
         }
+        if(engine.getBoolean("IceBreakerInstalled")) {
+            pose.pushPose();
+            pose.translate(0,offset,0);
+            IceBreakerMesh.draw(pose,buffers,light,true);
+            pose.popPose();
+        }
     }
     /** Align the painted name to the two angled bow panels, like SkiffBoatRenderer. */
     public static void drawName(ItemStack item, PoseStack pose, MultiBufferSource buffers, int light) {
