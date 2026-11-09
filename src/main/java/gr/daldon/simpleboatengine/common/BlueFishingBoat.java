@@ -69,6 +69,13 @@ public final class BlueFishingBoat extends SkiffBoat {
         return stack;
     }
 
+    /** This vessel is recovered with the Boat Recovery Tool, not by damage.
+     * Keep its complete cargo and installed attachments safe from accidental hits.
+     */
+    @Override public boolean hurt(DamageSource source, float amount) {
+        return false;
+    }
+
     /** A harvested boat remembers both dyes instead of reverting to the base item. */
     @Override
     protected void destroy(DamageSource source) {
