@@ -32,7 +32,7 @@ public final class EngineItems {
     public static final RegistryObject<Item> FUEL_CANISTER = ITEMS.register("fuel_canister",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ICE_BREAKER = ITEMS.register("ice_breaker",
-        () -> new EngineItem(new Item.Properties().stacksTo(1)));
+        () -> new IceBreakerItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BOAT_RECOVERY_KIT = ITEMS.register("boat_recovery_kit",
         () -> new BoatRecoveryItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
