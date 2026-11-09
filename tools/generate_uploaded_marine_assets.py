@@ -46,7 +46,38 @@ model={"textures":{"marine":"simpleboatengine:block/marine_workbench",
        "elements":elements}
 out=root/"models"/"block"/"boat_customizer.json"
 out.parent.mkdir(parents=True,exist_ok=True)
-out.write_text(json.dumps(model,indent=2)+"\n")
+out.write_text(json.dumps(model,indent=2)+"\\n")
+# Export pre-rotated versions of the two-block model. Vanilla blockstates
+# rotate around the MAIN block center, which previously displaced the second
+# half into the floor on some directions. Here geometry follows the side block.
+face_cycles={
+    "north":{"north":"north","east":"east","south":"south","west":"west"},
+    "east":{"north":"east","east":"south","south":"west","west":"north"},
+    "south":{"north":"south","east":"west","south":"north","west":"east"},
+    "west":{"north":"west","east":"north","south":"east","west":"south"},
+}
+def orient_point(x,z,facing):
+    return {
+        "north":(x,z),
+        "east":(16-z,x),
+        "south":(16-x,16-z),
+        "west":(z,16-x),
+    }[facing]
+for facing in face_cycles:
+    rotated=json.loads(json.dumps(model))
+    for part in rotated["elements"]:
+        a,b=part["from"],part["to"]
+        corners=[orient_point(x,z,facing) for x in (a[0],b[0]) for z in (a[2],b[2])]
+        part["from"]=[min(x for x,z in corners),a[1],min(z for x,z in corners)]
+        part["to"]=[max(x for x,z in corners),b[1],max(z for x,z in corners)]
+        part["faces"]={face_cycles[facing].get(face,face):data for face,data in part["faces"].items()}
+        if "rotation" in part:
+            rot=part["rotation"]
+            x,z=orient_point(rot["origin"][0],rot["origin"][2],facing)
+            rot["origin"]=[x,rot["origin"][1],z]
+            if rot["axis"] in ("x","z") and facing in ("east","west"):
+                rot["axis"]="z" if rot["axis"]=="x" else "x"
+    (out.parent/("boat_customizer_"+facing+".json")).write_text(json.dumps(rotated,indent=2)+"\\n")
 
 # A dedicated exact-UV V2 blade atlas, not the old placeholder beams.
 # Mesh coordinates remain in original V2 boat-local pixels, no extra offset.
