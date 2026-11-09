@@ -130,14 +130,13 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         ItemStack boat=stagedItem();
         if(!(boat.getItem() instanceof SkiffBoatItem))return;
         g.flush();
-        g.enableScissor(leftPos+237,topPos+12,leftPos+448,topPos+172);
         g.pose().pushPose();
         g.pose().translate(leftPos+342,topPos+100,330);
         g.pose().mulPose(Axis.XP.rotationDegrees(pitch));
         g.pose().mulPose(Axis.YP.rotationDegrees(angle));
         g.pose().scale(25f,-25f,25f);
         BoatItemVisuals.drawBoat(boat,g.pose(),g.bufferSource(),LightTexture.FULL_BRIGHT,-.11f);
-        g.flush();g.pose().popPose();g.disableScissor();
+        g.flush();g.pose().popPose();
     }
     private static ItemStack equipment(int index){
         return new ItemStack(switch(index){
