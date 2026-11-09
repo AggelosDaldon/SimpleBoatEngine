@@ -211,7 +211,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         }
         // Player inventory cells: visible for inserting items into required slots.
         for(int i=0;i<36;i++){
-            int sx=x+22+(i%9)*18,sy=y+(i<27?279+(i/9)*18:337);
+            int sx=x+21+(i%9)*20,sy=y+(i<27?279+(i/9)*19:337);
             panel(g,sx-1,sy-1,18,18,0xFF514031,0xFFC7B69D);
         }
         preview(g);
@@ -226,7 +226,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         g.drawString(font,"NAME",242,181,ink);
         g.drawString(font,"COLOUR",396,181,ink);
         g.drawString(font,"NEEDED MATERIALS",19,216,ink);
-        g.drawString(font,"ATTACHMENTS - CLICK TO REMOVE",240,229,ink);
+        g.drawString(font,"ATTACHMENTS",240,229,ink);
         for(int i=0;i<4;i++)
             g.drawCenteredString(font,new String[]{"ENGINE","LIGHT","TANK","ICE"}[i],
                 257+i*48,269,ink);
