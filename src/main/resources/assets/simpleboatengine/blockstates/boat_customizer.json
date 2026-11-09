@@ -1,20 +1,16 @@
 {
   "variants": {
     "facing=north": {
-      "model": "simpleboatengine:block/boat_customizer",
-      "y": 0
+      "model": "simpleboatengine:block/boat_customizer_north"
     },
     "facing=east": {
-      "model": "simpleboatengine:block/boat_customizer",
-      "y": 270
+      "model": "simpleboatengine:block/boat_customizer_east"
     },
     "facing=south": {
-      "model": "simpleboatengine:block/boat_customizer",
-      "y": 180
+      "model": "simpleboatengine:block/boat_customizer_south"
     },
     "facing=west": {
-      "model": "simpleboatengine:block/boat_customizer",
-      "y": 90
+      "model": "simpleboatengine:block/boat_customizer_west"
     }
   }
 }
