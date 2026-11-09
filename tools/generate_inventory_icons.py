@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Crisp 64px vanilla-friendly inventory sprites from modeled silhouettes; opaque pixels."""
+"""Crisp 256px pixel-art inventory fallbacks, with model-derived icons overriding available 3D meshes."""
 from pathlib import Path
 from PIL import Image,ImageDraw
 root=Path("src/main/resources/assets/simpleboatengine/textures/item")
@@ -8,7 +8,7 @@ def canvas():
  im=Image.new("RGBA",(32,32),(0,0,0,0))
  return im,ImageDraw.Draw(im)
 def save(im,key):
- im.resize((64,64),Image.Resampling.NEAREST).save(root/(key+"_icon.png"),optimize=True)
+ im.resize((256,256),Image.Resampling.NEAREST).save(root/(key+"_icon.png"),optimize=True)
 for name,base,shadow,highlight in [
  ("lift_buoy",(225,79,46),(130,38,29),(250,131,83)),
  ("yellow_lift_buoy",(231,187,49),(151,100,32),(255,224,118)),
