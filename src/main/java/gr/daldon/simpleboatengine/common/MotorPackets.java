@@ -172,7 +172,7 @@ public final class MotorPackets {
                     || player.distanceToSqr(msg.table.getX()+.5,msg.table.getY()+.5,msg.table.getZ()+.5)>64
                     || !(player.level().getBlockEntity(msg.table) instanceof BoatCustomizerBlockEntity table))
                     return;
-                table.selectRelative(msg.direction);
+                menu.selectRelative(msg.direction);
                 menu.broadcastChanges();
             });
             context.get().setPacketHandled(true);
@@ -198,7 +198,12 @@ public final class MotorPackets {
                     || player.distanceToSqr(msg.pos.getX() + 0.5, msg.pos.getY() + 0.5,
                         msg.pos.getZ() + 0.5) > 64
                     || !(player.level().getBlockEntity(msg.pos) instanceof BoatCustomizerBlockEntity table)) return;
-                BoatCustomizerBlockEntity workshop = table.linkedStand() == null ? table : table.linkedStand();
+                BoatCustomizerBlockEntity workshop;
+                if (menu.standCount()>0) {
+                    BoatStandBlockEntity chosen=menu.selectedStand();
+                    if (chosen==null || chosen.getItem(0).isEmpty()) return;
+                    workshop=chosen;
+                } else workshop=table;
                 ItemStack item = workshop.getItem(0);
                 if (!(item.getItem() instanceof SkiffBoatItem)) return;
                 if (msg.channel == -1) {
