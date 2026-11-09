@@ -31,6 +31,10 @@ public final class EngineItems {
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> FUEL_CANISTER = ITEMS.register("fuel_canister",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ICE_BREAKER = ITEMS.register("ice_breaker",
+        () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> BOAT_RECOVERY_KIT = ITEMS.register("boat_recovery_kit",
+        () -> new BoatRecoveryItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> CUSTOMIZER = ITEMS.register("boat_customizer",
@@ -94,6 +98,8 @@ public final class EngineItems {
                 output.accept(FUEL_BUCKET.get());
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
+                output.accept(ICE_BREAKER.get());
+                output.accept(BOAT_RECOVERY_KIT.get());
                 output.accept(CUSTOMIZER.get());
                 output.accept(LIFT_BUOY.get());
                 output.accept(YELLOW_LIFT_BUOY.get());
