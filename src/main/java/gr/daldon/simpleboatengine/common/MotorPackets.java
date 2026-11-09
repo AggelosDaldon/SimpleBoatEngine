@@ -51,6 +51,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(SelectPaintStand.class, 7, NetworkDirection.PLAY_TO_SERVER)
             .encoder(SelectPaintStand::write).decoder(SelectPaintStand::read)
             .consumerMainThread(SelectPaintStand::receive).add();
+        CHANNEL.messageBuilder(BoatPaintDraft.class, 8, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(BoatPaintDraft::write).decoder(BoatPaintDraft::read)
+            .consumerMainThread(BoatPaintDraft::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -176,6 +179,37 @@ public final class MotorPackets {
                 menu.broadcastChanges();
             });
             context.get().setPacketHandled(true);
+        }
+    }
+
+    /** All proposed values are checked server-side against the player menu. */
+    public record BoatPaintDraft(BlockPos table, BlockPos stand, int[] colors,
+                                 String name, int nameColor, int attachments, int action) {
+        static void write(BoatPaintDraft msg, FriendlyByteBuf out) {
+            out.writeBlockPos(msg.table);out.writeBlockPos(msg.stand);
+            for(int c:msg.colors)out.writeVarInt(c);
+            out.writeUtf(msg.name,32);out.writeVarInt(msg.nameColor);
+            out.writeVarInt(msg.attachments);out.writeVarInt(msg.action);
+        }
+        static BoatPaintDraft read(FriendlyByteBuf in) {
+            BlockPos table=in.readBlockPos(), stand=in.readBlockPos();
+            int[] colors=new int[BoatPaint.CHANNELS];
+            for(int i=0;i<colors.length;i++)colors[i]=in.readVarInt();
+            return new BoatPaintDraft(table,stand,colors,in.readUtf(32),
+                in.readVarInt(),in.readVarInt(),in.readVarInt());
+        }
+        static void receive(BoatPaintDraft msg, Supplier<NetworkEvent.Context> ctx) {
+            ServerPlayer player=ctx.get().getSender();
+            ctx.get().enqueueWork(()->{
+                if(player==null || !(player.containerMenu instanceof BoatCustomizerMenu menu)
+                    || !menu.getBlockPos().equals(msg.table)
+                    || player.distanceToSqr(msg.table.getX()+.5,msg.table.getY()+.5,msg.table.getZ()+.5)>64)
+                    return;
+                BoatPaintSessions.execute(player,menu,msg.stand,msg.colors,
+                    msg.name,msg.nameColor,msg.attachments,msg.action);
+                menu.broadcastChanges();
+            });
+            ctx.get().setPacketHandled(true);
         }
     }
 
