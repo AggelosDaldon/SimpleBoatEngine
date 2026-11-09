@@ -44,6 +44,25 @@ public final class BoatIceBreakerEvents {
         event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
     }
 
+    /** Point the portable recovery kit at an empty boat to pack it as an item. */
+    @SubscribeEvent public static void recover(PlayerInteractEvent.EntityInteract event){
+        if(event.getHand()!=InteractionHand.MAIN_HAND
+            || !(event.getTarget() instanceof Boat boat))return;
+        ItemStack kit=event.getEntity().getMainHandItem();
+        if(!kit.is(EngineItems.BOAT_RECOVERY_KIT.get()) || BoatRecoveryItem.loaded(kit))
+            return;
+        if(!boat.level().isClientSide && boat.getPassengers().isEmpty()){
+            ItemStack saved=boat instanceof BlueFishingBoat blue
+                ? blue.getPickResult() : new ItemStack(boat.getDropItem());
+            BoatRecoveryItem.put(kit,saved);
+            boat.discard();
+            event.getEntity().displayClientMessage(
+                net.minecraft.network.chat.Component.literal("Boat captured with its stored data."),true);
+        }
+        event.setCanceled(true);
+        event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
+    }
+
     @SubscribeEvent public static void tick(TickEvent.LevelTickEvent event) {
         if(event.phase!=TickEvent.Phase.END || !(event.level instanceof ServerLevel level)
             || level.getGameTime()%3!=0)return;
