@@ -148,16 +148,20 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     }
     @Override protected void renderBg(GuiGraphics g,float tick,int mx,int my){
         int x=leftPos,y=topPos;
-        panel(g,x,y,460,365,0xFF382A21,0xFFB49D80);
-        panel(g,x+12,y+12,215,36,0xFF40332A,0xFFD4C2A5);
-        panel(g,x+12,y+51,215,36,0xFF40332A,0xFFD4C2A5);
-        panel(g,x+12,y+90,215,82,0xFF40332A,0xFFAD967C);
-        panel(g,x+234,y+12,214,160,0xFF40332A,0xFF685D4E);
-        panel(g,x+234,y+178,214,43,0xFF40332A,0xFFD4C2A5);
-        panel(g,x+12,y+213,215,58,0xFF40332A,0xFFD4C2A5);
-        panel(g,x+234,y+224,214,67,0xFF40332A,0xFFD4C2A5);
-        panel(g,x+12,y+273,215,84,0xFF40332A,0xFF99836B);
-        panel(g,x+234,y+297,214,56,0xFF40332A,0xFFD4C2A5);
+        panel(g,x,y,460,365,0xFF3B291D,0xFF997551);
+        for(int plank=5;plank<360;plank+=18){
+            g.fill(x+4,y+plank,x+456,y+plank+1,0x66533722);
+            g.fill(x+4,y+plank+1,x+456,y+plank+2,0x336D4B2B);
+        }
+        panel(g,x+12,y+12,215,36,0xFF40332A,0xFFDBC09A);
+        panel(g,x+12,y+51,215,36,0xFF40332A,0xFFDBC09A);
+        panel(g,x+12,y+90,215,82,0xFF40332A,0xFFC0A07C);
+        panel(g,x+234,y+12,214,160,0xFF40332A,0xFF695744);
+        panel(g,x+234,y+178,214,43,0xFF40332A,0xFFDBC09A);
+        panel(g,x+12,y+213,215,58,0xFF40332A,0xFFDBC09A);
+        panel(g,x+234,y+224,214,67,0xFF40332A,0xFFDBC09A);
+        panel(g,x+12,y+273,215,84,0xFF40332A,0xFF8E7153);
+        panel(g,x+234,y+297,214,56,0xFF40332A,0xFFDBC09A);
         for(int i=0;i<(part==BoatPaint.ANTIFOUL?5:16);i++){
             int bx=x+17+(i%8)*26,by=y+112+(i/8)*26;
             panel(g,bx,by,23,23,draft[part]==i?0xFFFFFFFF:0xFF41352B,color(i));
@@ -175,13 +179,15 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
             if(i<req.size() && req.get(i).getValue()>1)
                 g.drawString(font,String.valueOf(req.get(i).getValue()),sx+9,sy+9,0xFFECE9DF,true);
         }
-        // Four interactive equipment sockets, not copies of real items.
+        // Four real attachment slots with a subdued icon when vacant.
         for(int i=0;i<4;i++){
             int sx=x+249+i*48,sy=y+246;
-            boolean active=(mask&(1<<i))!=0;
-            panel(g,sx-2,sy-2,22,22,active?0xFF36764B:0xFF76695C,0xFFC0B29B);
-            g.renderFakeItem(equipment(i),sx,sy);
-            if(!active)g.fill(sx,sy,sx+16,sy+16,0x998A8275);
+            boolean installed=(mask&(1<<i))!=0;
+            panel(g,sx-2,sy-2,22,22,installed?0xFF407C56:0xFF705E49,0xFFC7B49B);
+            if(menu.attachmentItem(i).isEmpty()){
+                g.renderFakeItem(equipment(i),sx,sy);
+                g.fill(sx,sy,sx+16,sy+16,installed?0x885B735A:0xBBA69A83);
+            }
         }
         // Player inventory cells: visible for inserting items into required slots.
         for(int i=0;i<36;i++){
