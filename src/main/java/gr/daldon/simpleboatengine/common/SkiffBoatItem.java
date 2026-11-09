@@ -59,10 +59,15 @@ public final class SkiffBoatItem extends EngineItem {
         if (!level.isClientSide && held.hasTag()
                 && held.getTag().contains("PackedFishingBoat", 10)) {
             CompoundTag saved = held.getTag().getCompound("PackedFishingBoat").copy();
+            // A newly painted boat can have only partial NBT (engine or cargo).
+            // Merge it into complete default entity NBT before loading.
+            CompoundTag complete = new CompoundTag();
+            boat.saveWithoutId(complete);
+            complete.merge(saved);
             // A fresh entity needs its own identity; do not restore the old UUID.
-            saved.remove("UUID");
+            complete.remove("UUID");
             try {
-                boat.load(saved);
+                boat.load(complete);
             } catch (RuntimeException error) {
                 org.slf4j.LoggerFactory.getLogger(SkiffBoatItem.class)
                     .error("Could not unpack the stored fishing boat", error);
