@@ -114,17 +114,25 @@ public final class MotorPackets {
         }
     }
 
-    public record OpenCargo(int boatId) {
-        static void write(OpenCargo msg, FriendlyByteBuf out) { out.writeVarInt(msg.boatId); }
-        static OpenCargo read(FriendlyByteBuf in) { return new OpenCargo(in.readVarInt()); }
+    public record OpenCargo(int boatId,boolean hatch) {
+        static void write(OpenCargo msg, FriendlyByteBuf out) {
+            out.writeVarInt(msg.boatId);out.writeBoolean(msg.hatch);
+        }
+        static OpenCargo read(FriendlyByteBuf in) {
+            return new OpenCargo(in.readVarInt(),in.readBoolean());
+        }
         static void receive(OpenCargo msg, Supplier<NetworkEvent.Context> ctx) {
             ServerPlayer player = ctx.get().getSender();
             ctx.get().enqueueWork(() -> {
                 if (player == null || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
                     || player.distanceToSqr(boat) > 40.0 || !boat.isAlive()
-                    || !BoatInteractionTarget.aimedAtHatch(boat, player.getEyePosition(),
-                        player.getViewVector(1f), 5.5)) return;
-                boat.openCargo(player);
+                    || !(msg.hatch()
+                        ? BoatInteractionTarget.aimedAtHatch(boat, player.getEyePosition(),
+                            player.getViewVector(1f),5.5)
+                        : BoatInteractionTarget.aimedAtStorage2(boat, player.getEyePosition(),
+                            player.getViewVector(1f),5.5))) return;
+                if(msg.hatch())boat.openHatch(player);
+                else boat.openCargo(player);
             });
             ctx.get().setPacketHandled(true);
         }
