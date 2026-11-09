@@ -97,8 +97,6 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         if(menu.standCount()==0 || menu.boatItem().isEmpty())return false;
         if((mask&(BoatPaintSessions.POLE|BoatPaintSessions.CANISTER))!=0
             && (mask&BoatPaintSessions.ENGINE)==0)return false;
-        if(minecraft!=null && minecraft.player!=null
-            && minecraft.player.getAbilities().instabuild)return true;
         return menu.hasMaterials(BoatPaintSessions.requirements(
             menu.selectedStand().previewOriginal(),draft,nameDye,mask,
                 name==null?"":name.getValue()))
@@ -197,7 +195,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
                 g.fill(sx,sy,sx+16,sy+16,0xAAB7A790);
             }
             if(i<req.size() && req.get(i).getValue()>1)
-                g.drawString(font,String.valueOf(req.get(i).getValue()),sx+9,sy+9,0xFFECE9DF,true);
+                g.drawString(font,String.valueOf(req.get(i).getValue()),sx+9,sy+9,0xFFECE9DF,false);
         }
         // Four real attachment slots with a subdued icon when vacant.
         for(int i=0;i<4;i++){
@@ -230,7 +228,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         for(int i=0;i<4;i++)
             g.drawCenteredString(font,new String[]{"ENGINE","LIGHT","TANK","ICE"}[i],
                 257+i*48,269,ink);
-        g.drawString(font,"PLAYER INVENTORY",19,273,0xFFF8E7C9);
+        
         
     }
     private double logicalX(double x){return (x-shiftX)/uiScale;}

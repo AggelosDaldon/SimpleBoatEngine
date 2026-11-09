@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.Mod;
 public final class BoatIceBreakerEvents {
     private BoatIceBreakerEvents(){}
     @SubscribeEvent public static void install(PlayerInteractEvent.EntityInteract event){
-        if(event.getHand()!=InteractionHand.MAIN_HAND || !(event.getTarget() instanceof Boat boat)
+        if(event.getHand()!=InteractionHand.MAIN_HAND || !(event.getTarget() instanceof BlueFishingBoat boat)
             || !event.getEntity().getMainHandItem().is(EngineItems.ICE_BREAKER.get()))return;
         if(!boat.level().isClientSide){
             CompoundTag data=MotorData.writable(boat);
@@ -67,7 +67,7 @@ public final class BoatIceBreakerEvents {
         if(event.phase!=TickEvent.Phase.END || !(event.level instanceof ServerLevel level)
             || level.getGameTime()%3!=0)return;
         for(Entity e:level.getAllEntities()) {
-            if(!(e instanceof Boat boat) || !boat.isAlive())continue;
+            if(!(e instanceof BlueFishingBoat boat) || !boat.isAlive())continue;
             CompoundTag data=MotorData.read(boat);
             if(!data.getBoolean("IceBreakerInstalled"))continue;
             // Vanilla boats have no built-in synchronized motor data. Keep the
@@ -85,7 +85,7 @@ public final class BoatIceBreakerEvents {
             double length=Math.hypot(velocity.x,velocity.z);
             double fx=length>.012?velocity.x/length:-Math.sin(Math.toRadians(boat.getYRot()));
             double fz=length>.012?velocity.z/length:Math.cos(Math.toRadians(boat.getYRot()));
-            double reach=boat instanceof BlueFishingBoat?2.45:1.12;
+            double reach=2.45;
             for(int side=-1;side<=1;side++){
                 double nx=boat.getX()+fx*reach-fz*side*.8;
                 double nz=boat.getZ()+fz*reach+fx*side*.8;

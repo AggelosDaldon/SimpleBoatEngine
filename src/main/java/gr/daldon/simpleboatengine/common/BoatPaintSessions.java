@@ -120,10 +120,11 @@ public final class BoatPaintSessions {
         }
         engine.putBoolean("IceBreakerSilk",silk);
         if(action==APPLY) {
-            if(!player.getAbilities().instabuild && (!menu.hasMaterials(cost) || !menu.hasAttachmentInputs(before,attachments))){
+            if(!menu.hasMaterials(cost) || !menu.hasAttachmentInputs(before,attachments)){
                 tell(player,"Missing materials: "+format(cost,player));return false;
             }
-            if(!player.getAbilities().instabuild){menu.consumeMaterials(cost);menu.consumeAttachmentInputs(before,attachments);}
+            menu.consumeMaterials(cost);
+            menu.consumeAttachmentInputs(before,attachments);
             for(int bit : new int[]{ENGINE,POLE,CANISTER,BREAKER})
                 if((before&bit)!=0 && (attachments&bit)==0) {
                     ItemStack returned=new ItemStack(bit==ENGINE?EngineItems.ENGINE.get():
