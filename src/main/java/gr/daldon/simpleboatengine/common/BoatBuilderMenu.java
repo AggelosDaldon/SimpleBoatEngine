@@ -82,8 +82,8 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
         if(index==12){
             if(!canCraft())return ItemStack.EMPTY;
             if(!moveItemStackTo(stack,13,slots.size(),true))return ItemStack.EMPTY;
-            slot.onTake(player,copy);
-            return copy;
+            slot.onTake(player,original);
+            return original;
         }
         if(index<12){
             if(!moveItemStackTo(stack,13,slots.size(),true))return ItemStack.EMPTY;
