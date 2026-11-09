@@ -23,6 +23,8 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     private final DataSlot selected=DataSlot.standalone();
     private final SimpleContainer materials=new SimpleContainer(16);
     public static final int MATERIAL_SLOTS=16;
+    public static final int ATTACHMENT_SLOTS=4;
+    private final SimpleContainer attachmentInputs=new SimpleContainer(ATTACHMENT_SLOTS);
 
     public BoatCustomizerMenu(int id, Inventory inv, FriendlyByteBuf packet) {
         this(id,inv,packet.readBlockPos());
@@ -45,6 +47,15 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             addSlot(new Slot(materials,i,17+(i%8)*25,227+(i/8)*24){
                 @Override public int getMaxStackSize(){return 64;}
             });
+        for(int i=0;i<ATTACHMENT_SLOTS;i++){
+            final int index=i;
+            addSlot(new Slot(attachmentInputs,i,249+i*48,246){
+                @Override public boolean mayPlace(ItemStack item){
+                    return item.is(attachmentType(index));
+                }
+                @Override public int getMaxStackSize(){return 1;}
+            });
+        }
         for(int row=0;row<3;row++)
             for(int col=0;col<9;col++)
                 addSlot(new Slot(inv,col+row*9+9,22+col*18,279+row*18));
@@ -76,6 +87,27 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     public ItemStack dyeItem(){return ItemStack.EMPTY;}
     public ItemStack woodItem(){return ItemStack.EMPTY;}
     public ItemStack nameDyeItem(){return ItemStack.EMPTY;}
+    public static Item attachmentType(int i){
+        return switch(i){
+            case 0 -> EngineItems.ENGINE.get();
+            case 1 -> EngineItems.POLE_LIGHT.get();
+            case 2 -> EngineItems.FUEL_CANISTER.get();
+            default -> EngineItems.ICE_BREAKER.get();
+        };
+    }
+    public ItemStack attachmentItem(int i){return attachmentInputs.getItem(i);}
+    public boolean hasAttachmentInputs(int oldMask,int newMask){
+        for(int i=0;i<ATTACHMENT_SLOTS;i++)
+            if((newMask&(1<<i))!=0 && (oldMask&(1<<i))==0
+                && !attachmentInputs.getItem(i).is(attachmentType(i)))return false;
+        return true;
+    }
+    public void consumeAttachmentInputs(int oldMask,int newMask){
+        for(int i=0;i<ATTACHMENT_SLOTS;i++)
+            if((newMask&(1<<i))!=0 && (oldMask&(1<<i))==0)
+                attachmentInputs.removeItem(i,1);
+        broadcastChanges();
+    }
     public int materialSlotCount(){return MATERIAL_SLOTS;}
     public ItemStack materialItem(int i){return materials.getItem(i);}
     public boolean hasMaterials(Map<Item,Integer> cost){
@@ -100,12 +132,16 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         Slot slot=slots.get(index);
         if(!slot.hasItem())return ItemStack.EMPTY;
         ItemStack original=slot.getItem(),copy=original.copy();
-        if(index<MATERIAL_SLOTS){
-            if(!moveItemStackTo(original,MATERIAL_SLOTS,slots.size(),true))
+        if(index<MATERIAL_SLOTS+ATTACHMENT_SLOTS){
+            if(!moveItemStackTo(original,MATERIAL_SLOTS+ATTACHMENT_SLOTS,slots.size(),true))
                 return ItemStack.EMPTY;
         } else {
-            if(!moveItemStackTo(original,0,MATERIAL_SLOTS,false))
-                return ItemStack.EMPTY;
+            boolean moved=false;
+            for(int i=0;i<ATTACHMENT_SLOTS && !moved;i++)
+                if(original.is(attachmentType(i)))
+                    moved=moveItemStackTo(original,MATERIAL_SLOTS+i,MATERIAL_SLOTS+i+1,false);
+            if(!moved)moved=moveItemStackTo(original,0,MATERIAL_SLOTS,false);
+            if(!moved)return ItemStack.EMPTY;
         }
         if(original.isEmpty())slot.set(ItemStack.EMPTY);
         else slot.setChanged();
@@ -114,8 +150,9 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     @Override public void removed(Player player){
         super.removed(player);
         // No materials are stored globally at the painting table.
-        for(int i=0;i<MATERIAL_SLOTS;i++) {
-            ItemStack stack=materials.removeItemNoUpdate(i);
+        for(int i=0;i<MATERIAL_SLOTS+ATTACHMENT_SLOTS;i++){
+            ItemStack stack=i<MATERIAL_SLOTS ? materials.removeItemNoUpdate(i)
+                : attachmentInputs.removeItemNoUpdate(i-MATERIAL_SLOTS);
             if(stack.isEmpty())continue;
             if(!player.getInventory().add(stack))player.drop(stack,false);
         }
