@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "simpleboatengine:block/boat_customizer_side"
+    },
+    "facing=east": {
+      "model": "simpleboatengine:block/boat_customizer_side"
+    },
+    "facing=south": {
+      "model": "simpleboatengine:block/boat_customizer_side"
+    },
+    "facing=west": {
+      "model": "simpleboatengine:block/boat_customizer_side"
+    }
+  }
+}

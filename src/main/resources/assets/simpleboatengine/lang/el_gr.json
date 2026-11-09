@@ -3,7 +3,7 @@
   "item.simpleboatengine.fuel_bucket": "Κουβάς καυσίμου",
   "item.simpleboatengine.fuel_canister": "Βοηθητικό δοχείο καυσίμου",
   "item.simpleboatengine.pole_light": "Αυτόματο φως βάρκας",
-  "block.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας",
+  "block.simpleboatengine.boat_customizer": "Ναυτικός Πάγκος Βαφής",
   "container.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας",
   "item.simpleboatengine.aggelos_blue_fishing_boat": "Μπλε ψαρόβαρκα",
   "entity.simpleboatengine.aggelos_blue_fishing_boat": "Ψαρόβαρκα",
@@ -28,5 +28,8 @@
   "item.simpleboatengine.boat_stand": "Βάση Στάθμευσης Βάρκας",
   "item.simpleboatengine.yellow_lift_buoy": "Κίτρινη Σημαδούρα Ανύψωσης",
   "item.simpleboatengine.white_lift_buoy": "Λευκή Σημαδούρα",
-  "item.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας"
+  "item.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας",
+  "item.simpleboatengine.ice_breaker": "Παγοθραύστης",
+  "item.simpleboatengine.boat_recovery_kit": "Κιτ Ανάκτησης Βάρκας",
+  "block.simpleboatengine.boat_recovery": "Βάση Ανάκτησης Βάρκας"
 }

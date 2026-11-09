@@ -3,7 +3,7 @@
   "item.simpleboatengine.fuel_bucket": "Steel Fuel Canister (Filled)",
   "item.simpleboatengine.fuel_canister": "Auxiliary Fuel Canister",
   "item.simpleboatengine.pole_light": "Automatic Boat Pole Light",
-  "block.simpleboatengine.boat_customizer": "Boat Painting Table",
+  "block.simpleboatengine.boat_customizer": "Marine Paint Workshop",
   "container.simpleboatengine.boat_customizer": "Boat Painting Table",
   "item.simpleboatengine.aggelos_blue_fishing_boat": "Blue Fishing Boat",
   "entity.simpleboatengine.aggelos_blue_fishing_boat": "Fishing Boat",
@@ -32,5 +32,8 @@
   "item.simpleboatengine.boat_stand": "Boat Parking Stand",
   "item.simpleboatengine.yellow_lift_buoy": "Yellow Lifting Buoy",
   "item.simpleboatengine.white_lift_buoy": "White Lifting Buoy",
-  "item.simpleboatengine.boat_customizer": "Boat Painting Table"
+  "item.simpleboatengine.boat_customizer": "Boat Painting Table",
+  "item.simpleboatengine.ice_breaker": "Ice Breaker",
+  "item.simpleboatengine.boat_recovery_kit": "Boat Recovery Kit",
+  "block.simpleboatengine.boat_recovery": "Boat Recovery Crate"
 }
