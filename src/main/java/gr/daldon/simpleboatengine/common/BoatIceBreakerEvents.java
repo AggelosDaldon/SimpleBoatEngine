@@ -51,9 +51,9 @@ public final class BoatIceBreakerEvents {
         ItemStack kit=event.getEntity().getMainHandItem();
         if(!kit.is(EngineItems.BOAT_RECOVERY_KIT.get()) || BoatRecoveryItem.loaded(kit))
             return;
-        if(!boat.level().isClientSide && boat.getPassengers().isEmpty()){
-            ItemStack saved=boat instanceof BlueFishingBoat blue
-                ? blue.getPickResult() : new ItemStack(boat.getDropItem());
+        if(!boat.level().isClientSide && boat.getPassengers().isEmpty()
+            && boat instanceof BlueFishingBoat blue){
+            ItemStack saved=blue.getPickResult();
             BoatRecoveryItem.put(kit,saved);
             boat.discard();
             event.getEntity().displayClientMessage(
