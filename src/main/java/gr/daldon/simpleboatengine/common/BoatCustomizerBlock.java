@@ -76,11 +76,9 @@ public final class BoatCustomizerBlock extends BaseEntityBlock {
                 player.drop(legacy,false);
         }
         ItemStack held = player.getMainHandItem();
-        if (workshop.getItem(0).isEmpty() && held.getItem() instanceof SkiffBoatItem) {
-            ItemStack placed = held.copy();
-            placed.setCount(1);
-            workshop.setItem(0, placed);
-            if (!player.getAbilities().instabuild) held.shrink(1);
+        if (held.getItem() instanceof SkiffBoatItem) {
+            serverPlayer.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                "Park this boat on a Boat Stand first, then paint it here."),true);
         }
         NetworkHooks.openScreen(serverPlayer, workshop, pos);
         return InteractionResult.CONSUME;
