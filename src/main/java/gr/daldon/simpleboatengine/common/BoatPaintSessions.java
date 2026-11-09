@@ -53,18 +53,11 @@ public final class BoatPaintSessions {
         if(colors==null || colors.length!=BoatPaint.CHANNELS)return cost;
         for(int i=0;i<colors.length;i++){
             if(colors[i]>=0 && colors[i]!=(BoatPaint.get(original,i))) {
-                if(i==BoatPaint.ANTIFOUL) add(cost,Items.BLACK_DYE,1);
-                else add(cost,dyeItem(colors[i]),1);
+                if(i!=BoatPaint.ANTIFOUL) add(cost,dyeItem(colors[i]),1);
             }
         }
         if(nameColor>=0 && nameColor!=BoatPaint.nameColor(original))
             add(cost,dyeItem(nameColor),1);
-        int before=mask(original);
-        for(int bit:new int[]{ENGINE,POLE,CANISTER,BREAKER})
-            if((attachments&bit)!=0 && (before&bit)==0)
-                add(cost,bit==ENGINE?EngineItems.ENGINE.get():
-                    bit==POLE?EngineItems.POLE_LIGHT.get():
-                    bit==CANISTER?EngineItems.FUEL_CANISTER.get():EngineItems.ICE_BREAKER.get(),1);
         return cost;
     }
     private static void tell(ServerPlayer p,String msg){
@@ -82,7 +75,7 @@ public final class BoatPaintSessions {
         if(menu.standCount()==0 || !standPos.equals(menu.selectedStandPos())
             || stand==null || colors==null || colors.length!=BoatPaint.CHANNELS) return false;
         if(stand.previewLockedFor(player.getUUID())) {tell(player,"Another player is previewing this boat.");return false;}
-        if(action==CANCEL) {stand.cancelPreview(player.getUUID());tell(player,"Changes cancelled.");return false;}
+        if(action==CANCEL) {stand.cancelPreview(player.getUUID());tell(player,"Changes cancelled.");return true;}
         ItemStack original=stand.previewOriginal();
         if(!(original.getItem() instanceof SkiffBoatItem)) return false;
         ItemStack proposed=original.copy();
@@ -104,12 +97,14 @@ public final class BoatPaintSessions {
         engine.putBoolean("IceBreakerInstalled",(attachments&BREAKER)!=0);
         if((attachments&ENGINE)==0) {engine.putBoolean("Running",false);engine.putInt("Throttle",0);}
         Map<Item,Integer> cost=requirements(original,colors,nameColor,attachments);
+        if(name!=null && !name.isBlank()
+            && !name.trim().equals(BoatPaint.name(original))) add(cost,Items.NAME_TAG,1);
         int before=mask(original);
         // Preserve Silk Touch from the actual attachment consumed in the player's inventory.
         boolean silk=motor(original).getBoolean("IceBreakerSilk");
         if((attachments&BREAKER)!=0 && (before&BREAKER)==0) {
-            for(int i=0;i<menu.materialSlotCount();i++) {
-                ItemStack candidate=menu.materialItem(i);
+            for(int i=0;i<4;i++) {
+                ItemStack candidate=menu.attachmentItem(i);
                 if(candidate.is(EngineItems.ICE_BREAKER.get())) {
                     silk=net.minecraft.world.item.enchantment.EnchantmentHelper
                         .getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,candidate)>0;
@@ -118,16 +113,11 @@ public final class BoatPaintSessions {
             }
         }
         engine.putBoolean("IceBreakerSilk",silk);
-        for(int bit : new int[]{ENGINE,POLE,CANISTER,BREAKER})
-            if((attachments&bit)!=0 && (before&bit)==0)
-                add(cost,bit==ENGINE?EngineItems.ENGINE.get():
-                    bit==POLE?EngineItems.POLE_LIGHT.get():
-                    bit==CANISTER?EngineItems.FUEL_CANISTER.get():EngineItems.ICE_BREAKER.get(),1);
         if(action==APPLY) {
-            if(!player.getAbilities().instabuild && !menu.hasMaterials(cost)){
+            if(!player.getAbilities().instabuild && (!menu.hasMaterials(cost) || !menu.hasAttachmentInputs(before,attachments))){
                 tell(player,"Missing materials: "+format(cost,player));return false;
             }
-            if(!player.getAbilities().instabuild)menu.consumeMaterials(cost);
+            if(!player.getAbilities().instabuild){menu.consumeMaterials(cost);menu.consumeAttachmentInputs(before,attachments);}
             for(int bit : new int[]{ENGINE,POLE,CANISTER,BREAKER})
                 if((before&bit)!=0 && (attachments&bit)==0) {
                     ItemStack returned=new ItemStack(bit==ENGINE?EngineItems.ENGINE.get():
