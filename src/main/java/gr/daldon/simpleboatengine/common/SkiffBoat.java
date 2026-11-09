@@ -49,7 +49,10 @@ public class SkiffBoat extends Boat {
             // BlueFishingBoat overrides the two local positions for its side seat.
             move.accept(entity,
                 getX() + local.x * Math.cos(yaw) + local.z * Math.sin(yaw),
-                y + (this instanceof BlueFishingBoat ? 0.33 : 0.71),
+                // The authored seats top out at y=9.43/16 above the model origin
+                // and the entire hull is rendered +0.10 blocks (BoatMounts.HULL_Y).
+                // Offset the passenger above vanilla boat seating to the real deck.
+                y + (this instanceof BlueFishingBoat ? 0.73 : 0.71),
                 getZ() - local.x * Math.sin(yaw) + local.z * Math.cos(yaw));
         });
     }
