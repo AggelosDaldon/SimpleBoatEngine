@@ -4,15 +4,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 
 /** A portable crate which captures a boat, then docks it in an empty stand.
  *  The entire packed boat NBT is carried by the recovery tool.
  */
-public final class BoatRecoveryItem extends BlockItem {
+public final class BoatRecoveryItem extends Item {
     private static final String STORED="RecoveredBoat";
-    public BoatRecoveryItem(Properties properties) {super(EngineBlocks.BOAT_RECOVERY.get(),properties);}
+    public BoatRecoveryItem(Properties properties) {super(properties);}
     public static boolean loaded(ItemStack stack){
         return stack.hasTag() && stack.getTag().contains(STORED,10);
     }
@@ -40,7 +40,6 @@ public final class BoatRecoveryItem extends BlockItem {
             }
             return InteractionResult.FAIL;
         }
-        // A loaded kit must not turn into an empty placed block and lose its boat.
-        return loaded(context.getItemInHand())?InteractionResult.FAIL:super.useOn(context);
+        return InteractionResult.PASS;
     }
 }
