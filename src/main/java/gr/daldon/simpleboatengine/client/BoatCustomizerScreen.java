@@ -42,7 +42,6 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         ItemStack original=menu.selectedStand()==null?source:menu.selectedStand().previewOriginal();
         int[] colors=BoatPaint.all(source);
         System.arraycopy(colors,0,draft,0,draft.length);
-        nameDye=BoatPaint.nameColor(source);
         mask=BoatPaintSessions.attachmentMask(source);
         if(name!=null)name.setValue(BoatPaint.name(source));
     }
@@ -57,6 +56,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         uiScale=Math.max(.25f,uiScale);
         shiftX=(width-imageWidth*uiScale)/2-leftPos*uiScale;
         shiftY=(height-imageHeight*uiScale)/2-topPos*uiScale;
+        nameDye=BoatPaint.nameColor(menu.boatItem());
         resetDraft();lastStand=menu.standIndex();
         button("<",17,19,24,23,()->navigate(-1));
         button(">",199,19,24,23,()->navigate(1));
@@ -214,20 +214,21 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         }
         preview(g);
     }
+    private void center(GuiGraphics g,String label,int x,int y,int color){
+        g.drawString(font,label,x-font.width(label)/2,y,color,false);
+    }
     @Override protected void renderLabels(GuiGraphics g,int mx,int my){
         int ink=0xFF30251B;
-        g.drawCenteredString(font,"PARKED BOAT "+
+        center(g,"PARKED BOAT "+
             (menu.standCount()==0?"0/0":(menu.standIndex()+1)+"/"+menu.standCount()),121,24,ink);
-        g.drawCenteredString(font,"PART: "+PARTS[part],121,63,ink);
-        g.drawCenteredString(font,"COLOURS",121,95,0xFFF4E1B7);
-        g.drawCenteredString(font,"PREVIEW - DRAG",342,20,0xFFFFE8C6);
-        g.drawString(font,"NAME",242,181,ink);
-        g.drawString(font,"COLOUR",396,181,ink);
-        g.drawString(font,"NEEDED MATERIALS",19,216,ink);
-        g.drawString(font,"ATTACHMENTS",240,229,ink);
-        for(int i=0;i<4;i++)
-            g.drawCenteredString(font,new String[]{"ENGINE","LIGHT","TANK","ICE"}[i],
-                257+i*48,269,ink);
+        center(g,"PART: "+PARTS[part],121,63,ink);
+        center(g,"COLOURS",121,95,0xFFF4E1B7);
+        center(g,"PREVIEW - DRAG",342,20,0xFFFFE8C6);
+        g.drawString(font,"NAME",242,181,ink,false);
+        g.drawString(font,"COLOUR",396,181,ink,false);
+        g.drawString(font,"NEEDED MATERIALS",19,216,ink,false);
+        g.drawString(font,"ATTACHMENTS",240,229,ink,false);
+
         
         
     }
