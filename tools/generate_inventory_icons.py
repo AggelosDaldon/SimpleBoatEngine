@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Crisp 32px vanilla-friendly inventory sprites with strict opaque pixels."""
+"""Crisp 64px vanilla-friendly inventory sprites from modeled silhouettes; opaque pixels."""
 from pathlib import Path
 from PIL import Image,ImageDraw
 root=Path("src/main/resources/assets/simpleboatengine/textures/item")
@@ -7,7 +7,8 @@ root.mkdir(parents=True,exist_ok=True)
 def canvas():
  im=Image.new("RGBA",(32,32),(0,0,0,0))
  return im,ImageDraw.Draw(im)
-def save(im,key):im.save(root/(key+"_icon.png"),optimize=True)
+def save(im,key):
+ im.resize((64,64),Image.Resampling.NEAREST).save(root/(key+"_icon.png"),optimize=True)
 for name,base,shadow,highlight in [
  ("lift_buoy",(225,79,46),(130,38,29),(250,131,83)),
  ("yellow_lift_buoy",(231,187,49),(151,100,32),(255,224,118)),
@@ -74,4 +75,19 @@ d.rectangle((13,3,19,7),fill=(187,187,149))
 d.rectangle((12,1,20,4),fill=(243,230,150))
 d.rectangle((12,26,21,28),fill=(67,76,77))
 save(im,"pole_light")
-print("Wrote 8 distinct opaque-pixel icons.")
+im,d=canvas()
+d.polygon([(14,2),(18,2),(20,7),(19,22),(24,27),(21,30),(16,24),(11,30),(8,27),(13,22),(12,7)],fill=(95,108,118))
+d.polygon([(15,4),(17,4),(17,23),(21,27),(19,28),(16,25),(13,28),(11,27),(15,22)],fill=(184,197,204))
+d.rectangle((11,8,21,10),fill=(224,218,170))
+save(im,"ice_breaker")
+im,d=canvas()
+d.rectangle((4,9,28,28),fill=(91,57,39))
+d.rectangle((6,11,26,26),fill=(166,105,59))
+d.rectangle((5,18,27,20),fill=(65,65,64))
+d.rectangle((14,4,18,10),fill=(130,134,132))
+d.rectangle((9,4,23,6),fill=(102,109,109))
+d.rectangle((8,24,24,26),fill=(83,62,44))
+d.rectangle((12,13,20,18),fill=(201,181,124))
+d.rectangle((15,14,17,17),fill=(66,83,95))
+save(im,"boat_recovery_kit")
+print("Wrote 10 distinct 64x64 opaque-pixel icons.")
