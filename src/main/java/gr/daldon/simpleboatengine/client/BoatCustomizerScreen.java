@@ -125,6 +125,10 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         g.fill(x,y,x+w,y+h,border);g.fill(x+2,y+2,x+w-2,y+h-2,fill);
     }
     private int color(int index){
+        if(part==BoatPaint.ANTIFOUL){
+            int[] marine={0x14585D,0x15345C,0x314238,0x522A32,0x292D35};
+            return 0xFF000000 | marine[Math.max(0,Math.min(index,4))];
+        }
         float[] c=DyeColor.byId(index).getTextureDiffuseColors();
         return 0xFF000000|(Math.round(c[0]*255)<<16)
             |(Math.round(c[1]*255)<<8)|Math.round(c[2]*255);
@@ -174,6 +178,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         panel(g,x+234,y+12,214,160,0xFF40332A,0xFF695744);
         panel(g,x+234,y+178,214,43,0xFF40332A,0xFFDBC09A);
         panel(g,x+12,y+213,215,58,0xFF40332A,0xFFDBC09A);
+        if(!valid())panel(g,x+14,y+181,67,25,0xFF181511,0xFF241F19);
         panel(g,x+234,y+224,214,67,0xFF40332A,0xFFDBC09A);
         panel(g,x+12,y+273,215,84,0xFF40332A,0xFF8E7153);
         panel(g,x+234,y+297,214,56,0xFF40332A,0xFFDBC09A);
