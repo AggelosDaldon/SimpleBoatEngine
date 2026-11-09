@@ -1,3 +1,6 @@
 {
-  "parent": "simpleboatengine:block/lift_buoy_orange"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "simpleboatengine:item/lift_buoy_icon"
+  }
 }

@@ -1,40 +1,6 @@
 {
-  "parent": "minecraft:builtin/entity",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "particle": "simpleboatengine:item/outboard_engine"
-  },
-  "display": {
-    "gui": {
-      "rotation": [20, 145, 0],
-      "translation": [0, 0, 0],
-      "scale": [1.35, 1.25, 1.35]
-    },
-    "ground": {
-      "rotation": [0, 90, 0],
-      "translation": [0, 2, 0],
-      "scale": [0.75, 0.75, 0.75]
-    },
-    "fixed": {
-      "rotation": [0, 180, 0],
-      "scale": [1.1, 1.1, 1.1]
-    },
-    "thirdperson_righthand": {
-      "rotation": [70, 45, 0],
-      "translation": [0, 2, 0],
-      "scale": [0.6, 0.6, 0.6]
-    },
-    "thirdperson_lefthand": {
-      "rotation": [70, 45, 0],
-      "translation": [0, 2, 0],
-      "scale": [0.6, 0.6, 0.6]
-    },
-    "firstperson_righthand": {
-      "rotation": [0, -45, 0],
-      "scale": [0.7, 0.7, 0.7]
-    },
-    "firstperson_lefthand": {
-      "rotation": [0, -45, 0],
-      "scale": [0.7, 0.7, 0.7]
-    }
+    "layer0": "simpleboatengine:item/engine_icon"
   }
 }

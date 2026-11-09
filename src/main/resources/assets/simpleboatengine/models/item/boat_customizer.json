@@ -1,3 +1,6 @@
 {
-  "parent": "simpleboatengine:block/boat_customizer"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "simpleboatengine:item/boat_customizer_icon"
+  }
 }
