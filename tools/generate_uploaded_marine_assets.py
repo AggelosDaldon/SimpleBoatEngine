@@ -46,7 +46,7 @@ model={"textures":{"marine":"simpleboatengine:block/marine_workbench",
        "elements":elements}
 out=root/"models"/"block"/"boat_customizer.json"
 out.parent.mkdir(parents=True,exist_ok=True)
-out.write_text(json.dumps(model,indent=2)+"\\n")
+out.write_text(json.dumps(model,indent=2)+"\n")
 # Export pre-rotated versions of the two-block model. Vanilla blockstates
 # rotate around the MAIN block center, which previously displaced the second
 # half into the floor on some directions. Here geometry follows the side block.
@@ -77,7 +77,7 @@ for facing in face_cycles:
             rot["origin"]=[x,rot["origin"][1],z]
             if rot["axis"] in ("x","z") and facing in ("east","west"):
                 rot["axis"]="z" if rot["axis"]=="x" else "x"
-    (out.parent/("boat_customizer_"+facing+".json")).write_text(json.dumps(rotated,indent=2)+"\\n")
+    (out.parent/("boat_customizer_"+facing+".json")).write_text(json.dumps(rotated,indent=2)+"\n")
 
 # A dedicated exact-UV V2 blade atlas, not the old placeholder beams.
 # Mesh coordinates remain in original V2 boat-local pixels, no extra offset.
