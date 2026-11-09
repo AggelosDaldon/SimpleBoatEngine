@@ -99,11 +99,24 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         if(minecraft!=null && minecraft.player!=null
             && minecraft.player.getAbilities().instabuild)return true;
         return menu.hasMaterials(BoatPaintSessions.requirements(
-            menu.selectedStand().previewOriginal(),draft,nameDye,mask));
+            menu.selectedStand().previewOriginal(),draft,nameDye,mask))
+            && menu.hasAttachmentInputs(
+                BoatPaintSessions.attachmentMask(menu.selectedStand().previewOriginal()),mask)
+            && hasNameTag();
+    }
+    private boolean hasNameTag(){
+        ItemStack original=menu.selectedStand().previewOriginal();
+        if(name==null || name.getValue().isBlank()
+           || name.getValue().trim().equals(BoatPaint.name(original)))return true;
+        for(int i=0;i<BoatCustomizerMenu.MATERIAL_SLOTS;i++)
+            if(menu.materialItem(i).is(net.minecraft.world.item.Items.NAME_TAG))return true;
+        return false;
     }
     @Override protected void containerTick(){
         super.containerTick();
         if(lastStand!=menu.standIndex()){lastStand=menu.standIndex();resetDraft();}
+        for(int i=0;i<4;i++)
+            if(!menu.attachmentItem(i).isEmpty())mask|=1<<i;
         if(applyButton!=null){applyButton.active=valid();applyButton.visible=valid();}
     }
     private static void panel(GuiGraphics g,int x,int y,int w,int h,int border,int fill){
@@ -230,7 +243,9 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         }
         if(button==0 && x>=247&&x<447&&y>=244&&y<266) {
             int index=(x-247)/48;
-            if(index<4) {
+            if(index<4 && menu.attachmentItem(index).isEmpty()
+                && minecraft!=null && minecraft.player!=null
+                && minecraft.player.containerMenu.getCarried().isEmpty()) {
                 mask ^= 1<<index;
                 if(index==0 && (mask&1)==0) mask &= ~(2|4);
                 if((index==1||index==2)&&(mask&(1<<index))!=0)mask |= 1;
