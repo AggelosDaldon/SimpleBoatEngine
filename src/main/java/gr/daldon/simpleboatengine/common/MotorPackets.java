@@ -209,7 +209,7 @@ public final class MotorPackets {
                 if (msg.channel == -1) {
                     BoatPaint.setName(item, msg.name);
                 } else if (msg.channel == -4) {
-                    ItemStack material = workshop.getItem(2);
+                    ItemStack material = table.getItem(2);
                     int wood = EngineItems.woodStyleFor(material);
                     if (wood < 1) return;
                     int previous = item.getItem() instanceof SkiffBoatItem current
@@ -221,16 +221,16 @@ public final class MotorPackets {
                     item = replacement;
                     if (!player.getAbilities().instabuild) {
                         material.shrink(1);
-                        workshop.setItem(2, material);
+                        table.setItem(2, material);
                     }
                 } else if (msg.channel == -2 || msg.channel == -3) {
-                    ItemStack input = workshop.getItem(3);
+                    ItemStack input = table.getItem(3);
                     if (msg.channel == -2 && input.getItem() instanceof DyeItem dye) {
                         if (BoatPaint.nameColor(item) != dye.getDyeColor().getId()) {
                             BoatPaint.setNameColor(item, dye.getDyeColor().getId());
                             if (!player.getAbilities().instabuild) {
                                 input.shrink(1);
-                                workshop.setItem(3, input);
+                                table.setItem(3, input);
                             }
                         }
                     } else if (msg.channel == -3 && input.is(net.minecraft.world.item.Items.GLOW_INK_SAC)) {
@@ -238,7 +238,7 @@ public final class MotorPackets {
                             BoatPaint.setNameGlow(item, true);
                             if (!player.getAbilities().instabuild) {
                                 input.shrink(1);
-                                workshop.setItem(1, input);
+                                table.setItem(1, input);
                             }
                         }
                     } else {
@@ -249,7 +249,7 @@ public final class MotorPackets {
                     if (msg.channel < 0 || msg.channel >= BoatPaint.CHANNELS) return;
                     // Dyes must now be placed in the actual station slot.
                     // Normal paints inherit the placed dye's exact vanilla color.
-                    ItemStack dye = workshop.getItem(1);
+                    ItemStack dye = table.getItem(1);
                     if (!(dye.getItem() instanceof DyeItem dyeItem)) {
                         player.displayClientMessage(Component.literal("Put a dye into the station first."), true);
                         return;
@@ -265,7 +265,7 @@ public final class MotorPackets {
                     BoatPaint.set(item, msg.channel, selectedColor);
                     if (!player.getAbilities().instabuild) {
                         dye.shrink(1);
-                        workshop.setItem(1, dye);
+                        table.setItem(1, dye);
                     }
                 }
                 workshop.setItem(0, item);
