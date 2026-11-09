@@ -35,7 +35,7 @@ public final class BoatPaintSessions {
         return stack.getTag().getCompound("PackedFishingBoat").getCompound("ForgeData")
             .getCompound("SimpleBoatEngine");
     }
-    private static CompoundTag writableMotor(ItemStack stack) {
+    public static CompoundTag writableMotor(ItemStack stack) {
         CompoundTag packed=stack.getOrCreateTag().getCompound("PackedFishingBoat");
         if(!stack.getOrCreateTag().contains("PackedFishingBoat",10)) {
             packed=new CompoundTag(); stack.getOrCreateTag().put("PackedFishingBoat",packed);
@@ -89,6 +89,19 @@ public final class BoatPaintSessions {
         if(BoatPaint.nameColor(proposed)!=BoatPaint.nameColor(original))
             add(cost,dyeItem(BoatPaint.nameColor(proposed)),1);
         int before=mask(original);
+        // Preserve Silk Touch from the actual attachment consumed in the player's inventory.
+        boolean silk=motor(original).getBoolean("IceBreakerSilk");
+        if((attachments&BREAKER)!=0 && (before&BREAKER)==0) {
+            for(int i=0;i<player.getInventory().getContainerSize();i++) {
+                ItemStack candidate=player.getInventory().getItem(i);
+                if(candidate.is(EngineItems.ICE_BREAKER.get())) {
+                    silk=net.minecraft.world.item.enchantment.EnchantmentHelper
+                        .getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,candidate)>0;
+                    break;
+                }
+            }
+        }
+        engine.putBoolean("IceBreakerSilk",silk);
         for(int bit : new int[]{ENGINE,POLE,CANISTER,BREAKER})
             if((attachments&bit)!=0 && (before&bit)==0)
                 add(cost,bit==ENGINE?EngineItems.ENGINE.get():
@@ -104,6 +117,8 @@ public final class BoatPaintSessions {
                     ItemStack returned=new ItemStack(bit==ENGINE?EngineItems.ENGINE.get():
                         bit==POLE?EngineItems.POLE_LIGHT.get():
                         bit==CANISTER?EngineItems.FUEL_CANISTER.get():EngineItems.ICE_BREAKER.get());
+                    if(bit==BREAKER && motor(original).getBoolean("IceBreakerSilk"))
+                        returned.enchant(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,1);
                     if(!player.getInventory().add(returned))player.drop(returned,false);
                 }
             stand.setItem(0,proposed);
