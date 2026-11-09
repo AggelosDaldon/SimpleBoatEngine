@@ -184,7 +184,8 @@ public final class MotorPackets {
                    || !menu.position().equals(msg.pos)
                    || player.distanceToSqr(msg.pos.getX()+.5,
                        msg.pos.getY()+.5,msg.pos.getZ()+.5)>64)return;
-                if(msg.craft==1)menu.craft(player);
+                if(msg.craft==2)menu.selectTab(true);
+                else if(msg.craft==3)menu.selectTab(false);
                 else if(Math.abs(msg.delta)==1)menu.change(msg.delta);
             });
             ctx.get().setPacketHandled(true);
