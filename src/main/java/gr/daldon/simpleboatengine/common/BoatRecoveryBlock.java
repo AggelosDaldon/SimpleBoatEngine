@@ -37,7 +37,7 @@ public final class BoatRecoveryBlock extends BaseEntityBlock {
             return InteractionResult.CONSUME;
         }
         var candidates=world.getEntitiesOfClass(Boat.class,new AABB(pos).inflate(4.0),
-            b->b.isAlive()&&b.getPassengers().isEmpty());
+            b->b instanceof BlueFishingBoat && b.isAlive()&&b.getPassengers().isEmpty());
         if(candidates.isEmpty()){
             player.displayClientMessage(Component.literal("No unoccupied boat within 4 blocks."),true);
             return InteractionResult.CONSUME;
@@ -46,8 +46,7 @@ public final class BoatRecoveryBlock extends BaseEntityBlock {
         for(Boat b:candidates)if(b.distanceToSqr(pos.getX()+.5,pos.getY()+.5,pos.getZ()+.5)<
                               nearest.distanceToSqr(pos.getX()+.5,pos.getY()+.5,pos.getZ()+.5))
             nearest=b;
-        ItemStack packed=nearest instanceof BlueFishingBoat blue
-            ? blue.getPickResult() : new ItemStack(nearest.getDropItem());
+        ItemStack packed=((BlueFishingBoat)nearest).getPickResult();
         crate.store(packed);
         nearest.discard(); // Not a damage death: stored cargo must not spill.
         player.displayClientMessage(Component.literal("Boat safely recovered with contents."),true);
