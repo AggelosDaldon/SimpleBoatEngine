@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "simpleboatengine:block/boat_builder"
+    }
+  }
+}

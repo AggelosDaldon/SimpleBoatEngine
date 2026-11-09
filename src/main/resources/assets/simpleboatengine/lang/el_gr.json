@@ -31,5 +31,7 @@
   "item.simpleboatengine.boat_customizer": "Τραπέζι Βαφής Βάρκας",
   "item.simpleboatengine.ice_breaker": "Παγοθραύστης",
   "item.simpleboatengine.boat_recovery_kit": "Γάντζος Ανάκτησης Βάρκας",
-  "block.simpleboatengine.boat_recovery": "Βάση Ανάκτησης Βάρκας"
+  "block.simpleboatengine.boat_recovery": "Βάση Ανάκτησης Βάρκας",
+  "block.simpleboatengine.boat_builder": "Εργαστήριο Κατασκευής Σκαφών",
+  "item.simpleboatengine.boat_builder": "Εργαστήριο Κατασκευής Σκαφών"
 }
