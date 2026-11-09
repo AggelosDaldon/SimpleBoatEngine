@@ -33,20 +33,26 @@ public final class BoatStandRenderer implements BlockEntityRenderer<BoatStandBlo
 
     @Override public void render(BoatStandBlockEntity stand, float tick, PoseStack pose,
                                  MultiBufferSource buffers, int light, int overlay) {
-        // Two elongated keel beams / cross braces at the correct full-size length.
-        beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.06,.11,-3.8,.20,.24,4.0);
-        beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.76,.11,-3.8,.20,.24,4.0);
-        beam(pose,buffers,light,Blocks.DARK_OAK_PLANKS,.03,.06,-2.9,.94,.17,.20);
-        beam(pose,buffers,light,Blocks.DARK_OAK_PLANKS,.03,.06,-1.4,.94,.17,.20);
-        beam(pose,buffers,light,Blocks.DARK_OAK_PLANKS,.03,.06,-.15,.94,.17,.20);
-        for(double z : new double[]{-2.8,-.45}) {
-            beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.03,-.25,z,.20,.42,.20);
-            beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.77,-.25,z,.20,.42,.20);
+        // Longitudinal keel rails with four upright posts contacting hull sides.
+        // Cross-ties terminate between rails; no co-planar surfaces at joints.
+        beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.06,.055,-3.80,.18,.22,3.96);
+        beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.76,.055,-3.80,.18,.22,3.96);
+        for(double z : new double[]{-3.12,-1.08}) {
+            beam(pose,buffers,light,Blocks.DARK_OAK_PLANKS,.245,.055,z,.51,.145,.16);
+            // Two side posts per station. Their capped ends support the hull.
+            beam(pose,buffers,light,Blocks.STRIPPED_OAK_LOG,.095,.275,z+.01,.17,.49,.17);
+            beam(pose,buffers,light,Blocks.STRIPPED_OAK_LOG,.735,.275,z+.01,.17,.49,.17);
+            beam(pose,buffers,light,Blocks.SPRUCE_SLAB,.085,.76,z,.19,.115,.19);
+            beam(pose,buffers,light,Blocks.SPRUCE_SLAB,.725,.76,z,.19,.115,.19);
+        }
+        for(double z : new double[]{-3.10,-.82}) {
+            beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.06,-.24,z,.18,.295,.18);
+            beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.76,-.24,z,.18,.295,.18);
         }
         var item=stand.getItem(0);
         if(!(item.getItem() instanceof SkiffBoatItem)) return;
         pose.pushPose();
-        pose.translate(.5,.52,-1.45);
+        pose.translate(.5,.41,-1.45);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.scale(.94f,.94f,.94f);
         BoatItemVisuals.drawBoat(item,pose,buffers,light,-.14f);
