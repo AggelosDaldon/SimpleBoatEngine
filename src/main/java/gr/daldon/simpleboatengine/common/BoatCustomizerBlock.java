@@ -1,6 +1,13 @@
 package gr.daldon.simpleboatengine.common;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,7 +25,27 @@ import net.minecraftforge.network.NetworkHooks;
 
 /** Physical workshop: insert a boat, edit its parts, and retrieve the same item. */
 public final class BoatCustomizerBlock extends BaseEntityBlock {
-    public BoatCustomizerBlock(BlockBehaviour.Properties properties) { super(properties); }
+    public static final DirectionProperty FACING=HorizontalDirectionalBlock.FACING;
+    public BoatCustomizerBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+        registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH));
+    }
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block,BlockState> builder){
+        builder.add(FACING);
+    }
+    @Override public BlockState getStateForPlacement(BlockPlaceContext context){
+        Direction facing=context.getHorizontalDirection().getOpposite();
+        BlockPos second=context.getClickedPos().relative(facing.getClockWise());
+        return context.getLevel().getBlockState(second).canBeReplaced(context)
+            ? defaultBlockState().setValue(FACING,facing):null;
+    }
+    @Override public void setPlacedBy(Level level,BlockPos pos,BlockState state,
+                                      @Nullable LivingEntity placer,ItemStack item){
+        super.setPlacedBy(level,pos,state,placer,item);
+        level.setBlock(pos.relative(state.getValue(FACING).getClockWise()),
+            EngineBlocks.CUSTOMIZER_SIDE.get().defaultBlockState()
+                .setValue(BoatPainterSideBlock.FACING,state.getValue(FACING)),3);
+    }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -58,6 +85,9 @@ public final class BoatCustomizerBlock extends BaseEntityBlock {
         if (!oldState.is(newState.getBlock())) {
             if (level.getBlockEntity(pos) instanceof BoatCustomizerBlockEntity workshop)
                 Containers.dropContents(level, pos, workshop);
+            BlockPos side=pos.relative(oldState.getValue(FACING).getClockWise());
+            if(level.getBlockState(side).is(EngineBlocks.CUSTOMIZER_SIDE.get()))
+                level.removeBlock(side,false);
             super.onRemove(oldState, level, pos, newState, moving);
         }
     }
