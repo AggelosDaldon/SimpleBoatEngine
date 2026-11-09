@@ -21,6 +21,7 @@ public final class BoatStandBlockEntity extends BoatCustomizerBlockEntity {
         }
     }
     public boolean hasPreview() {return previewOwner!=null;}
+    public java.util.UUID previewOwnerId(){return previewOwner;}
     public void cancelPreview(java.util.UUID owner) {
         if(previewOwner!=null && previewOwner.equals(owner)) {
             setItem(0,previewBackup.copy());
