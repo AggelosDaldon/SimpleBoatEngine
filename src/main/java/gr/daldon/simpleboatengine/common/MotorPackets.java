@@ -60,6 +60,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(CycleParkedCargo.class, 10, NetworkDirection.PLAY_TO_SERVER)
             .encoder(CycleParkedCargo::write).decoder(CycleParkedCargo::read)
             .consumerMainThread(CycleParkedCargo::receive).add();
+        CHANNEL.messageBuilder(BuilderAction.class, 11, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(BuilderAction::write).decoder(BuilderAction::read)
+            .consumerMainThread(BuilderAction::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -163,6 +166,28 @@ public final class MotorPackets {
                 menu.setStartRow(msg.firstRow());
             });
             context.get().setPacketHandled(true);
+        }
+    }
+
+    /** Server-authoritative blueprint selection and material consumption. */
+    public record BuilderAction(BlockPos pos,int delta,int craft) {
+        static void write(BuilderAction msg,FriendlyByteBuf out){
+            out.writeBlockPos(msg.pos);out.writeVarInt(msg.delta);out.writeVarInt(msg.craft);
+        }
+        static BuilderAction read(FriendlyByteBuf in){
+            return new BuilderAction(in.readBlockPos(),in.readVarInt(),in.readVarInt());
+        }
+        static void receive(BuilderAction msg,Supplier<NetworkEvent.Context> ctx){
+            ServerPlayer player=ctx.get().getSender();
+            ctx.get().enqueueWork(()->{
+                if(player==null || !(player.containerMenu instanceof BoatBuilderMenu menu)
+                   || !menu.position().equals(msg.pos)
+                   || player.distanceToSqr(msg.pos.getX()+.5,
+                       msg.pos.getY()+.5,msg.pos.getZ()+.5)>64)return;
+                if(msg.craft==1)menu.craft(player);
+                else if(Math.abs(msg.delta)==1)menu.change(msg.delta);
+            });
+            ctx.get().setPacketHandled(true);
         }
     }
 
