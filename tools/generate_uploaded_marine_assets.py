@@ -26,8 +26,11 @@ elements=[]
 for cube in unpack(WORKBENCH_GEOMETRY):
     faces={direction:{"texture":"#marine","uv":[round(v/8,5) for v in uv]}
            for direction,uv in zip(("north","south","west","east","up","down"),cube["u"])}
-    item={"from":[round(cube["f"][0]+16,4),round(cube["f"][1],4),round(cube["f"][2]+8,4)],
-          "to":[round(cube["t"][0]+16,4),round(cube["t"][1],4),round(cube["t"][2]+8,4)],
+    # Vanilla accepts model element coordinates only in [-16, 32].
+    # Trim the last 1.35px of ornamental side edging rather than reject
+    # the entire otherwise-exact workbench model at resource load time.
+    item={"from":[round(max(-16,min(32,cube["f"][0]+16)),4),round(cube["f"][1],4),round(cube["f"][2]+8,4)],
+          "to":[round(max(-16,min(32,cube["t"][0]+16)),4),round(cube["t"][1],4),round(cube["t"][2]+8,4)],
           "faces":faces}
     rot=cube.get("r") or [0,0,0]
     if any(rot):
