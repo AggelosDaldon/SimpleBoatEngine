@@ -149,6 +149,25 @@ public final class BlueFishingBoat extends SkiffBoat {
         entityData.set(CUSTOMIZATION, temp.getTag().copy());
     }
 
+    /** Silk Touch ice goes into the normal 108-slot hold before any drop. */
+    public boolean storeIce(ItemStack incoming) {
+        if(incoming.isEmpty())return true;
+        for(int i=0;i<cargo.getContainerSize();i++){
+            ItemStack stored=cargo.getItem(i);
+            if(stored.isEmpty()) {
+                cargo.setItem(i,incoming.copy());
+                return true;
+            }
+            if(ItemStack.isSameItemSameTags(stored,incoming)
+                && stored.getCount()+incoming.getCount()<=stored.getMaxStackSize()){
+                stored.grow(incoming.getCount());
+                cargo.setChanged();
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Dedicated 27-slot chest below the white bow hatch. */
     public void openHatch(ServerPlayer player) {
         player.openMenu(new SimpleMenuProvider(
