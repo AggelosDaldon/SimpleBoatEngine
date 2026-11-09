@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "simpleboatengine:block/boat_stand"
+    "facing=north": {
+      "model": "simpleboatengine:block/boat_stand",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "simpleboatengine:block/boat_stand",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "simpleboatengine:block/boat_stand",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "simpleboatengine:block/boat_stand",
+      "y": 270
     }
   }
 }

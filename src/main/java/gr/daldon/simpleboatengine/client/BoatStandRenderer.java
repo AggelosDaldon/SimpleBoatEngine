@@ -33,6 +33,13 @@ public final class BoatStandRenderer implements BlockEntityRenderer<BoatStandBlo
 
     @Override public void render(BoatStandBlockEntity stand, float tick, PoseStack pose,
                                  MultiBufferSource buffers, int light, int overlay) {
+        pose.pushPose();
+        pose.translate(.5,0,.5);
+        if(stand.getBlockState().hasProperty(gr.daldon.simpleboatengine.common.BoatStandBlock.FACING))
+            pose.mulPose(Axis.YP.rotationDegrees(
+                stand.getBlockState().getValue(gr.daldon.simpleboatengine.common.BoatStandBlock.FACING)
+                .toYRot()-180f));
+        pose.translate(-.5,0,-.5);
         // Longitudinal keel rails with four upright posts contacting hull sides.
         // Cross-ties terminate between rails; no co-planar surfaces at joints.
         beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.06,.055,-3.80,.18,.22,3.96);
@@ -50,12 +57,13 @@ public final class BoatStandRenderer implements BlockEntityRenderer<BoatStandBlo
             beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.76,-.24,z,.18,.295,.18);
         }
         var item=stand.getItem(0);
-        if(!(item.getItem() instanceof SkiffBoatItem)) return;
+        if(!(item.getItem() instanceof SkiffBoatItem)) {pose.popPose();return;}
         pose.pushPose();
         pose.translate(.5,.41,-1.45);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.scale(.94f,.94f,.94f);
         BoatItemVisuals.drawBoat(item,pose,buffers,light,-.14f);
+        pose.popPose();
         pose.popPose();
     }
     @Override public boolean shouldRenderOffScreen(BoatStandBlockEntity stand){return true;}

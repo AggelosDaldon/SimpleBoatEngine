@@ -1,6 +1,11 @@
 package gr.daldon.simpleboatengine.common;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +26,17 @@ import net.minecraftforge.network.NetworkHooks;
  * the complete stored boat; click the bench to open its existing paint GUI.
  */
 public final class BoatStandBlock extends BaseEntityBlock {
-    public BoatStandBlock(BlockBehaviour.Properties properties) { super(properties); }
+    public static final DirectionProperty FACING=HorizontalDirectionalBlock.FACING;
+    public BoatStandBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+        registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH));
+    }
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block,BlockState> builder){
+        builder.add(FACING);
+    }
+    @Override public BlockState getStateForPlacement(BlockPlaceContext context){
+        return defaultBlockState().setValue(FACING,context.getHorizontalDirection().getOpposite());
+    }
 
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BoatStandBlockEntity(pos, state);
@@ -38,11 +53,17 @@ public final class BoatStandBlock extends BaseEntityBlock {
         ItemStack held = server.getItemInHand(hand);
         if(held.is(EngineItems.BOAT_RECOVERY_KIT.get())) {
             if(station.hasPreview())return InteractionResult.CONSUME;
-            if(BoatRecoveryItem.loaded(held) && station.getItem(0).isEmpty()) {
-                station.setItem(0,BoatRecoveryItem.boat(held));
+            // Recover directly into the player's inventory; the hook stays reusable.
+            if(!station.getItem(0).isEmpty()) {
+                ItemStack saved=station.removeItemNoUpdate(0);
+                station.setChanged();
+                if(!server.getInventory().add(saved))server.drop(saved,false);
+            }
+            // Recover items from legacy loaded hooks without losing old saves.
+            if(BoatRecoveryItem.loaded(held)) {
+                ItemStack previous=BoatRecoveryItem.boat(held);
                 BoatRecoveryItem.put(held,ItemStack.EMPTY);
-            } else if(!BoatRecoveryItem.loaded(held) && !station.getItem(0).isEmpty()) {
-                BoatRecoveryItem.put(held,station.removeItemNoUpdate(0));
+                if(!server.getInventory().add(previous))server.drop(previous,false);
             }
             return InteractionResult.CONSUME;
         }

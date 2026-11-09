@@ -54,10 +54,11 @@ public final class BoatIceBreakerEvents {
         if(!boat.level().isClientSide && boat.getPassengers().isEmpty()
             && boat instanceof BlueFishingBoat blue){
             ItemStack saved=blue.getPickResult();
-            BoatRecoveryItem.put(kit,saved);
+            if(!event.getEntity().getInventory().add(saved))
+                event.getEntity().drop(saved,false);
             boat.discard();
             event.getEntity().displayClientMessage(
-                net.minecraft.network.chat.Component.literal("Boat captured with its stored data."),true);
+                net.minecraft.network.chat.Component.literal("Boat recovered into inventory."),true);
         }
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
