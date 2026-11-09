@@ -40,10 +40,10 @@ public final class BoatStandRenderer implements BlockEntityRenderer<BoatStandBlo
         for(double z : new double[]{-3.12,-1.08}) {
             beam(pose,buffers,light,Blocks.DARK_OAK_PLANKS,.245,.055,z,.51,.145,.16);
             // Two side posts per station. Their capped ends support the hull.
-            beam(pose,buffers,light,Blocks.STRIPPED_OAK_LOG,.095,.275,z+.01,.17,.49,.17);
-            beam(pose,buffers,light,Blocks.STRIPPED_OAK_LOG,.735,.275,z+.01,.17,.49,.17);
-            beam(pose,buffers,light,Blocks.SPRUCE_SLAB,.085,.76,z,.19,.115,.19);
-            beam(pose,buffers,light,Blocks.SPRUCE_SLAB,.725,.76,z,.19,.115,.19);
+            beam(pose,buffers,light,Blocks.STRIPPED_OAK_LOG,.095,.275,z+.01,.17,.23,.17);
+            beam(pose,buffers,light,Blocks.STRIPPED_OAK_LOG,.735,.275,z+.01,.17,.23,.17);
+            beam(pose,buffers,light,Blocks.SPRUCE_SLAB,.085,.505,z,.19,.055,.19);
+            beam(pose,buffers,light,Blocks.SPRUCE_SLAB,.725,.505,z,.19,.055,.19);
         }
         for(double z : new double[]{-3.10,-.82}) {
             beam(pose,buffers,light,Blocks.STRIPPED_SPRUCE_LOG,.06,-.24,z,.18,.295,.18);
