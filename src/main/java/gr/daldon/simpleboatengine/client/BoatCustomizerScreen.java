@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCustomizerMenu> {
     private static final String[] PARTS={"Hull","Floor","Stripe","Hatch & trim",
-        "Seats","Antifouling","Inner walls","Storage 2"};
+        "Seats","Antifouling","Inner walls","Storage cabinet"};
     private static final String[] ATTACHMENTS={"Engine","Pole light","Reserve tank","Ice breaker"};
     private final int[] draft=new int[BoatPaint.CHANNELS];
     private int part,nameDye,mask,lastStand=-1;
@@ -65,7 +65,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         applyButton=button("APPLY",14,181,67,25,()->send(BoatPaintSessions.APPLY));
         button("PREVIEW",84,181,70,25,()->send(BoatPaintSessions.PREVIEW));
         button("CANCEL",157,181,69,25,()->send(BoatPaintSessions.CANCEL));
-        button("INVENTORY",265,319,156,24,this::inventory);
+        button("BOAT INVENTORY",265,319,156,24,this::inventory);
         name=new EditBox(font,leftPos+245,topPos+192,143,20,Component.literal("Name"));
         name.setMaxLength(20);name.setHint(Component.literal("Boat name"));
         name.setValue(BoatPaint.name(menu.boatItem()));
@@ -104,7 +104,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     @Override protected void containerTick(){
         super.containerTick();
         if(lastStand!=menu.standIndex()){lastStand=menu.standIndex();resetDraft();}
-        if(applyButton!=null)applyButton.active=valid();
+        if(applyButton!=null){applyButton.active=valid();applyButton.visible=valid();}
     }
     private static void panel(GuiGraphics g,int x,int y,int w,int h,int border,int fill){
         g.fill(x,y,x+w,y+h,border);g.fill(x+2,y+2,x+w-2,y+h-2,fill);
@@ -158,7 +158,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         panel(g,x+234,y+224,214,67,0xFF40332A,0xFFD4C2A5);
         panel(g,x+12,y+273,215,84,0xFF40332A,0xFF99836B);
         panel(g,x+234,y+297,214,56,0xFF40332A,0xFFD4C2A5);
-        for(int i=0;i<16;i++){
+        for(int i=0;i<(part==BoatPaint.ANTIFOUL?5:16);i++){
             int bx=x+17+(i%8)*26,by=y+112+(i/8)*26;
             panel(g,bx,by,23,23,draft[part]==i?0xFFFFFFFF:0xFF41352B,color(i));
         }
@@ -192,21 +192,20 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     }
     @Override protected void renderLabels(GuiGraphics g,int mx,int my){
         int ink=0xFF30251B;
-        g.drawCenteredString(font,"STAND BOAT "+
+        g.drawCenteredString(font,"PARKED BOAT "+
             (menu.standCount()==0?"0/0":(menu.standIndex()+1)+"/"+menu.standCount()),121,24,ink);
         g.drawCenteredString(font,"PART: "+PARTS[part],121,63,ink);
-        g.drawCenteredString(font,"16 DYES",121,95,0xFFF4E1B7);
+        g.drawCenteredString(font,"COLOURS",121,95,0xFFF4E1B7);
         g.drawCenteredString(font,"PREVIEW - DRAG",342,20,0xFFFFE8C6);
         g.drawString(font,"NAME",242,181,ink);
-        g.drawString(font,"DYE",406,181,ink);
-        g.drawString(font,"MATERIALS TO APPLY",19,216,ink);
+        g.drawString(font,"COLOUR",396,181,ink);
+        g.drawString(font,"NEEDED MATERIALS",19,216,ink);
         g.drawString(font,"ATTACHMENTS - CLICK TO REMOVE",240,229,ink);
         for(int i=0;i<4;i++)
             g.drawCenteredString(font,new String[]{"ENGINE","LIGHT","TANK","ICE"}[i],
                 257+i*48,269,ink);
-        g.drawString(font,"YOUR INVENTORY",19,276,0xFFF8E7C9);
-        g.drawString(font,valid()?"READY TO APPLY":"INSERT REQUIRED ITEMS",241,301,
-            valid()?0xFF38754B:0xFF8E4A40);
+        g.drawString(font,"PLAYER INVENTORY",19,273,0xFFF8E7C9);
+        
     }
     private double logicalX(double x){return (x-shiftX)/uiScale;}
     private double logicalY(double y){return (y-shiftY)/uiScale;}
@@ -215,9 +214,8 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         int x=(int)lx-leftPos,y=(int)ly-topPos;
         if(button==0 && x>=17&&x<225&&y>=112&&y<161){
             int col=(x-17)/26,row=(y-112)/26;
-            if(col<8 && row<2 && (x-17)%26<23 && (y-112)%26<23){
+            if(col<8 && row<2 && row*8+col<(part==BoatPaint.ANTIFOUL?5:16) && (x-17)%26<23 && (y-112)%26<23){
                 draft[part]=row*8+col;
-                if(part==BoatPaint.ANTIFOUL)draft[part]%=5;
                 return true;
             }
         }
