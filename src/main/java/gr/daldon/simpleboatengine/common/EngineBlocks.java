@@ -34,5 +34,8 @@ public final class EngineBlocks {
         () -> new BoatRecoveryBlock(BlockBehaviour.Properties.of()
             .strength(2f).noOcclusion()));
 
+    public static final RegistryObject<Block> BOAT_BUILDER=BLOCKS.register("boat_builder",
+        ()->new BoatBuilderBlock(BlockBehaviour.Properties.of().strength(3.0f).noOcclusion()));
+
     private EngineBlocks() {}
 }
