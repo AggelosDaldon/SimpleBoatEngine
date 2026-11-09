@@ -90,7 +90,8 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     private List<Map.Entry<Item,Integer>> required(){
         ItemStack original=menu.selectedStand()==null?ItemStack.EMPTY:
             menu.selectedStand().previewOriginal();
-        return new ArrayList<>(BoatPaintSessions.requirements(original,draft,nameDye,mask).entrySet());
+        return new ArrayList<>(BoatPaintSessions.requirements(original,draft,nameDye,mask,
+            name==null?"":name.getValue()).entrySet());
     }
     private boolean valid(){
         if(menu.standCount()==0 || menu.boatItem().isEmpty())return false;
@@ -99,7 +100,8 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         if(minecraft!=null && minecraft.player!=null
             && minecraft.player.getAbilities().instabuild)return true;
         return menu.hasMaterials(BoatPaintSessions.requirements(
-            menu.selectedStand().previewOriginal(),draft,nameDye,mask))
+            menu.selectedStand().previewOriginal(),draft,nameDye,mask,
+                name==null?"":name.getValue()))
             && menu.hasAttachmentInputs(
                 BoatPaintSessions.attachmentMask(menu.selectedStand().previewOriginal()),mask)
             && hasNameTag();
