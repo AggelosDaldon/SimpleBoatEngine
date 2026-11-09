@@ -54,6 +54,12 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(BoatPaintDraft.class, 8, NetworkDirection.PLAY_TO_SERVER)
             .encoder(BoatPaintDraft::write).decoder(BoatPaintDraft::read)
             .consumerMainThread(BoatPaintDraft::receive).add();
+        CHANNEL.messageBuilder(OpenParkedCargo.class, 9, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(OpenParkedCargo::write).decoder(OpenParkedCargo::read)
+            .consumerMainThread(OpenParkedCargo::receive).add();
+        CHANNEL.messageBuilder(CycleParkedCargo.class, 10, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(CycleParkedCargo::write).decoder(CycleParkedCargo::read)
+            .consumerMainThread(CycleParkedCargo::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -208,6 +214,51 @@ public final class MotorPackets {
                 BoatPaintSessions.execute(player,menu,msg.stand,msg.colors,
                     msg.name,msg.nameColor,msg.attachments,msg.action);
                 menu.broadcastChanges();
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
+
+    public record OpenParkedCargo(BlockPos table,BlockPos stand) {
+        static void write(OpenParkedCargo msg,FriendlyByteBuf out){
+            out.writeBlockPos(msg.table);out.writeBlockPos(msg.stand);
+        }
+        static OpenParkedCargo read(FriendlyByteBuf in){
+            return new OpenParkedCargo(in.readBlockPos(),in.readBlockPos());
+        }
+        static void receive(OpenParkedCargo msg,Supplier<NetworkEvent.Context> ctx){
+            ServerPlayer player=ctx.get().getSender();
+            ctx.get().enqueueWork(()->{
+                if(player==null || !(player.containerMenu instanceof BoatCustomizerMenu menu)
+                    || !menu.getBlockPos().equals(msg.table)
+                    || !msg.stand.equals(menu.selectedStandPos())
+                    || player.distanceToSqr(msg.table.getX()+.5,msg.table.getY()+.5,msg.table.getZ()+.5)>64
+                    || !(player.level().getBlockEntity(msg.stand) instanceof BoatStandBlockEntity stand)
+                    || stand.getItem(0).isEmpty()
+                    || stand.previewLockedFor(player.getUUID()))return;
+                net.minecraftforge.network.NetworkHooks.openScreen(player,
+                    new net.minecraft.world.SimpleMenuProvider(
+                        (id,inv,owner)->new ParkedBoatCargoMenu(id,inv,stand),
+                        Component.literal("Parked boat inventory")),
+                    buf->buf.writeBlockPos(msg.stand));
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+    public record CycleParkedCargo(BlockPos stand,int delta) {
+        static void write(CycleParkedCargo msg,FriendlyByteBuf out){
+            out.writeBlockPos(msg.stand);out.writeVarInt(msg.delta);
+        }
+        static CycleParkedCargo read(FriendlyByteBuf in){
+            return new CycleParkedCargo(in.readBlockPos(),in.readVarInt());
+        }
+        static void receive(CycleParkedCargo msg,Supplier<NetworkEvent.Context> ctx){
+            ServerPlayer player=ctx.get().getSender();
+            ctx.get().enqueueWork(()->{
+                if(player==null || !(player.containerMenu instanceof ParkedBoatCargoMenu menu)
+                    || !menu.standPos().equals(msg.stand))return;
+                menu.switchPage(msg.delta);
             });
             ctx.get().setPacketHandled(true);
         }
