@@ -37,6 +37,9 @@ public final class EngineItems {
         () -> new BoatRecoveryItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> BOAT_BUILDER=ITEMS.register("boat_builder",
+        ()->new BlockItem(EngineBlocks.BOAT_BUILDER.get(),new Item.Properties()));
+
     public static final RegistryObject<Item> CUSTOMIZER = ITEMS.register("boat_customizer",
         () -> new BlockItem(EngineBlocks.CUSTOMIZER.get(), new Item.Properties()));
     public static final RegistryObject<Item> BLUE_FISHING_BOAT = ITEMS.register("aggelos_blue_fishing_boat",
@@ -101,6 +104,7 @@ public final class EngineItems {
                 output.accept(ICE_BREAKER.get());
                 output.accept(BOAT_RECOVERY_KIT.get());
                 output.accept(CUSTOMIZER.get());
+                output.accept(BOAT_BUILDER.get());
                 output.accept(LIFT_BUOY.get());
                 output.accept(YELLOW_LIFT_BUOY.get());
                 output.accept(WHITE_LIFT_BUOY.get());
