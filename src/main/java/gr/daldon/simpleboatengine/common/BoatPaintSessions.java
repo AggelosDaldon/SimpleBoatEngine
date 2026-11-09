@@ -71,6 +71,10 @@ public final class BoatPaintSessions {
         BoatPaint.setName(proposed,name==null?"":name);
         if(nameColor>=0 && nameColor<16) BoatPaint.setNameColor(proposed,nameColor);
         if(attachments<0 || attachments>15)return;
+        if((attachments&(POLE|CANISTER))!=0 && (attachments&ENGINE)==0){
+            tell(player,"Engine required for pole light or reserve fuel canister.");
+            return;
+        }
         CompoundTag engine=writableMotor(proposed);
         engine.putBoolean("Installed",(attachments&ENGINE)!=0);
         engine.putBoolean("PoleLightInstalled",(attachments&POLE)!=0);
