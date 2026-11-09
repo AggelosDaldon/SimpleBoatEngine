@@ -31,8 +31,9 @@ public final class BoatRecoveryBlock extends BaseEntityBlock {
         if(!(world.getBlockEntity(pos) instanceof BoatRecoveryBlockEntity crate))
             return InteractionResult.PASS;
         if(!crate.empty()){
-            ItemStack stored=crate.take();
-            if(!player.getInventory().add(stored))player.drop(stored,false);
+            ItemStack portable=new ItemStack(EngineItems.BOAT_RECOVERY_KIT.get());
+            BoatRecoveryItem.put(portable,crate.take());
+            if(!player.getInventory().add(portable))player.drop(portable,false);
             return InteractionResult.CONSUME;
         }
         var candidates=world.getEntitiesOfClass(Boat.class,new AABB(pos).inflate(4.0),
