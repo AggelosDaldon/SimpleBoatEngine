@@ -98,8 +98,7 @@ public final class BoatIceBreakerEvents {
                     ItemStack drop=new ItemStack(state.getBlock());
                     if(!level.setBlock(pos,Blocks.WATER.defaultBlockState(),3))continue;
                     if(silk && !state.is(Blocks.FROSTED_ICE)){
-                        if(!(boat instanceof BlueFishingBoat fishing
-                             && fishing.storeIce(drop.copy())))
+                        if(!storeIce(boat,drop.copy()))
                             net.minecraft.world.Containers.dropItemStack(level,
                                 pos.getX()+.5,pos.getY()+.5,pos.getZ()+.5,drop);
                     }
@@ -108,4 +107,28 @@ public final class BoatIceBreakerEvents {
             }
         }
     }
+    /** Fishing boats use our 108-slot hold; vanilla chest boats use their
+     * normal 27-slot inventory. Regular vanilla boats drop the ice nearby.
+     */
+    private static boolean storeIce(Boat boat,ItemStack incoming){
+        if(boat instanceof BlueFishingBoat fishing)return fishing.storeIce(incoming);
+        if(boat instanceof net.minecraft.world.Container storage) {
+            for(int slot=0;slot<storage.getContainerSize();slot++) {
+                ItemStack have=storage.getItem(slot);
+                if(have.isEmpty()){
+                    storage.setItem(slot,incoming.copy());
+                    storage.setChanged();
+                    return true;
+                }
+                if(ItemStack.isSameItemSameTags(have,incoming)
+                   && have.getCount()+incoming.getCount()<=have.getMaxStackSize()){
+                    have.grow(incoming.getCount());
+                    storage.setChanged();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
