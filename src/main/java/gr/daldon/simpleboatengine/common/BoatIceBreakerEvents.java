@@ -78,10 +78,13 @@ public final class BoatIceBreakerEvents {
                         MotorPackets.sendStatus(boat,observer);
             }
             Vec3 velocity=boat.getDeltaMovement();
-            if(velocity.x*velocity.x + velocity.z*velocity.z < .00015)continue;
-            // Velocity determines which side is really forward even in reversing turns.
+            if(velocity.x*velocity.x + velocity.z*velocity.z < .00015
+                && boat.getControllingPassenger()==null)continue;
+            // Use actual travel direction, or the bow direction when a
+            // controlled boat has stopped against a solid ice wall.
             double length=Math.hypot(velocity.x,velocity.z);
-            double fx=velocity.x/length, fz=velocity.z/length;
+            double fx=length>.012?velocity.x/length:-Math.sin(Math.toRadians(boat.getYRot()));
+            double fz=length>.012?velocity.z/length:Math.cos(Math.toRadians(boat.getYRot()));
             double reach=boat instanceof BlueFishingBoat?2.45:1.12;
             for(int side=-1;side<=1;side++){
                 double nx=boat.getX()+fx*reach-fz*side*.8;
