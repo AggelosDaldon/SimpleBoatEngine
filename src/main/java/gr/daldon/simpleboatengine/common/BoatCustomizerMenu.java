@@ -13,8 +13,8 @@ import java.util.Map;
 import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
-/** No item slots in this GUI. All materials are counted in player inventory,
- * and all painting drafts are validated against this player's selected stand.
+/** Paint ingredients and attachment inputs are dedicated temporary slots.
+ * The edited boat remains bound to this player's selected stand.
  */
 public final class BoatCustomizerMenu extends AbstractContainerMenu {
     private final BoatCustomizerBlockEntity table;
@@ -58,9 +58,9 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         }
         for(int row=0;row<3;row++)
             for(int col=0;col<9;col++)
-                addSlot(new Slot(inv,col+row*9+9,22+col*18,279+row*18));
+                addSlot(new Slot(inv,col+row*9+9,21+col*20,279+row*19));
         for(int col=0;col<9;col++)
-            addSlot(new Slot(inv,col,22+col*18,337));
+            addSlot(new Slot(inv,col,21+col*20,337));
     }
     public BlockPos getBlockPos(){return blockPos;}
     public int standCount(){return stands.size();}
