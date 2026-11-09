@@ -59,8 +59,6 @@ public final class BoatPaintSessions {
         BoatStandBlockEntity stand=menu.selectedStand();
         if(menu.standCount()==0 || !standPos.equals(menu.selectedStandPos())
             || stand==null || colors==null || colors.length!=BoatPaint.CHANNELS) return;
-        if(player.distanceToSqr(standPos.getX()+.5,standPos.getY()+.5,standPos.getZ()+.5)>150)
-            return;
         if(stand.previewLockedFor(player.getUUID())) {tell(player,"Another player is previewing this boat.");return;}
         if(action==CANCEL) {stand.cancelPreview(player.getUUID());tell(player,"Changes cancelled.");return;}
         ItemStack original=stand.previewOriginal();
