@@ -22,6 +22,7 @@ jobs:
           python3 tools/generate_marine_assets.py
           python3 tools/generate_user_marine_models.py
           python3 tools/generate_inventory_icons.py
+          python3 tools/generate_model_inventory_icons.py
           python3 tools/generate_uploaded_marine_assets.py
       - name: Compile Forge 1.20.1
         run: gradle --no-daemon build --stacktrace
