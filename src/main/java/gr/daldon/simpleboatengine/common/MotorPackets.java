@@ -211,9 +211,13 @@ public final class MotorPackets {
                     || !menu.getBlockPos().equals(msg.table)
                     || player.distanceToSqr(msg.table.getX()+.5,msg.table.getY()+.5,msg.table.getZ()+.5)>64)
                     return;
-                BoatPaintSessions.execute(player,menu,msg.stand,msg.colors,
+                boolean success=BoatPaintSessions.execute(player,menu,msg.stand,msg.colors,
                     msg.name,msg.nameColor,msg.attachments,msg.action);
-                menu.broadcastChanges();
+                if(success && (msg.action==BoatPaintSessions.CANCEL
+                    || msg.action==BoatPaintSessions.PREVIEW)) {
+                    // Close only after server has restored or staged the actual boat.
+                    player.closeContainer();
+                } else menu.broadcastChanges();
             });
             ctx.get().setPacketHandled(true);
         }
