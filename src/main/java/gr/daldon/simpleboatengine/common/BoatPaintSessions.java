@@ -46,6 +46,27 @@ public final class BoatPaintSessions {
         forge.put("SimpleBoatEngine",data);
         return data;
     }
+    /** Requirements in a stable order: the GUI uses precisely this list. */
+    public static java.util.LinkedHashMap<Item,Integer> requirements(
+            ItemStack original,int[] colors,int nameColor,int attachments) {
+        java.util.LinkedHashMap<Item,Integer> cost=new java.util.LinkedHashMap<>();
+        if(colors==null || colors.length!=BoatPaint.CHANNELS)return cost;
+        for(int i=0;i<colors.length;i++){
+            if(colors[i]>=0 && colors[i]!=(BoatPaint.get(original,i))) {
+                if(i==BoatPaint.ANTIFOUL) add(cost,Items.BLACK_DYE,1);
+                else add(cost,dyeItem(colors[i]),1);
+            }
+        }
+        if(nameColor>=0 && nameColor!=BoatPaint.nameColor(original))
+            add(cost,dyeItem(nameColor),1);
+        int before=mask(original);
+        for(int bit:new int[]{ENGINE,POLE,CANISTER,BREAKER})
+            if((attachments&bit)!=0 && (before&bit)==0)
+                add(cost,bit==ENGINE?EngineItems.ENGINE.get():
+                    bit==POLE?EngineItems.POLE_LIGHT.get():
+                    bit==CANISTER?EngineItems.FUEL_CANISTER.get():EngineItems.ICE_BREAKER.get(),1);
+        return cost;
+    }
     private static void tell(ServerPlayer p,String msg){
         p.displayClientMessage(Component.literal(msg),true);
     }
@@ -81,21 +102,13 @@ public final class BoatPaintSessions {
         engine.putBoolean("CanisterInstalled",(attachments&CANISTER)!=0);
         engine.putBoolean("IceBreakerInstalled",(attachments&BREAKER)!=0);
         if((attachments&ENGINE)==0) {engine.putBoolean("Running",false);engine.putInt("Throttle",0);}
-        Map<Item,Integer> cost=new HashMap<>();
-        for(int i=0;i<BoatPaint.CHANNELS;i++) {
-            if(BoatPaint.get(proposed,i)!=BoatPaint.get(original,i)) {
-                if(i==BoatPaint.ANTIFOUL) add(cost,Items.BLACK_DYE,1);
-                if(i!=BoatPaint.ANTIFOUL) add(cost,dyeItem(colors[i]),1);
-            }
-        }
-        if(BoatPaint.nameColor(proposed)!=BoatPaint.nameColor(original))
-            add(cost,dyeItem(BoatPaint.nameColor(proposed)),1);
+        Map<Item,Integer> cost=requirements(original,colors,nameColor,attachments);
         int before=mask(original);
         // Preserve Silk Touch from the actual attachment consumed in the player's inventory.
         boolean silk=motor(original).getBoolean("IceBreakerSilk");
         if((attachments&BREAKER)!=0 && (before&BREAKER)==0) {
-            for(int i=0;i<player.getInventory().getContainerSize();i++) {
-                ItemStack candidate=player.getInventory().getItem(i);
+            for(int i=0;i<menu.materialSlotCount();i++) {
+                ItemStack candidate=menu.materialItem(i);
                 if(candidate.is(EngineItems.ICE_BREAKER.get())) {
                     silk=net.minecraft.world.item.enchantment.EnchantmentHelper
                         .getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,candidate)>0;
@@ -110,10 +123,10 @@ public final class BoatPaintSessions {
                     bit==POLE?EngineItems.POLE_LIGHT.get():
                     bit==CANISTER?EngineItems.FUEL_CANISTER.get():EngineItems.ICE_BREAKER.get(),1);
         if(action==APPLY) {
-            if(!player.getAbilities().instabuild && !hasAll(player,cost)){
+            if(!player.getAbilities().instabuild && !menu.hasMaterials(cost)){
                 tell(player,"Missing materials: "+format(cost,player));return;
             }
-            if(!player.getAbilities().instabuild)consume(player,cost);
+            if(!player.getAbilities().instabuild)menu.consumeMaterials(cost);
             for(int bit : new int[]{ENGINE,POLE,CANISTER,BREAKER})
                 if((before&bit)!=0 && (attachments&bit)==0) {
                     ItemStack returned=new ItemStack(bit==ENGINE?EngineItems.ENGINE.get():
