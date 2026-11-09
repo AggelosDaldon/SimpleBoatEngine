@@ -192,7 +192,11 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         }
         if(btn==0 && x>=261 && x<517 && y>=299 && y<335){
             int idx=((y-299)/17)*2+((x-261)/128);
-            if(idx>=0 && idx<4)mask ^= (1<<idx);
+            if(idx>=0 && idx<4){
+                mask ^= (1<<idx);
+                if(idx==0 && (mask&1)==0)mask &= ~(2|4);
+                if((idx==1 || idx==2) && (mask&(1<<idx))!=0)mask |= 1;
+            }
             return true;
         }
         return super.mouseClicked(mx,my,btn);
