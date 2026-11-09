@@ -72,5 +72,8 @@ public final class ParkedBoatInventory implements Container {
             && p.distanceToSqr(stand.getBlockPos().getX()+.5,
                 stand.getBlockPos().getY()+.5,stand.getBlockPos().getZ()+.5)<=100;
     }
-    @Override public void clearContent(){items.clear();setChanged();}
+    @Override public void clearContent(){
+        for(int i=0;i<items.size();i++)items.set(i,ItemStack.EMPTY);
+        setChanged();
+    }
 }
