@@ -74,27 +74,28 @@ public final class BoatPaintSessions {
     /** Request colors array length 7, name, name dye, attachment toggle mask.
      * All uncommitted values are derived from the unmodified original boat.
      */
-    public static void execute(ServerPlayer player, BoatCustomizerMenu menu,
+    public static boolean execute(ServerPlayer player, BoatCustomizerMenu menu,
             BlockPos standPos, int[] colors, String name, int nameColor,
             int attachments, int action) {
+        if(action<PREVIEW || action>CANCEL)return false;
         BoatStandBlockEntity stand=menu.selectedStand();
         if(menu.standCount()==0 || !standPos.equals(menu.selectedStandPos())
-            || stand==null || colors==null || colors.length!=BoatPaint.CHANNELS) return;
-        if(stand.previewLockedFor(player.getUUID())) {tell(player,"Another player is previewing this boat.");return;}
-        if(action==CANCEL) {stand.cancelPreview(player.getUUID());tell(player,"Changes cancelled.");return;}
+            || stand==null || colors==null || colors.length!=BoatPaint.CHANNELS) return false;
+        if(stand.previewLockedFor(player.getUUID())) {tell(player,"Another player is previewing this boat.");return false;}
+        if(action==CANCEL) {stand.cancelPreview(player.getUUID());tell(player,"Changes cancelled.");return false;}
         ItemStack original=stand.previewOriginal();
-        if(!(original.getItem() instanceof SkiffBoatItem)) return;
+        if(!(original.getItem() instanceof SkiffBoatItem)) return false;
         ItemStack proposed=original.copy();
         for(int i=0;i<BoatPaint.CHANNELS;i++){
-            if(colors[i]<-1 || colors[i]>=(i==BoatPaint.ANTIFOUL?5:16))return;
+            if(colors[i]<-1 || colors[i]>=(i==BoatPaint.ANTIFOUL?5:16))return false;
             if(colors[i]>=0) BoatPaint.set(proposed,i,colors[i]);
         }
         BoatPaint.setName(proposed,name==null?"":name);
         if(nameColor>=0 && nameColor<16) BoatPaint.setNameColor(proposed,nameColor);
-        if(attachments<0 || attachments>15)return;
+        if(attachments<0 || attachments>15)return false;
         if((attachments&(POLE|CANISTER))!=0 && (attachments&ENGINE)==0){
             tell(player,"Engine required for pole light or reserve fuel canister.");
-            return;
+            return false;
         }
         CompoundTag engine=writableMotor(proposed);
         engine.putBoolean("Installed",(attachments&ENGINE)!=0);
@@ -124,7 +125,7 @@ public final class BoatPaintSessions {
                     bit==CANISTER?EngineItems.FUEL_CANISTER.get():EngineItems.ICE_BREAKER.get(),1);
         if(action==APPLY) {
             if(!player.getAbilities().instabuild && !menu.hasMaterials(cost)){
-                tell(player,"Missing materials: "+format(cost,player));return;
+                tell(player,"Missing materials: "+format(cost,player));return false;
             }
             if(!player.getAbilities().instabuild)menu.consumeMaterials(cost);
             for(int bit : new int[]{ENGINE,POLE,CANISTER,BREAKER})
@@ -144,6 +145,7 @@ public final class BoatPaintSessions {
             stand.setItem(0,proposed);
             tell(player,"Preview on parked boat. Reopen table to Apply or Cancel.");
         }
+        return true;
     }
     private static Item dyeItem(int id){
         return switch(DyeColor.byId(id)) {
