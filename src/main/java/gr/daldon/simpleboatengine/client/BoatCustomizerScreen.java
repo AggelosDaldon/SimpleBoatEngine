@@ -100,8 +100,8 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         for(int i=0;i<draft.length;i++)if(draft[i]>=0)BoatPaint.set(stack,i,draft[i]);
         if(name!=null)BoatPaint.setName(stack,name.getValue());
         BoatPaint.setNameColor(stack,nameDye);
-        if(stack.hasTag() && stack.getTag().contains("PackedFishingBoat",10)){
-            var data=BoatPaintSessions.motor(stack);
+        {
+            var data=BoatPaintSessions.writableMotor(stack);
             data.putBoolean("Installed",(mask&BoatPaintSessions.ENGINE)!=0);
             data.putBoolean("PoleLightInstalled",(mask&BoatPaintSessions.POLE)!=0);
             data.putBoolean("CanisterInstalled",(mask&BoatPaintSessions.CANISTER)!=0);
