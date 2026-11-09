@@ -21,8 +21,8 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     private final BlockPos blockPos;
     private final List<BlockPos> stands;
     private final DataSlot selected=DataSlot.standalone();
-    private final SimpleContainer materials=new SimpleContainer(12);
-    public static final int MATERIAL_SLOTS=12;
+    private final SimpleContainer materials=new SimpleContainer(16);
+    public static final int MATERIAL_SLOTS=16;
 
     public BoatCustomizerMenu(int id, Inventory inv, FriendlyByteBuf packet) {
         this(id,inv,packet.readBlockPos());
@@ -42,7 +42,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         addDataSlot(selected);
         // Only 12 explicit material slots + the player's own inventory.
         for(int i=0;i<MATERIAL_SLOTS;i++)
-            addSlot(new Slot(materials,i,22+(i%6)*25,227+(i/6)*24){
+            addSlot(new Slot(materials,i,17+(i%8)*25,227+(i/8)*24){
                 @Override public int getMaxStackSize(){return 64;}
             });
         for(int row=0;row<3;row++)

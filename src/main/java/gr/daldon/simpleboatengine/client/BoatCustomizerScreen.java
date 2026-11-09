@@ -20,8 +20,8 @@ import java.util.Map;
  * slots, selectable attachment icons and no extra unnecessary controls.
  */
 public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCustomizerMenu> {
-    private static final String[] PARTS={"Hull","Floor / Storage 2","Stripe","Hatch & trim",
-        "Seats","Antifouling","Inner walls"};
+    private static final String[] PARTS={"Hull","Floor","Stripe","Hatch & trim",
+        "Seats","Antifouling","Inner walls","Storage 2"};
     private static final String[] ATTACHMENTS={"Engine","Pole light","Reserve tank","Ice breaker"};
     private final int[] draft=new int[BoatPaint.CHANNELS];
     private int part,nameDye,mask,lastStand=-1;
@@ -166,7 +166,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         // Material requirements are translucent ghosts BEHIND real inventory slots.
         List<Map.Entry<Item,Integer>> req=required();
         for(int i=0;i<BoatCustomizerMenu.MATERIAL_SLOTS;i++){
-            int sx=x+22+(i%6)*25,sy=y+227+(i/6)*24;
+            int sx=x+17+(i%8)*25,sy=y+227+(i/8)*24;
             panel(g,sx-1,sy-1,18,18,0xFF685746,0xFFB2A38B);
             if(i<req.size() && menu.materialItem(i).isEmpty()){
                 g.renderFakeItem(new ItemStack(req.get(i).getKey()),sx,sy);

@@ -4,14 +4,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 
-/** Seven independent boat-surface paints and an optional painted bow name. */
+/** Eight independent boat-surface paints and an optional painted bow name. */
 public final class BoatPaint {
     public static final int HULL = 0, FLOOR = 1, STRIPE = 2, HATCH = 3,
-        SEATS = 4, ANTIFOUL = 5, LINING = 6;
-    public static final int CHANNELS = 7;
+        SEATS = 4, ANTIFOUL = 5, LINING = 6, STORAGE2 = 7;
+    public static final int CHANNELS = 8;
     private static final String[] KEYS = {
         "BoatPaintHull", "BoatPaintFloor", "BoatPaintStripe", "BoatPaintHatch",
-        "BoatPaintSeats", "BoatPaintAntifoul", "BoatPaintLining"
+        "BoatPaintSeats", "BoatPaintAntifoul", "BoatPaintLining", "BoatPaintStorage2"
     };
     private static final String NAME = "BoatCustomName";
     private static final String WOOD = "BoatWoodStyle";
