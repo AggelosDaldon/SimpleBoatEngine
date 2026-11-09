@@ -36,6 +36,18 @@ public final class BoatStandBlock extends BaseEntityBlock {
             !(level.getBlockEntity(pos) instanceof BoatStandBlockEntity station))
             return InteractionResult.PASS;
         ItemStack held = server.getItemInHand(hand);
+        if(held.is(EngineItems.BOAT_RECOVERY_KIT.get())) {
+            if(station.hasPreview())return InteractionResult.CONSUME;
+            if(BoatRecoveryItem.loaded(held) && station.getItem(0).isEmpty()) {
+                station.setItem(0,BoatRecoveryItem.boat(held));
+                BoatRecoveryItem.put(held,ItemStack.EMPTY);
+            } else if(!BoatRecoveryItem.loaded(held) && !station.getItem(0).isEmpty()) {
+                BoatRecoveryItem.put(held,station.removeItemNoUpdate(0));
+            }
+            return InteractionResult.CONSUME;
+        }
+        if(station.hasPreview() && !server.getUUID().equals(
+            station.previewOwnerId()))return InteractionResult.CONSUME;
         if (station.getItem(0).isEmpty() && held.getItem() instanceof SkiffBoatItem) {
             ItemStack parked = held.copy();
             parked.setCount(1);
@@ -44,6 +56,7 @@ public final class BoatStandBlock extends BaseEntityBlock {
             return InteractionResult.CONSUME;
         }
         if (server.isShiftKeyDown() && held.isEmpty() && !station.getItem(0).isEmpty()) {
+            if(station.hasPreview())station.cancelPreview(server.getUUID());
             ItemStack fullBoat = station.removeItemNoUpdate(0);
             if (!server.getInventory().add(fullBoat)) server.drop(fullBoat, false);
             return InteractionResult.CONSUME;
@@ -56,8 +69,10 @@ public final class BoatStandBlock extends BaseEntityBlock {
     @Override public void onRemove(BlockState oldState, Level level, BlockPos pos,
                                    BlockState next, boolean moving) {
         if (!oldState.is(next.getBlock())) {
-            if (!level.isClientSide && level.getBlockEntity(pos) instanceof BoatStandBlockEntity be)
+            if (!level.isClientSide && level.getBlockEntity(pos) instanceof BoatStandBlockEntity be) {
+                if(be.hasPreview())be.cancelPreview(be.previewOwnerId());
                 Containers.dropContents(level, pos, be);
+            }
             super.onRemove(oldState, level, pos, next, moving);
         }
     }
