@@ -60,6 +60,14 @@ public final class BoatPaintSessions {
             add(cost,dyeItem(nameColor),1);
         return cost;
     }
+    public static java.util.LinkedHashMap<Item,Integer> requirements(
+        ItemStack original,int[] colors,int nameColor,int attachments,String newName){
+        var result=requirements(original,colors,nameColor,attachments);
+        String safe=newName==null?"":newName.trim();
+        if(!safe.isEmpty() && !safe.equals(BoatPaint.name(original)))
+            add(result,Items.NAME_TAG,1);
+        return result;
+    }
     private static void tell(ServerPlayer p,String msg){
         p.displayClientMessage(Component.literal(msg),true);
     }
@@ -96,9 +104,7 @@ public final class BoatPaintSessions {
         engine.putBoolean("CanisterInstalled",(attachments&CANISTER)!=0);
         engine.putBoolean("IceBreakerInstalled",(attachments&BREAKER)!=0);
         if((attachments&ENGINE)==0) {engine.putBoolean("Running",false);engine.putInt("Throttle",0);}
-        Map<Item,Integer> cost=requirements(original,colors,nameColor,attachments);
-        if(name!=null && !name.isBlank()
-            && !name.trim().equals(BoatPaint.name(original))) add(cost,Items.NAME_TAG,1);
+        Map<Item,Integer> cost=requirements(original,colors,nameColor,attachments,name);
         int before=mask(original);
         // Preserve Silk Touch from the actual attachment consumed in the player's inventory.
         boolean silk=motor(original).getBoolean("IceBreakerSilk");
