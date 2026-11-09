@@ -21,7 +21,7 @@ public final class EngineBlocks {
         () -> new BoatPainterSideBlock(BlockBehaviour.Properties.of()
             .strength(2.5f).noOcclusion().noLootTable()));
     public static final RegistryObject<Block> CUSTOMIZER = BLOCKS.register("boat_customizer",
-        () -> new BoatCustomizerBlock(BlockBehaviour.Properties.of().strength(2.5f)));
+        () -> new BoatCustomizerBlock(BlockBehaviour.Properties.of().strength(2.5f).noOcclusion()));
 
     public static final RegistryObject<Block> LIFT_BUOY = BLOCKS.register("lift_buoy",
         () -> new LiftBuoyBlock(BlockBehaviour.Properties.of()
