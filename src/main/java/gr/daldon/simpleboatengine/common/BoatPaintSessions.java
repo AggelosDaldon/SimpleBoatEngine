@@ -56,9 +56,9 @@ public final class BoatPaintSessions {
     public static void execute(ServerPlayer player, BoatCustomizerMenu menu,
             BlockPos standPos, int[] colors, String name, int nameColor,
             int attachments, int action) {
+        BoatStandBlockEntity stand=menu.selectedStand();
         if(menu.standCount()==0 || !standPos.equals(menu.selectedStandPos())
-            || !(menu.selectedStand() instanceof BoatStandBlockEntity stand)
-            || colors==null || colors.length!=BoatPaint.CHANNELS) return;
+            || stand==null || colors==null || colors.length!=BoatPaint.CHANNELS) return;
         if(player.distanceToSqr(standPos.getX()+.5,standPos.getY()+.5,standPos.getZ()+.5)>150)
             return;
         if(stand.previewLockedFor(player.getUUID())) {tell(player,"Another player is previewing this boat.");return;}
