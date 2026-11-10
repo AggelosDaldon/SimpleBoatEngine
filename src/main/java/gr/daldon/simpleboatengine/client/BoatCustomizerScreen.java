@@ -114,7 +114,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     }
     @Override protected void containerTick(){
         super.containerTick();
-        if(lastStand!=menu.standIndex()){lastStand=menu.standIndex();resetDraft();}
+        if(lastStand!=menu.standIndex()){lastStand=menu.standIndex();resetDraft();nameDye=BoatPaint.nameColor(menu.boatItem());}
         mask=0;
         for(int i=0;i<BoatCustomizerMenu.ATTACHMENT_SLOTS;i++)
             if(!menu.attachmentItem(i).isEmpty())mask|=1<<i;
@@ -207,13 +207,10 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         }
         // Four real attachment slots with a subdued icon when vacant.
         for(int i=0;i<5;i++){
-            int sx=x+245+i*39,sy=y+246;
+            int sx=x+249+i*39,sy=y+246;
             boolean installed=!menu.attachmentItem(i).isEmpty();
-            panel(g,sx-2,sy-2,22,22,installed?0xFF407C56:0xFF705E49,0xFFC7B49B);
-            if(menu.attachmentItem(i).isEmpty()){
-                g.renderFakeItem(equipment(i),sx,sy);
-                g.fill(sx,sy,sx+16,sy+16,installed?0x885B735A:0xBBA69A83);
-            }
+            panel(g,sx-1,sy-1,18,18,installed?0xFF407C56:0xFF705E49,0xFFC7B49B);
+            
         }
         // Player inventory cells: visible for inserting items into required slots.
         for(int i=0;i<36;i++){

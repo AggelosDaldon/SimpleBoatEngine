@@ -53,9 +53,11 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             });
         for(int i=0;i<ATTACHMENT_SLOTS;i++){
             final int index=i;
-            addSlot(new Slot(attachmentInputs,i,249+i*48,246){
+            addSlot(new Slot(attachmentInputs,i,249+i*39,246){
                 @Override public boolean mayPlace(ItemStack item){
-                    return item.is(attachmentType(index));
+                    return item.is(EngineItems.ENGINE.get()) || item.is(EngineItems.POLE_LIGHT.get()) ||
+                        item.is(EngineItems.FUEL_CANISTER.get()) || item.is(EngineItems.ICE_BREAKER.get()) ||
+                        item.is(EngineItems.BOAT_RADIO.get());
                 }
                 @Override public int getMaxStackSize(){return 1;}
             });

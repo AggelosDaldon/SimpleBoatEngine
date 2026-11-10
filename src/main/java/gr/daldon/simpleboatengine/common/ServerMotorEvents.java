@@ -33,6 +33,22 @@ public final class ServerMotorEvents {
         if (!(event.getTarget() instanceof Boat boat)
             || event.getHand() != InteractionHand.MAIN_HAND) return;
         ItemStack held = event.getEntity().getMainHandItem();
+        if (held.is(EngineItems.BOAT_RADIO.get()) && boat instanceof BlueFishingBoat) {
+            if (!boat.level().isClientSide) {
+                CompoundTag data=MotorData.writable(boat);
+                if(data.getBoolean("RadioInstalled")){
+                    notify(event.getEntity(),"This boat already has a radio.");
+                } else {
+                    data.putBoolean("RadioInstalled",true);
+                    if(!event.getEntity().getAbilities().instabuild)held.shrink(1);
+                    notify(event.getEntity(),"Boat Radio installed.");
+                    click(boat);
+                }
+            }
+            event.setCancellationResult(InteractionResult.sidedSuccess(boat.level().isClientSide));
+            event.setCanceled(true);
+            return;
+        }
         if (held.is(EngineItems.POLE_LIGHT.get())) {
             if (!boat.level().isClientSide) {
                 CompoundTag data = MotorData.writable(boat);

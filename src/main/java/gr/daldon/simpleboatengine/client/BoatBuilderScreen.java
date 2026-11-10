@@ -19,6 +19,7 @@ import java.util.List;
 public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilderMenu> {
     private static final String[] CATEGORIES={"BOATS","ATTACHMENTS","BUOYS"};
     private static final int CATALOG_X=184,CATALOG_Y=30,CELL_W=42,CELL_H=37;
+    private float uiScale, shiftX, shiftY;
     public BoatBuilderScreen(BoatBuilderMenu menu,Inventory inv,Component title){
         super(menu,inv,title);
         imageWidth=460;imageHeight=365;
@@ -26,6 +27,9 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
     }
     @Override protected void init(){
         super.init();
+        uiScale=Math.max(.3f,Math.min(.78f,Math.min((width-12f)/imageWidth,(height-12f)/imageHeight)));
+        shiftX=(width-imageWidth*uiScale)/2-leftPos*uiScale;
+        shiftY=(height-imageHeight*uiScale)/2-topPos*uiScale;
         addRenderableWidget(Button.builder(Component.literal("<"),b->category(-1))
             .bounds(leftPos+24,topPos+22,25,21).build());
         addRenderableWidget(Button.builder(Component.literal(">"),b->category(1))
@@ -96,7 +100,8 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
                 g.fill(bx,by,bx+16,by+16,0x99C09A91);
             }
             if(needed && required.get(i).getValue()>1)
-                g.drawString(font,""+required.get(i).getValue(),bx+9,by+9,
+                g.drawString(font,""+required.get(i).getValue(),
+                    bx+17-font.width(""+required.get(i).getValue()),by+10,
                     0xFFFFFFFF,false);
         }
         panel(g,x+407,y+211,20,20,0xFFE7D3B5);
@@ -113,14 +118,17 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
         g.drawString(font,"PREVIEW",65,55,ink,false);
         ItemStack selection=menu.recipe().result();
         g.renderFakeItem(selection,84,77);
-        g.drawString(font,"INFO",24,135,ink,false);
-        lineWrapped(g,details(),24,147,135,ink);
+        g.drawString(font,"INFO",24,135,0xFFFFD44A,false);
+        lineWrapped(g,details(),24,147,135,0xFFFFD44A);
         g.drawString(font,"AVAILABLE",275,19,ink,false);
         g.drawString(font,"MATERIALS",193,184,ink,false);
         g.drawString(font,"OUTPUT",399,184,ink,false);
         g.drawString(font,selection.getHoverName(),19,205,0xFFE9D0AA,false);
     }
+    private double ux(double x){return (x-shiftX)/uiScale;}
+    private double uy(double y){return (y-shiftY)/uiScale;}
     @Override public boolean mouseClicked(double mouseX,double mouseY,int button){
+        mouseX=ux(mouseX);mouseY=uy(mouseY);
         if(button==0){
             int col=(int)(mouseX-leftPos-CATALOG_X)/43;
             int row=(int)(mouseY-topPos-CATALOG_Y)/37;
@@ -133,8 +141,23 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
         }
         return super.mouseClicked(mouseX,mouseY,button);
     }
+    @Override public boolean mouseReleased(double x,double y,int button){
+        return super.mouseReleased(ux(x),uy(y),button);
+    }
+    @Override public boolean mouseDragged(double x,double y,int button,double dx,double dy){
+        return super.mouseDragged(ux(x),uy(y),button,dx/uiScale,dy/uiScale);
+    }
+    @Override public boolean mouseScrolled(double x,double y,double amount){
+        return super.mouseScrolled(ux(x),uy(y),amount);
+    }
     @Override public void render(GuiGraphics g,int mouseX,int mouseY,float tick){
-        renderBackground(g);super.render(g,mouseX,mouseY,tick);
-        renderTooltip(g,mouseX,mouseY);
+        renderBackground(g);
+        g.pose().pushPose();
+        g.pose().translate(shiftX,shiftY,0);
+        g.pose().scale(uiScale,uiScale,1f);
+        int x=(int)ux(mouseX),y=(int)uy(mouseY);
+        super.render(g,x,y,tick);
+        renderTooltip(g,x,y);
+        g.pose().popPose();
     }
 }

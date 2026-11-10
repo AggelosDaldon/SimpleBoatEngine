@@ -20,13 +20,22 @@ public final class BoatBuilderRecipes {
     public static List<Blueprint> all(){
         List<Blueprint> out=new ArrayList<>();
         out.add(b(new ItemStack(EngineItems.BLUE_FISHING_BOAT.get()),
-            Items.OAK_PLANKS,24,Items.IRON_INGOT,6,Items.CHEST,2));
+            Items.OAK_LOG,8,Items.STRIPPED_OAK_LOG,8,Items.OAK_PLANKS,16,Items.STICK,12,Items.IRON_INGOT,6,Items.CHEST,2));
         Item[] woods={Items.OAK_PLANKS,Items.SPRUCE_PLANKS,Items.BIRCH_PLANKS,
             Items.JUNGLE_PLANKS,Items.ACACIA_PLANKS,Items.DARK_OAK_PLANKS,
             Items.MANGROVE_PLANKS,Items.CHERRY_PLANKS,Items.BAMBOO_PLANKS};
+        Item[] logs={Items.OAK_LOG,Items.SPRUCE_LOG,Items.BIRCH_LOG,
+            Items.JUNGLE_LOG,Items.ACACIA_LOG,Items.DARK_OAK_LOG,
+            Items.MANGROVE_LOG,Items.CHERRY_LOG,Items.BAMBOO_BLOCK};
+        Item[] stripped={Items.STRIPPED_OAK_LOG,Items.STRIPPED_SPRUCE_LOG,
+            Items.STRIPPED_BIRCH_LOG,Items.STRIPPED_JUNGLE_LOG,
+            Items.STRIPPED_ACACIA_LOG,Items.STRIPPED_DARK_OAK_LOG,
+            Items.STRIPPED_MANGROVE_LOG,Items.STRIPPED_CHERRY_LOG,
+            Items.STRIPPED_BAMBOO_BLOCK};
         for(int i=0;i<EngineItems.WOOD_BOATS.size();i++){
             out.add(b(new ItemStack(EngineItems.WOOD_BOATS.get(i).get()),
-                woods[i],24,Items.IRON_INGOT,6,Items.CHEST,2));
+                logs[i],8,stripped[i],8,woods[i],16,Items.STICK,12,
+                Items.IRON_INGOT,6,Items.CHEST,2));
         }
         out.add(b(new ItemStack(EngineItems.ENGINE.get()),
             Items.IRON_INGOT,12,Items.REDSTONE,4,Items.PISTON,2));
