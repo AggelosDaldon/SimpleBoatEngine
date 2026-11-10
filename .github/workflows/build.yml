@@ -27,13 +27,14 @@ jobs:
           python3 tools/generate_boat_radio.py
           python3 tools/generate_model_inventory_icons.py
           python3 tools/finalize_user_icons.py
+          python3 tools/migrate_namespace.py
       - name: Verify shipwright and marine assets
         run: |
           python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
           import json
-          root=Path('src/main/resources/assets/simpleboatengine')
+          root=Path('src/main/resources/assets/daldonsboatadditions')
           for key in ('boat_customizer','boat_builder'):
               for facing in ('north','east','south','west'):
                   path=root/'models/block'/f'{key}_{facing}.json'
@@ -64,7 +65,7 @@ jobs:
           test -n "$JAR"
           unzip -p "$JAR" pack.mcmeta
           for ASSET in \
-            assets/simpleboatengine/models/item/engine.json \
+            assets/daldonsboatadditions/models/item/engine.json \
             assets/simpleboatengine/models/item/pole_light.json \
             assets/simpleboatengine/sounds/motor_loop.ogg \
             assets/simpleboatengine/textures/item/outboard_engine.png; do
@@ -72,7 +73,7 @@ jobs:
           done
           for ASSET in \
             assets/simpleboatengine/textures/item/pole_light.png \
-            data/simpleboatengine/recipes/pole_light.json; do
+            data/daldonsboatadditions/recipes/pole_light.json; do
             unzip -l "$JAR" "$ASSET" | grep -F "$ASSET"
           done
       - name: Upload standalone JAR

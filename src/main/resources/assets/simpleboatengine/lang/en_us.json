@@ -18,7 +18,7 @@
   "item.simpleboatengine.cherry_fishing_boat": "Cherry Fishing Boat",
   "item.simpleboatengine.bamboo_fishing_boat": "Bamboo Fishing Boat",
   "itemGroup.simpleboatengine": "Daldon's Boat Additions",
-  "key.simpleboatengine.category": "Simple Boat Engine",
+  "key.simpleboatengine.category": "Daldon's Boat Additions",
   "key.simpleboatengine.up": "Increase throttle",
   "key.simpleboatengine.down": "Decrease throttle",
   "subtitles.simpleboatengine.motor_loop": "Boat engine humming",
@@ -32,10 +32,11 @@
   "item.simpleboatengine.boat_stand": "Boat Parking Stand",
   "item.simpleboatengine.yellow_lift_buoy": "Yellow Buoy",
   "item.simpleboatengine.white_lift_buoy": "White Buoy",
-  "item.simpleboatengine.boat_customizer": "Boat Painting Table",
+  "item.simpleboatengine.boat_customizer": "Marine Paint Workshop",
   "item.simpleboatengine.ice_breaker": "Ice Breaker",
   "item.simpleboatengine.boat_recovery_kit": "Boat Recovery Hook",
   "block.simpleboatengine.boat_recovery": "Boat Recovery Crate",
   "block.simpleboatengine.boat_builder": "Boat Builder",
-  "item.simpleboatengine.boat_builder": "Boat Builder"
+  "item.simpleboatengine.boat_builder": "Boat Builder",
+  "item.simpleboatengine.boat_radio": "Boat Radio"
 }

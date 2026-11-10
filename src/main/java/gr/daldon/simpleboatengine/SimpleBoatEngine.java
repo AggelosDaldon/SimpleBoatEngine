@@ -15,8 +15,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(SimpleBoatEngine.MOD_ID)
 public final class SimpleBoatEngine {
     public static final String MOD_ID = "daldonsboatadditions";
-    // Keep the original registry namespace to protect existing worlds.
-    public static final String ID = "simpleboatengine";
+    // Registry namespace for every game object. Old entity NBT keys remain readable.
+    public static final String ID = MOD_ID;
+    public static final String LEGACY_ID = "simpleboatengine";
 
     public SimpleBoatEngine() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
