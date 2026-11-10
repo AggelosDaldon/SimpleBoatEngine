@@ -85,6 +85,8 @@ public final class BoatPaintSessions {
         if(stand.previewLockedFor(player.getUUID())) {tell(player,"Another player is previewing this boat.");return false;}
         if(action==CANCEL) {stand.cancelPreview(player.getUUID());tell(player,"Changes cancelled.");return true;}
         ItemStack original=stand.previewOriginal();
+        // Equipment is handled separately by live inventory slots, never paint draft.
+        attachments=mask(original);
         if(!(original.getItem() instanceof SkiffBoatItem)) return false;
         ItemStack proposed=original.copy();
         for(int i=0;i<BoatPaint.CHANNELS;i++){
@@ -120,11 +122,10 @@ public final class BoatPaintSessions {
         }
         engine.putBoolean("IceBreakerSilk",silk);
         if(action==APPLY) {
-            if(!menu.hasMaterials(cost) || !menu.hasAttachmentInputs(before,attachments)){
+            if(!menu.hasMaterials(cost)){
                 tell(player,"Missing materials: "+format(cost,player));return false;
             }
             menu.consumeMaterials(cost);
-            menu.consumeAttachmentInputs(before,attachments);
             for(int bit : new int[]{ENGINE,POLE,CANISTER,BREAKER})
                 if((before&bit)!=0 && (attachments&bit)==0) {
                     ItemStack returned=new ItemStack(bit==ENGINE?EngineItems.ENGINE.get():
