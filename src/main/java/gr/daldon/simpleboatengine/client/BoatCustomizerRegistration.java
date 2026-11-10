@@ -22,6 +22,7 @@ public final class BoatCustomizerRegistration {
         event.enqueueWork(() -> MenuScreens.register(EngineMenus.CARGO.get(), BoatCargoScreen::new));
         event.enqueueWork(() -> MenuScreens.register(EngineMenus.PARKED_CARGO.get(), ParkedBoatCargoScreen::new));
         event.enqueueWork(() -> MenuScreens.register(EngineMenus.BOAT_BUILDER.get(), BoatBuilderScreen::new));
+        event.enqueueWork(() -> MenuScreens.register(EngineMenus.BOAT_RADIO.get(), BoatRadioScreen::new));
 
     }
 
