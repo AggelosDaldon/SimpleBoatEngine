@@ -269,25 +269,25 @@ public final class BlueFishingBoat extends SkiffBoat {
             BoatNavigationData.get(level).observeBoat(this, level, distance, tickCount % 20 == 0);
         }
     }
-    /** Dedicated 27-slot chest below the white bow hatch. */
     public void openHatch(ServerPlayer player) {
-        level().playSound(null,blockPosition(),
-            net.minecraft.sounds.SoundEvents.BARREL_OPEN,
-            net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
-        player.openMenu(new SimpleMenuProvider(
-            (id, inventory, owner) -> new BarrelHatchMenu(id, inventory, hatchCargo, this),
-            Component.literal("Bow hatch - 27 slots")));
+        openStorage(player, true);
     }
 
-    /** Separate 108-slot storage under the marked STORAGE 2 panel. */
     public void openCargo(ServerPlayer player) {
-        level().playSound(null,blockPosition(),
+        openStorage(player, false);
+    }
+
+    private void openStorage(ServerPlayer player, boolean hatch) {
+        level().playSound(null, blockPosition(),
             net.minecraft.sounds.SoundEvents.BARREL_OPEN,
-            net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
+            net.minecraft.sounds.SoundSource.BLOCKS, .8f, .95f);
         net.minecraftforge.network.NetworkHooks.openScreen(player, new SimpleMenuProvider(
-            (id, inventory, owner) -> new BoatCargoMenu(id, inventory, this, cargo),
-            Component.translatable("container.simpleboatengine.fishing_boat")),
-            buf -> buf.writeVarInt(getId()));
+            (id, inventory, owner) -> new BoatCargoMenu(id, inventory, this, hatch ? hatchCargo : cargo, hatch),
+            Component.literal(hatch ? BoatCargoMenu.HATCH_TITLE : BoatCargoMenu.MAIN_TITLE)),
+            buf -> {
+                buf.writeVarInt(getId());
+                buf.writeBoolean(hatch);
+            });
     }
 
     @Override

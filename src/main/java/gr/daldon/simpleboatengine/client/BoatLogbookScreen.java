@@ -117,10 +117,10 @@ public final class BoatLogbookScreen extends Screen {
     private void renderBoat(GuiGraphics graphics, ItemStack boat, int x, int y) {
         graphics.flush();
         graphics.pose().pushPose();
-        graphics.pose().translate(x, y, 250);
-        graphics.pose().mulPose(Axis.XP.rotationDegrees(25f));
-        graphics.pose().mulPose(Axis.YP.rotationDegrees(-45f));
-        graphics.pose().scale(25f, -25f, 25f);
+        graphics.pose().translate(x, y + 4, 250);
+        graphics.pose().mulPose(Axis.XP.rotationDegrees(-38f));
+        graphics.pose().mulPose(Axis.YP.rotationDegrees(32f));
+        graphics.pose().scale(23f, -23f, 23f);
         BoatItemVisuals.drawBoat(boat, graphics.pose(), graphics.bufferSource(), LightTexture.FULL_BRIGHT);
         graphics.flush();
         graphics.pose().popPose();

@@ -24,7 +24,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Synced engine controls, precise hatch interaction and click-to-board handling. */
 public final class MotorPackets {
-    private static final String VERSION = "4";
+    private static final String VERSION = "5";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(SimpleBoatEngine.ID, "motor"),
         () -> VERSION, VERSION::equals, VERSION::equals);
@@ -299,19 +299,21 @@ public final class MotorPackets {
             ctx.get().setPacketHandled(true);
         }
     }
-    public record SelectParkedCargo(BlockPos stand,int page) {
+    public record SelectParkedCargo(BlockPos stand, int page, int firstRow) {
         static void write(SelectParkedCargo msg,FriendlyByteBuf out){
-            out.writeBlockPos(msg.stand);out.writeVarInt(msg.page);
+            out.writeBlockPos(msg.stand);
+            out.writeVarInt(msg.page);
+            out.writeVarInt(msg.firstRow);
         }
         static SelectParkedCargo read(FriendlyByteBuf in){
-            return new SelectParkedCargo(in.readBlockPos(),in.readVarInt());
+            return new SelectParkedCargo(in.readBlockPos(), in.readVarInt(), in.readVarInt());
         }
         static void receive(SelectParkedCargo msg,Supplier<NetworkEvent.Context> ctx){
             ServerPlayer player=ctx.get().getSender();
             ctx.get().enqueueWork(()->{
                 if(player==null || !(player.containerMenu instanceof ParkedBoatCargoMenu menu)
-                    || !menu.standPos().equals(msg.stand))return;
-                menu.selectPage(msg.page);
+                    || !menu.standPos().equals(msg.stand) || !menu.stillValid(player))return;
+                menu.selectPage(msg.page, msg.firstRow);
             });
             ctx.get().setPacketHandled(true);
         }
