@@ -181,7 +181,7 @@ public final class BlueFishingBoat extends SkiffBoat {
     public int radioIndex(){return radioIndex;}
     public boolean radioPlaying(){return radioIndex>=0;}
     private static boolean playable(ItemStack stack){
-        return stack.getItem() instanceof net.minecraft.world.item.RecordItem;
+        return EtchedSupport.isPlayable(stack);
     }
     private void syncRadio(){
         if(!(level() instanceof net.minecraft.server.level.ServerLevel server))return;
@@ -190,6 +190,7 @@ public final class BlueFishingBoat extends SkiffBoat {
                 MotorPackets.sendStatus(this,listener);
     }
     public void stopRadio(){
+        EtchedSupport.stop(this);
         radioIndex=-1;radioTicks=0;
         var data=MotorData.writable(this);
         data.putBoolean("RadioPlaying",false);
@@ -201,14 +202,23 @@ public final class BlueFishingBoat extends SkiffBoat {
     public void startRadio(int index){
         if(index<0 || index>=radioDiscs.getContainerSize())return;
         ItemStack disc=radioDiscs.getItem(index);
-        if(!(disc.getItem() instanceof net.minecraft.world.item.RecordItem record))return;
+        if(!EtchedSupport.isPlayable(disc))return;
+        EtchedSupport.stop(this);
         radioIndex=index;
-        radioTicks=Math.max(40,record.getLengthInTicks());
+        boolean etched=!(disc.getItem() instanceof net.minecraft.world.item.RecordItem);
+        radioTicks=etched?4800:Math.max(40,
+            ((net.minecraft.world.item.RecordItem)disc.getItem()).getLengthInTicks());
+        if(etched && !EtchedSupport.play(this,disc)){stopRadio();return;}
         var data=MotorData.writable(this);
         data.putBoolean("RadioPlaying",true);
-        data.putString("RadioSound",
-            net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS
-                .getKey(record.getSound()).toString());
+        String sound="";
+        if(!etched){
+            var record=(net.minecraft.world.item.RecordItem)disc.getItem();
+            var id=net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS
+                .getKey(record.getSound());
+            if(id!=null)sound=id.toString();
+        }
+        data.putString("RadioSound",sound);
         data.putString("RadioTrackName",disc.getHoverName().getString());
         data.putInt("RadioSerial",data.getInt("RadioSerial")+1);
         if(level() instanceof net.minecraft.server.level.ServerLevel server)
