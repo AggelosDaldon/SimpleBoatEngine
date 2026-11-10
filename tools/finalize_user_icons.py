@@ -38,3 +38,19 @@ for name in names:
             pix[x,y]=(r,g,b,255 if a>=128 else 0)
     icon.resize((256,256),Image.Resampling.NEAREST).save(dest/(name+"_icon.png"),optimize=True)
 print("Installed seven user-supplied 256x256 pixel icons with clean alpha.")
+
+# Use the user's supplied workbench pictures as 2D inventory icons only.
+# The placed 3D blocks and their block models remain untouched.
+for name in ("boat_builder","boat_customizer"):
+    icon=Image.open(source/(name+".png")).convert("RGBA")
+    icon.load()
+    if icon.size!=(64,64):raise ValueError(name+" must be a 64px pixel sprite")
+    icon.resize((256,256),Image.Resampling.NEAREST).save(
+        dest/(name+"_icon.png"),optimize=True)
+    item_model=ROOT/"src/main/resources/assets/simpleboatengine/models/item"/(name+".json")
+    import json
+    item_model.write_text(json.dumps({
+        "parent":"minecraft:item/generated",
+        "textures":{"layer0":"simpleboatengine:item/"+name+"_icon"}
+    },indent=2)+"\\n")
+print("Installed both supplied 256x256 workbench inventory icons.")
