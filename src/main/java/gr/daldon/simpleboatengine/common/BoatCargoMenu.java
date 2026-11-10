@@ -58,6 +58,13 @@ public final class BoatCargoMenu extends AbstractContainerMenu {
         broadcastChanges();
     }
 
+    @Override public void removed(Player player) {
+        super.removed(player);
+        if(!player.level().isClientSide && boat!=null)
+            player.level().playSound(null,boat.blockPosition(),
+                net.minecraft.sounds.SoundEvents.BARREL_CLOSE,
+                net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
+    }
     @Override public boolean stillValid(Player player) {
         return boat == null || boat.isAlive() && player.distanceToSqr(boat) <= 64.0;
     }
