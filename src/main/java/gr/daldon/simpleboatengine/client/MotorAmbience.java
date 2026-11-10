@@ -124,7 +124,7 @@ public final class MotorAmbience {
                 return;
             }
             int throttle = data == null ? 0 : Math.max(0, Math.min(10, data.getInt("Throttle")));
-            volume = fade * 0.80f;
+            volume = fade * 1.25f;
             pitch = 0.84f + throttle * 0.039f;
             x = boat.getX();
             y = boat.getY();
