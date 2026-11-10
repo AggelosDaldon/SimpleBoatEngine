@@ -1,6 +1,9 @@
 package gr.daldon.simpleboatengine.common;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -55,9 +58,12 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             final int index=i;
             addSlot(new Slot(attachmentInputs,i,249+i*39,246){
                 @Override public boolean mayPlace(ItemStack item){
-                    return item.is(EngineItems.ENGINE.get()) || item.is(EngineItems.POLE_LIGHT.get()) ||
-                        item.is(EngineItems.FUEL_CANISTER.get()) || item.is(EngineItems.ICE_BREAKER.get()) ||
-                        item.is(EngineItems.BOAT_RADIO.get());
+                    int kind=typeIndex(item);
+                    if(kind<0)return false;
+                    for(int other=0;other<ATTACHMENT_SLOTS;other++)
+                        if(other!=index && attachmentInputs.getItem(other).is(item.getItem()))
+                            return false;
+                    return true;
                 }
                 @Override public int getMaxStackSize(){return 1;}
             });
@@ -110,32 +116,52 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
      * it back to the cursor; depositing one installs it immediately. No Apply
      * action, no duplicated virtual copies, and no on/off toggles.
      */
+    private static int typeIndex(ItemStack item){
+        if(item.is(EngineItems.ENGINE.get()))return 0;
+        if(item.is(EngineItems.POLE_LIGHT.get()))return 1;
+        if(item.is(EngineItems.FUEL_CANISTER.get()))return 2;
+        if(item.is(EngineItems.ICE_BREAKER.get()))return 3;
+        if(item.is(EngineItems.BOAT_RADIO.get()))return 4;
+        return -1;
+    }
     private void loadAttachmentSlots(){
         if(editor.level().isClientSide)return;
         loadingAttachments=true;
         try{
             ItemStack boat=boatItem();
             int mask=BoatPaintSessions.attachmentMask(boat);
+            ListTag saved=boat.hasTag()
+                ?boat.getTag().getList("BoatAttachmentSlots",Tag.TAG_COMPOUND):new ListTag();
             for(int i=0;i<ATTACHMENT_SLOTS;i++){
-                ItemStack equipped=(mask&(1<<i))!=0
-                    ? new ItemStack(attachmentType(i)):ItemStack.EMPTY;
-                if(i==3 && !equipped.isEmpty() &&
-                    BoatPaintSessions.motor(boat).getBoolean("IceBreakerSilk"))
-                    equipped.enchant(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,1);
+                ItemStack equipped=ItemStack.EMPTY;
+                if(i<saved.size()) equipped=ItemStack.of(saved.getCompound(i));
+                if(saved.isEmpty() && (mask&(1<<i))!=0){
+                    equipped=new ItemStack(attachmentType(i));
+                    if(i==3 && BoatPaintSessions.motor(boat).getBoolean("IceBreakerSilk"))
+                        equipped.enchant(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,1);
+                }
                 attachmentInputs.setItem(i,equipped);
             }
             lastSyncedMask=mask;
         }finally{loadingAttachments=false;}
     }
     private void saveAttachmentSlots(){
-        if(loadingAttachments||editor.level().isClientSide)return;
+        if(loadingAttachments || editor.level().isClientSide)return;
         BoatStandBlockEntity stand=selectedStand();
-        if(stand==null||stand.getItem(0).isEmpty()||stand.hasPreview())return;
+        if(stand==null || stand.getItem(0).isEmpty() || stand.hasPreview())return;
         int next=0;
-        for(int i=0;i<ATTACHMENT_SLOTS;i++)
-            if(!attachmentInputs.getItem(i).isEmpty())next|=1<<i;
-        if(next==lastSyncedMask)return;
+        ListTag saved=new ListTag();
+        for(int i=0;i<ATTACHMENT_SLOTS;i++){
+            ItemStack item=attachmentInputs.getItem(i);
+            int kind=typeIndex(item);
+            if(kind>=0)next|=1<<kind;
+            saved.add(item.save(new CompoundTag()));
+        }
         ItemStack boat=stand.getItem(0).copy();
+        int previous=BoatPaintSessions.attachmentMask(boat);
+        if(next==previous && boat.hasTag() &&
+            boat.getTag().getList("BoatAttachmentSlots",Tag.TAG_COMPOUND).equals(saved))return;
+        boat.getOrCreateTag().put("BoatAttachmentSlots",saved);
         var motor=BoatPaintSessions.writableMotor(boat);
         motor.putBoolean("Installed",(next&1)!=0);
         motor.putBoolean("PoleLightInstalled",(next&2)!=0);
@@ -143,14 +169,17 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         motor.putBoolean("IceBreakerInstalled",(next&8)!=0);
         motor.putBoolean("RadioInstalled",(next&16)!=0);
         if((next&1)==0){
-            motor.putBoolean("Running",false);motor.putInt("Throttle",0);
+            motor.putBoolean("Running",false);
+            motor.putInt("Throttle",0);
         }
-        if((next&8)!=0)
-            motor.putBoolean("IceBreakerSilk",
-                net.minecraft.world.item.enchantment.EnchantmentHelper
+        boolean silk=false;
+        for(int i=0;i<ATTACHMENT_SLOTS;i++)
+            if(typeIndex(attachmentInputs.getItem(i))==3)
+                silk=net.minecraft.world.item.enchantment.EnchantmentHelper
                     .getItemEnchantmentLevel(
                         net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,
-                        attachmentInputs.getItem(3))>0);
+                        attachmentInputs.getItem(i))>0;
+        motor.putBoolean("IceBreakerSilk",silk);
         stand.setItem(0,boat);
         lastSyncedMask=next;
         broadcastChanges();
@@ -192,7 +221,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         } else {
             boolean moved=false;
             for(int i=0;i<ATTACHMENT_SLOTS && !moved;i++)
-                if(original.is(attachmentType(i)))
+                if(typeIndex(original)>=0 && !slots.get(MATERIAL_SLOTS+i).hasItem())
                     moved=moveItemStackTo(original,MATERIAL_SLOTS+i,MATERIAL_SLOTS+i+1,false);
             if(!moved)moved=moveItemStackTo(original,0,MATERIAL_SLOTS,false);
             if(!moved)return ItemStack.EMPTY;
