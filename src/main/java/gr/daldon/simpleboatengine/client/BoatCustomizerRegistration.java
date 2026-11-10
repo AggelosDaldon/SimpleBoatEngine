@@ -2,10 +2,12 @@ package gr.daldon.simpleboatengine.client;
 
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.common.EngineBlockEntities;
+import gr.daldon.simpleboatengine.common.BoatAttachmentTooltip;
 import gr.daldon.simpleboatengine.common.EngineMenus;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,6 +26,11 @@ public final class BoatCustomizerRegistration {
         event.enqueueWork(() -> MenuScreens.register(EngineMenus.BOAT_BUILDER.get(), BoatBuilderScreen::new));
         event.enqueueWork(() -> MenuScreens.register(EngineMenus.BOAT_RADIO.get(), BoatRadioScreen::new));
 
+    }
+
+    @SubscribeEvent
+    public static void registerTooltips(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(BoatAttachmentTooltip.class, BoatAttachmentTooltipRenderer::new);
     }
 
     @SubscribeEvent

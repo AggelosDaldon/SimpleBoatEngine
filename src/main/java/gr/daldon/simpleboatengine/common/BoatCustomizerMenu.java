@@ -59,7 +59,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             addSlot(new Slot(attachmentInputs,i,249+i*39,246){
                 @Override public boolean mayPlace(ItemStack item){
                     int kind=typeIndex(item);
-                    if(kind<0)return false;
+                    if(kind<0 || getItem().is(EngineItems.BOAT_RADIO.get()))return false;
                     for(int other=0;other<ATTACHMENT_SLOTS;other++)
                         if(other!=index && attachmentInputs.getItem(other).is(item.getItem()))
                             return false;
@@ -151,6 +151,10 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
                     if(i==3 && BoatPaintSessions.motor(boat).getBoolean("IceBreakerSilk"))
                         equipped.enchant(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,1);
                 }
+                if (equipped.is(EngineItems.BOAT_RADIO.get()) && equipped.hasTag()) {
+                    equipped.getTag().remove(BoatRadioStorage.ITEM_DISCS);
+                    if (equipped.getTag().isEmpty()) equipped.setTag(null);
+                }
                 attachmentInputs.setItem(i,equipped);
             }
             lastSyncedMask=mask;
@@ -166,7 +170,13 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             ItemStack item=attachmentInputs.getItem(i);
             int kind=typeIndex(item);
             if(kind>=0)next|=1<<kind;
-            saved.add(item.save(new CompoundTag()));
+            CompoundTag entry = item.save(new CompoundTag());
+            if (kind == 4 && entry.contains("tag", Tag.TAG_COMPOUND)) {
+                CompoundTag radioTag = entry.getCompound("tag");
+                radioTag.remove(BoatRadioStorage.ITEM_DISCS);
+                if (radioTag.isEmpty()) entry.remove("tag");
+            }
+            saved.add(entry);
         }
         ItemStack boat=stand.getItem(0).copy();
         int previous=BoatPaintSessions.attachmentMask(boat);
@@ -239,11 +249,17 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         if(index<MATERIAL_SLOTS+ATTACHMENT_SLOTS){
             if(index>=MATERIAL_SLOTS && original.is(EngineItems.BOAT_RADIO.get())){
                 BoatStandBlockEntity stand=selectedStand();
-                if(stand!=null && !stand.getItem(0).isEmpty()){
-                    ItemStack storedBoat=stand.getItem(0).copy();
-                    BoatRadioStorage.detach(storedBoat,original);
-                    stand.setItem(0,storedBoat);
-                }
+                if(stand==null || stand.getItem(0).isEmpty() || stand.hasPreview())return ItemStack.EMPTY;
+                ItemStack storedBoat=stand.getItem(0).copy();
+                ItemStack radio=original.copy();
+                BoatRadioStorage.copyDiscsToRadio(storedBoat,radio);
+                ItemStack moved=radio.copy();
+                if(!moveItemStackTo(radio,MATERIAL_SLOTS+ATTACHMENT_SLOTS,slots.size(),true))
+                    return ItemStack.EMPTY;
+                BoatRadioStorage.detach(storedBoat,original);
+                stand.setItem(0,storedBoat);
+                slot.set(ItemStack.EMPTY);
+                return moved;
             }
             if(!moveItemStackTo(original,MATERIAL_SLOTS+ATTACHMENT_SLOTS,slots.size(),true))
                 return ItemStack.EMPTY;

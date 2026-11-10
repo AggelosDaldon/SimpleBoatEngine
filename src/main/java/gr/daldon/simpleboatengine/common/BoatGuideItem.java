@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = SimpleBoatEngine.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class BoatGuideItem extends WrittenBookItem {
+    private static final String AUTHOR = "AggelosDaldon";
     private static final String GIVEN_KEY = "DaldonsBoatGuideGiven";
     private static final String[][] CHAPTERS = {
         {"Getting started", "Craft a Boat Builder and a Marine Paint Workshop at a crafting table. Use the Builder to make boats, gear, buoys and a Boat Parking Stand."},
@@ -60,7 +61,7 @@ public final class BoatGuideItem extends WrittenBookItem {
         }
         var tag = stack.getOrCreateTag();
         tag.putString("title", "Daldon's Boat Guide");
-        tag.putString("author", "Daldon's Boat Additions");
+        tag.putString("author", AUTHOR);
         tag.put("pages", pages);
         tag.putBoolean("resolved", true);
     }
@@ -68,10 +69,19 @@ public final class BoatGuideItem extends WrittenBookItem {
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack book = player.getItemInHand(hand);
         if (!book.hasTag() || !book.getTag().contains("pages")) writePages(book);
+        book.getOrCreateTag().putString("author", AUTHOR);
         if (level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> BoatGuideScreen.open(book));
         }
         return InteractionResultHolder.sidedSuccess(book, level.isClientSide);
+    }
+
+    @Override public void appendHoverText(ItemStack stack, Level level, java.util.List<Component> lines,
+                                          net.minecraft.world.item.TooltipFlag flags) {
+        // Also display the updated credit on guides issued by older versions.
+        ItemStack credited = stack.copy();
+        credited.getOrCreateTag().putString("author", AUTHOR);
+        super.appendHoverText(credited, level, lines, flags);
     }
 
     @SubscribeEvent

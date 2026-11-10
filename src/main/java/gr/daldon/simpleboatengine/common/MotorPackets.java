@@ -22,7 +22,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Synced engine controls, precise hatch interaction and click-to-board handling. */
 public final class MotorPackets {
-    private static final String VERSION = "1";
+    private static final String VERSION = "2";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(SimpleBoatEngine.ID, "motor"),
         () -> VERSION, VERSION::equals, VERSION::equals);
@@ -57,9 +57,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(OpenParkedCargo.class, 9, NetworkDirection.PLAY_TO_SERVER)
             .encoder(OpenParkedCargo::write).decoder(OpenParkedCargo::read)
             .consumerMainThread(OpenParkedCargo::receive).add();
-        CHANNEL.messageBuilder(CycleParkedCargo.class, 10, NetworkDirection.PLAY_TO_SERVER)
-            .encoder(CycleParkedCargo::write).decoder(CycleParkedCargo::read)
-            .consumerMainThread(CycleParkedCargo::receive).add();
+        CHANNEL.messageBuilder(SelectParkedCargo.class, 10, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(SelectParkedCargo::write).decoder(SelectParkedCargo::read)
+            .consumerMainThread(SelectParkedCargo::receive).add();
         CHANNEL.messageBuilder(BuilderAction.class, 11, NetworkDirection.PLAY_TO_SERVER)
             .encoder(BuilderAction::write).decoder(BuilderAction::read)
             .consumerMainThread(BuilderAction::receive).add();
@@ -291,19 +291,19 @@ public final class MotorPackets {
             ctx.get().setPacketHandled(true);
         }
     }
-    public record CycleParkedCargo(BlockPos stand,int delta) {
-        static void write(CycleParkedCargo msg,FriendlyByteBuf out){
-            out.writeBlockPos(msg.stand);out.writeVarInt(msg.delta);
+    public record SelectParkedCargo(BlockPos stand,int page) {
+        static void write(SelectParkedCargo msg,FriendlyByteBuf out){
+            out.writeBlockPos(msg.stand);out.writeVarInt(msg.page);
         }
-        static CycleParkedCargo read(FriendlyByteBuf in){
-            return new CycleParkedCargo(in.readBlockPos(),in.readVarInt());
+        static SelectParkedCargo read(FriendlyByteBuf in){
+            return new SelectParkedCargo(in.readBlockPos(),in.readVarInt());
         }
-        static void receive(CycleParkedCargo msg,Supplier<NetworkEvent.Context> ctx){
+        static void receive(SelectParkedCargo msg,Supplier<NetworkEvent.Context> ctx){
             ServerPlayer player=ctx.get().getSender();
             ctx.get().enqueueWork(()->{
                 if(player==null || !(player.containerMenu instanceof ParkedBoatCargoMenu menu)
                     || !menu.standPos().equals(msg.stand))return;
-                menu.switchPage(msg.delta);
+                menu.selectPage(msg.page);
             });
             ctx.get().setPacketHandled(true);
         }

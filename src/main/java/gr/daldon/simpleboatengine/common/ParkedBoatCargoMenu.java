@@ -13,24 +13,26 @@ import net.minecraft.world.item.ItemStack;
 
 /** Hatch (27), front main cargo (54), back main cargo (54). */
 public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
+    public static final int RADIO_PAGE = 3;
+    private static final int CARGO_SLOTS = ParkedBoatInventory.CARGO_SLOTS;
+    private static final int BOAT_SLOTS = CARGO_SLOTS + ParkedBoatInventory.RADIO_SLOTS;
     private final BlockPos standPos;
     private final Container cargo;
     private final DataSlot page=DataSlot.standalone();
+    private final DataSlot installedRadio = DataSlot.standalone();
     public ParkedBoatCargoMenu(int id,Inventory inv,FriendlyByteBuf packet){
         this(id,inv,packet.readBlockPos());
     }
     private ParkedBoatCargoMenu(int id,Inventory inv,BlockPos pos){
-        this(id,inv,pos,inv.player.level().getBlockEntity(pos)
-            instanceof BoatStandBlockEntity stand ? new ParkedBoatInventory(stand)
-            : new SimpleContainer(135));
+        this(id,inv,pos,new SimpleContainer(BOAT_SLOTS));
     }
     public ParkedBoatCargoMenu(int id,Inventory inv,BoatStandBlockEntity stand){
         this(id,inv,stand.getBlockPos(),new ParkedBoatInventory(stand));
     }
     private ParkedBoatCargoMenu(int id,Inventory inv,BlockPos pos,Container source){
         super(EngineMenus.PARKED_CARGO.get(),id);
-        standPos=pos;cargo=source;page.set(0);addDataSlot(page);
-        for(int i=0;i<135;i++){
+        standPos=pos;cargo=source;addDataSlot(page);addDataSlot(installedRadio);
+        for(int i=0;i<CARGO_SLOTS;i++){
             final int slot=i;
             int relative=i<27?i:i-27;
             int x=8+(relative%9)*18;
@@ -41,6 +43,15 @@ public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
                 }
             });
         }
+        for (int i=0;i<ParkedBoatInventory.RADIO_SLOTS;i++) {
+            addSlot(new Slot(source,CARGO_SLOTS+i,8+i*18,19) {
+                @Override public boolean isActive() { return page()==RADIO_PAGE && hasRadio(); }
+                @Override public boolean mayPlace(ItemStack stack) { return false; }
+                @Override public boolean mayPickup(Player player) {
+                    return isActive() && stillValid(player);
+                }
+            });
+        }
         for(int row=0;row<3;row++)
             for(int col=0;col<9;col++)
                 addSlot(new Slot(inv,col+row*9+9,8+col*18,140+row*18));
@@ -48,20 +59,29 @@ public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
             addSlot(new Slot(inv,col,8+col*18,198));
     }
     public int page(){return page.get();}
-    public void switchPage(int delta){
-        page.set(Math.floorMod(page.get()+Integer.signum(delta),3));
+    public boolean hasRadio(){
+        return cargo instanceof ParkedBoatInventory parked ? parked.hasRadio() : installedRadio.get() != 0;
+    }
+    @Override public void broadcastChanges() {
+        if (cargo instanceof ParkedBoatInventory parked) installedRadio.set(parked.hasRadio() ? 1 : 0);
+        super.broadcastChanges();
+    }
+    public void selectPage(int selected){
+        if (selected < 0 || selected > RADIO_PAGE) return;
+        page.set(selected);
         broadcastChanges();
     }
     public BlockPos standPos(){return standPos;}
     @Override public boolean stillValid(Player player){return cargo.stillValid(player);}
     @Override public ItemStack quickMoveStack(Player player,int index){
-        if(index<0 || index>=slots.size())return ItemStack.EMPTY;
+        if(!stillValid(player) || index<0 || index>=slots.size())return ItemStack.EMPTY;
         Slot slot=slots.get(index);
         if(!slot.hasItem() || !slot.isActive())return ItemStack.EMPTY;
         ItemStack stack=slot.getItem(),copy=stack.copy();
-        if(index<135){
-            if(!moveItemStackTo(stack,135,171,true))return ItemStack.EMPTY;
+        if(index<BOAT_SLOTS){
+            if(!moveItemStackTo(stack,BOAT_SLOTS,slots.size(),true))return ItemStack.EMPTY;
         } else {
+            if (page()==RADIO_PAGE) return ItemStack.EMPTY;
             int start=page.get()==0?0:27+(page.get()-1)*54;
             int end=page.get()==0?27:start+54;
             if(!moveItemStackTo(stack,start,end,false))return ItemStack.EMPTY;

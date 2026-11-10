@@ -51,7 +51,7 @@ public final class MotorControls {
 
         Vec3 eye = game.player.getEyePosition();
         Vec3 look = game.player.getViewVector(1f);
-        if (event.getHand() == InteractionHand.MAIN_HAND && held.isEmpty()) {
+        if (event.getHand() == InteractionHand.MAIN_HAND) {
             for (Entity entity : game.level.entitiesForRendering()) {
                 if (!(entity instanceof BlueFishingBoat boat)) continue;
                 var radioState=ClientMotorState.get(boat);
@@ -64,6 +64,7 @@ public final class MotorControls {
                     event.setCanceled(true);
                     return;
                 }
+                if (!held.isEmpty()) continue;
                 boolean hatch=BoatInteractionTarget.aimedAtHatch(boat, eye, look, 5.5);
                 boolean cabinet=BoatInteractionTarget.aimedAtStorage2(boat, eye, look, 5.5);
                 if (hatch || cabinet) {

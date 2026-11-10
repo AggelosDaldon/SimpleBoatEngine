@@ -40,7 +40,7 @@ public final class EngineItems {
     public static final RegistryObject<Item> POLE_LIGHT = ITEMS.register("pole_light",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BOAT_RADIO=ITEMS.register("boat_radio",
-        ()->new EngineItem(new Item.Properties().stacksTo(1)));
+        ()->new BoatRadioItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BOAT_BUILDER=ITEMS.register("boat_builder",
         ()->new BlockItem(EngineBlocks.BOAT_BUILDER.get(),new Item.Properties()));
 
