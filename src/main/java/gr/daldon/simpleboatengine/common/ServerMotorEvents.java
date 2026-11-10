@@ -97,18 +97,23 @@ public final class ServerMotorEvents {
                 notify(player, "Switch off the motor before refueling.");
                 return;
             }
-            if (data.getFloat("Fuel") >= MotorData.capacity(data) - 0.01f) {
-                notify(player, "The tank is already full.");
+            int remaining=(int)Math.ceil(MotorData.capacity(data)-data.getFloat("Fuel"));
+            int available=SteelFuelCanisterItem.fuel(item);
+            if(remaining<=0) {
+                notify(player,"The boat tank is already full.");
                 return;
             }
-            data.putFloat("Fuel", Math.min(MotorData.capacity(data),
-                data.getFloat("Fuel") + MotorData.TANK_CAPACITY));
-            if (!player.getAbilities().instabuild) {
-                item.shrink(1);
-                ItemStack emptyBucket = new ItemStack(Items.BUCKET);
-                if (!player.getInventory().add(emptyBucket)) player.drop(emptyBucket, false);
+            if(available<=0) {
+                notify(player,"Steel fuel canister is empty. Refill in your inventory.");
+                return;
             }
-            notify(player, "Fuel: " + (int) data.getFloat("Fuel") + " / " + MotorData.capacity(data));
+            int moved=Math.min(remaining,available);
+            data.putFloat("Fuel",Math.min(MotorData.capacity(data),
+                data.getFloat("Fuel")+moved));
+            SteelFuelCanisterItem.fuel(item,available-moved);
+            notify(player,"Boat fuel: "+(int)data.getFloat("Fuel")+" / "+MotorData.capacity(data)+
+                " | Canister: "+SteelFuelCanisterItem.fuel(item)+" / "+
+                SteelFuelCanisterItem.CAPACITY);
             click(boat);
             return;
         }
