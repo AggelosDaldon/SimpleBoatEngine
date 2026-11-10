@@ -71,6 +71,8 @@ public final class BoatItemVisuals {
                 pose.popPose();
             }
         }
+        if(engine.getBoolean("RadioInstalled"))
+            BoatRadioVisuals.draw(pose,buffers,light,offset);
         if(engine.getBoolean("IceBreakerInstalled")) {
             pose.pushPose();
             pose.translate(0,offset,0);
