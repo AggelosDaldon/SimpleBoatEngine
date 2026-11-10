@@ -19,5 +19,7 @@ public final class EngineMenus {
     public static final RegistryObject<MenuType<BoatBuilderMenu>> BOAT_BUILDER =
         MENUS.register("boat_builder",()->IForgeMenuType.create(BoatBuilderMenu::new));
 
+    public static final RegistryObject<MenuType<BoatRadioMenu>> BOAT_RADIO =
+        MENUS.register("boat_radio",()->IForgeMenuType.create(BoatRadioMenu::new));
     private EngineMenus() {}
 }
