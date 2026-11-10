@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** Front-mounted breaker for regular and fishing boats. No changes to non-ice. */
-@Mod.EventBusSubscriber(modid=SimpleBoatEngine.ID,bus=Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid=SimpleBoatEngine.MOD_ID,bus=Mod.EventBusSubscriber.Bus.FORGE)
 public final class BoatIceBreakerEvents {
     private BoatIceBreakerEvents(){}
     @SubscribeEvent public static void install(PlayerInteractEvent.EntityInteract event){

@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** Authoritative engine rules; never trusts a client-supplied fuel or throttle value. */
-@Mod.EventBusSubscriber(modid = SimpleBoatEngine.ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = SimpleBoatEngine.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ServerMotorEvents {
     private static final Map<Boat, Vec3> PREVIOUS = new WeakHashMap<>();
     private ServerMotorEvents() {}
