@@ -3,20 +3,20 @@ loaderVersion="[47,)"
 license="All Rights Reserved"
 
 [[mods]]
-modId="simpleboatengine"
+modId="daldonsboatadditions"
 version="${file.jarVersion}"
-displayName="Simple Boat Engine"
+displayName="Daldon's Boat Additions"
 authors="AggelosDaldon"
-description='''A lightweight, standalone outboard motor for vanilla boats. Built for Forge 1.20.1.'''
+description='''Custom fishing boats, engines, marine workshops, storage, and attachments for Forge 1.20.1.'''
 
-[[dependencies.simpleboatengine]]
+[[dependencies.daldonsboatadditions]]
 modId="forge"
 mandatory=true
 versionRange="[47.4.22,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.simpleboatengine]]
+[[dependencies.daldonsboatadditions]]
 modId="minecraft"
 mandatory=true
 versionRange="[1.20.1,1.20.2)"
