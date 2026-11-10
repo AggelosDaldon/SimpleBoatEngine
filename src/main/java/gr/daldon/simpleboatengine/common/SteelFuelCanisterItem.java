@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 
 /** Refillable steel canister. Works directly in any ordinary player inventory.
  * All fuel is NBT-backed and transferred, never duplicated by right-clicking.
@@ -33,6 +35,19 @@ public final class SteelFuelCanisterItem extends Item {
     }
     private static void catalysts(ItemStack stack,int amount){
         stack.getOrCreateTag().putInt("RedstoneCatalysts",Math.max(0,Math.min(20,amount)));
+    }
+    /** Creative-mode fallback: right-clicking a held canister fills it without
+     * requiring ingredient stacks (creative inventory bypasses normal slot hooks).
+     * Survival inventory filling remains unchanged.
+     */
+    @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
+        ItemStack canister=player.getItemInHand(hand);
+        if(!player.getAbilities().instabuild)return InteractionResultHolder.pass(canister);
+        if(!level.isClientSide){
+            fuel(canister,CAPACITY);
+            player.displayClientMessage(Component.literal("Steel Fuel Canister: 100%"),true);
+        }
+        return InteractionResultHolder.sidedSuccess(canister,level.isClientSide);
     }
     @Override public void appendHoverText(ItemStack stack,@Nullable Level world,
                                          List<Component> tooltip,TooltipFlag flag){
