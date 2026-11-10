@@ -48,7 +48,10 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
     public BlockPos position(){return pos;}
     public BoatBuilderRecipes.Blueprint recipe(){return blueprints.get(Math.floorMod(selected.get(),blueprints.size()));}
     public void change(int direction){
-        selected.set(Math.floorMod(selected.get()+Integer.signum(direction),blueprints.size()));
+        int start=isBoatTab()?0:10;
+        int size=(isBoatTab()?Math.min(10,blueprints.size()):blueprints.size()-start);
+        if(size<=0)return;
+        selected.set(start+Math.floorMod(selected.get()-start+Integer.signum(direction),size));
         updateOutput();
         broadcastChanges();
     }
