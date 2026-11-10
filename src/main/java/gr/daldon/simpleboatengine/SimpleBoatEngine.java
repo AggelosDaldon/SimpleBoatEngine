@@ -12,8 +12,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod(SimpleBoatEngine.ID)
+@Mod(SimpleBoatEngine.MOD_ID)
 public final class SimpleBoatEngine {
+    public static final String MOD_ID = "daldonsboatadditions";
+    // Keep the original registry namespace to protect existing worlds.
     public static final String ID = "simpleboatengine";
 
     public SimpleBoatEngine() {
