@@ -35,7 +35,10 @@ public final class BoatStandBlock extends BaseEntityBlock {
         builder.add(FACING);
     }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context){
-        return defaultBlockState().setValue(FACING,context.getHorizontalDirection().getOpposite());
+        Direction direction=context.getHorizontalDirection().getOpposite();
+        // Original stand model uses opposite front for North/South only.
+        if(direction.getAxis()==Direction.Axis.Z)direction=direction.getOpposite();
+        return defaultBlockState().setValue(FACING,direction);
     }
 
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

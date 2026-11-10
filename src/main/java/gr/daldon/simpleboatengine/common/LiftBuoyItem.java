@@ -21,6 +21,12 @@ public final class LiftBuoyItem extends BlockItem {
         super(EngineBlocks.LIFT_BUOY.get(), properties);
         this.color = color;
     }
+    @Override public net.minecraft.network.chat.Component getName(ItemStack stack) {
+        return net.minecraft.network.chat.Component.translatable(
+            color==1?"item.daldonsboatadditions.yellow_lift_buoy":
+            color==2?"item.daldonsboatadditions.white_lift_buoy":
+                     "item.daldonsboatadditions.lift_buoy");
+    }
     /** BlockItem normally handles a click on a block before Item.use(). */
     @Override public InteractionResult useOn(UseOnContext context) {
         Level level=context.getLevel();

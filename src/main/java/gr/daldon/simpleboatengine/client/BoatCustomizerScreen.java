@@ -115,8 +115,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     @Override protected void containerTick(){
         super.containerTick();
         if(lastStand!=menu.standIndex()){lastStand=menu.standIndex();resetDraft();}
-        for(int i=0;i<4;i++)
-            if(!menu.attachmentItem(i).isEmpty())mask|=1<<i;
+
         if(applyButton!=null){applyButton.active=valid();applyButton.visible=valid();}
     }
     private static void panel(GuiGraphics g,int x,int y,int w,int h,int border,int fill){
@@ -246,17 +245,6 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         }
         if(button==0 && x>=402&&x<440&&y>=188&&y<213){
             nameDye=(nameDye+1)%16;return true;
-        }
-        if(button==0 && x>=247&&x<447&&y>=244&&y<266) {
-            int index=(x-247)/48;
-            if(index<4 && menu.attachmentItem(index).isEmpty()
-                && minecraft!=null && minecraft.player!=null
-                && minecraft.player.containerMenu.getCarried().isEmpty()) {
-                mask ^= 1<<index;
-                if(index==0 && (mask&1)==0) mask &= ~(2|4);
-                if((index==1||index==2)&&(mask&(1<<index))!=0)mask |= 1;
-                return true;
-            }
         }
         return super.mouseClicked(lx,ly,button);
     }

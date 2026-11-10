@@ -54,7 +54,7 @@ public class SkiffBoat extends Boat {
                 // passenger placement already subtracts roughly 0.10 blocks.
                 // Compensate that offset so rider feet rest ON the seat surface.
                 y + (this instanceof BlueFishingBoat
-                    ? BoatMounts.HULL_Y + 9.43 / 16.0 + 0.10 : 0.71),
+                    ? BoatMounts.HULL_Y + 9.43 / 16.0 - 0.21 : 0.71),
                 getZ() - local.x * Math.sin(yaw) + local.z * Math.cos(yaw));
         });
     }

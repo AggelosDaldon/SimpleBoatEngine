@@ -33,7 +33,7 @@ public final class BoatBuilderBlock extends Block {
         builder.add(FACING);
     }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context){
-        Direction facing=context.getHorizontalDirection().getOpposite();
+        Direction facing=context.getHorizontalDirection();
         BlockPos side=context.getClickedPos().relative(facing.getClockWise());
         return context.getLevel().getBlockState(side).canBeReplaced(context)
             ?defaultBlockState().setValue(FACING,facing):null;
