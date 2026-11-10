@@ -25,6 +25,7 @@ jobs:
           python3 tools/generate_uploaded_marine_assets.py
           python3 tools/generate_shipwright_workbench.py
           python3 tools/generate_model_inventory_icons.py
+          python3 tools/finalize_user_icons.py
       - name: Compile Forge 1.20.1
         run: gradle --no-daemon build --stacktrace
       - name: Verify resource pack metadata is packaged
