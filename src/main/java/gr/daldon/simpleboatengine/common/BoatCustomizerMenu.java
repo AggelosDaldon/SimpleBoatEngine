@@ -66,6 +66,17 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
                     return true;
                 }
                 @Override public int getMaxStackSize(){return 1;}
+                @Override public void onTake(Player player,ItemStack taken){
+                    if(taken.is(EngineItems.BOAT_RADIO.get())){
+                        BoatStandBlockEntity stand=selectedStand();
+                        if(stand!=null && !stand.getItem(0).isEmpty()){
+                            ItemStack storedBoat=stand.getItem(0).copy();
+                            BoatRadioStorage.detach(storedBoat,taken);
+                            stand.setItem(0,storedBoat);
+                        }
+                    }
+                    super.onTake(player,taken);
+                }
             });
         }
         for(int row=0;row<3;row++)
@@ -161,6 +172,16 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         int previous=BoatPaintSessions.attachmentMask(boat);
         if(next==previous && boat.hasTag() &&
             boat.getTag().getList("BoatAttachmentSlots",Tag.TAG_COMPOUND).equals(saved))return;
+        // When a physical radio is inserted its own saved playlist goes onto
+        // the selected boat; an empty radio starts with an empty playlist.
+        if((next & BoatPaintSessions.RADIO)!=0 &&
+           (previous & BoatPaintSessions.RADIO)==0){
+            for(int i=0;i<ATTACHMENT_SLOTS;i++)
+                if(attachmentInputs.getItem(i).is(EngineItems.BOAT_RADIO.get())){
+                    BoatRadioStorage.install(boat,attachmentInputs.getItem(i));
+                    break;
+                }
+        }
         boat.getOrCreateTag().put("BoatAttachmentSlots",saved);
         var motor=BoatPaintSessions.writableMotor(boat);
         motor.putBoolean("Installed",(next&1)!=0);
@@ -216,6 +237,14 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         if(!slot.hasItem())return ItemStack.EMPTY;
         ItemStack original=slot.getItem(),copy=original.copy();
         if(index<MATERIAL_SLOTS+ATTACHMENT_SLOTS){
+            if(index>=MATERIAL_SLOTS && original.is(EngineItems.BOAT_RADIO.get())){
+                BoatStandBlockEntity stand=selectedStand();
+                if(stand!=null && !stand.getItem(0).isEmpty()){
+                    ItemStack storedBoat=stand.getItem(0).copy();
+                    BoatRadioStorage.detach(storedBoat,original);
+                    stand.setItem(0,storedBoat);
+                }
+            }
             if(!moveItemStackTo(original,MATERIAL_SLOTS+ATTACHMENT_SLOTS,slots.size(),true))
                 return ItemStack.EMPTY;
         } else {

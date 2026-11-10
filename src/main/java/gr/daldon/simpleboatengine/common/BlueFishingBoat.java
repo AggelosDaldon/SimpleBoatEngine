@@ -178,6 +178,17 @@ public final class BlueFishingBoat extends SkiffBoat {
     }
 
     public SimpleContainer radioDiscs(){return radioDiscs;}
+    /** Install the individual radio's tracks on this vessel only. */
+    public void installRadio(ItemStack radio){
+        stopRadio();
+        radioDiscs.clearContent();
+        for(Tag entry:BoatRadioStorage.discs(radio)){
+            CompoundTag data=(CompoundTag)entry;
+            int slot=data.getByte("Slot") & 255;
+            if(slot<radioDiscs.getContainerSize())
+                radioDiscs.setItem(slot,ItemStack.of(data));
+        }
+    }
     public int radioIndex(){return radioIndex;}
     public boolean radioPlaying(){return radioIndex>=0;}
     private static boolean playable(ItemStack stack){

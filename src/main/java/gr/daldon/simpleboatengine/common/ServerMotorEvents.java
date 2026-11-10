@@ -39,6 +39,7 @@ public final class ServerMotorEvents {
                 if(data.getBoolean("RadioInstalled")){
                     notify(event.getEntity(),"This boat already has a radio.");
                 } else {
+                    ((BlueFishingBoat)boat).installRadio(held);
                     data.putBoolean("RadioInstalled",true);
                     if(!event.getEntity().getAbilities().instabuild)held.shrink(1);
                     notify(event.getEntity(),"Boat Radio installed.");
