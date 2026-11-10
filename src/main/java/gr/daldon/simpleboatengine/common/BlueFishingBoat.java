@@ -177,13 +177,19 @@ public final class BlueFishingBoat extends SkiffBoat {
 
     /** Dedicated 27-slot chest below the white bow hatch. */
     public void openHatch(ServerPlayer player) {
+        level().playSound(null,blockPosition(),
+            net.minecraft.sounds.SoundEvents.BARREL_OPEN,
+            net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
         player.openMenu(new SimpleMenuProvider(
-            (id, inventory, owner) -> ChestMenu.threeRows(id, inventory, hatchCargo),
+            (id, inventory, owner) -> new BarrelHatchMenu(id, inventory, hatchCargo),
             Component.literal("Bow hatch - 27 slots")));
     }
 
     /** Separate 108-slot storage under the marked STORAGE 2 panel. */
     public void openCargo(ServerPlayer player) {
+        level().playSound(null,blockPosition(),
+            net.minecraft.sounds.SoundEvents.BARREL_OPEN,
+            net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
         net.minecraftforge.network.NetworkHooks.openScreen(player, new SimpleMenuProvider(
             (id, inventory, owner) -> new BoatCargoMenu(id, inventory, this, cargo),
             Component.translatable("container.simpleboatengine.fishing_boat")),
