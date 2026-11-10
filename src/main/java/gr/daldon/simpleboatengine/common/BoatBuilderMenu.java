@@ -73,11 +73,6 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
     }
     public void change(int direction){changeCategory(direction);}
     public ItemStack input(int i){return ingredients.getItem(i);}
-    public BlockPos position(){return pos;}
-    public int selection(){return selected.get();}
-    public BoatBuilderRecipes.Blueprint recipe(){
-        return blueprints.get(Math.floorMod(selected.get(),blueprints.size()));
-    }
     private void updateOutput(){
         ItemStack result=canCraft()?recipe().result().copy():ItemStack.EMPTY;
         output.setItem(0,result);
