@@ -54,6 +54,16 @@ public final class MotorControls {
         if (event.getHand() == InteractionHand.MAIN_HAND && held.isEmpty()) {
             for (Entity entity : game.level.entitiesForRendering()) {
                 if (!(entity instanceof BlueFishingBoat boat)) continue;
+                var radioState=ClientMotorState.get(boat);
+                if(radioState!=null && radioState.getBoolean("RadioInstalled")
+                    && BoatInteractionTarget.aimedAtRadio(boat,eye,look,5.5)){
+                    if(!useHeld){
+                        useHeld=true;
+                        MotorPackets.CHANNEL.sendToServer(new MotorPackets.OpenRadio(boat.getId()));
+                    }
+                    event.setCanceled(true);
+                    return;
+                }
                 boolean hatch=BoatInteractionTarget.aimedAtHatch(boat, eye, look, 5.5);
                 boolean cabinet=BoatInteractionTarget.aimedAtStorage2(boat, eye, look, 5.5);
                 if (hatch || cabinet) {
