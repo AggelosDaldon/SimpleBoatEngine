@@ -40,5 +40,8 @@ public final class EngineBlocks {
     public static final RegistryObject<Block> BOAT_BUILDER=BLOCKS.register("boat_builder",
         ()->new BoatBuilderBlock(BlockBehaviour.Properties.of().strength(3.0f).noOcclusion()));
 
+    public static final RegistryObject<Block> BOAT_RADIO_DECORATION=BLOCKS.register(
+        "boat_radio_decoration",()->new Block(BlockBehaviour.Properties.of()
+            .noCollission().noOcclusion().noLootTable().strength(1f)));
     private EngineBlocks() {}
 }

@@ -23,7 +23,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     private final DataSlot selected=DataSlot.standalone();
     private final SimpleContainer materials=new SimpleContainer(16);
     public static final int MATERIAL_SLOTS=16;
-    public static final int ATTACHMENT_SLOTS=4;
+    public static final int ATTACHMENT_SLOTS=5;
     private final SimpleContainer attachmentInputs=new SimpleContainer(ATTACHMENT_SLOTS);
     private final Player editor;
     private boolean loadingAttachments;
@@ -98,7 +98,8 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             case 0 -> EngineItems.ENGINE.get();
             case 1 -> EngineItems.POLE_LIGHT.get();
             case 2 -> EngineItems.FUEL_CANISTER.get();
-            default -> EngineItems.ICE_BREAKER.get();
+            case 3 -> EngineItems.ICE_BREAKER.get();
+            default -> EngineItems.BOAT_RADIO.get();
         };
     }
 
@@ -138,6 +139,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
         motor.putBoolean("PoleLightInstalled",(next&2)!=0);
         motor.putBoolean("CanisterInstalled",(next&4)!=0);
         motor.putBoolean("IceBreakerInstalled",(next&8)!=0);
+        motor.putBoolean("RadioInstalled",(next&16)!=0);
         if((next&1)==0){
             motor.putBoolean("Running",false);motor.putInt("Throttle",0);
         }

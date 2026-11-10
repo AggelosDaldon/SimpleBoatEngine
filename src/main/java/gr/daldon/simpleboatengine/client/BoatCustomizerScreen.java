@@ -22,7 +22,7 @@ import java.util.Map;
 public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCustomizerMenu> {
     private static final String[] PARTS={"Hull","Floor","Stripe","Hatch & trim",
         "Seats","Antifouling","Inner walls","Storage cabinet"};
-    private static final String[] ATTACHMENTS={"Engine","Pole light","Reserve tank","Ice breaker"};
+    private static final String[] ATTACHMENTS={"Engine","Pole light","Reserve tank","Ice breaker","Radio"};
     private final int[] draft=new int[BoatPaint.CHANNELS];
     private int part,nameDye,mask,lastStand=-1;
     private float angle=32f,pitch=-38f;
@@ -143,6 +143,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         motor.putBoolean("PoleLightInstalled",(mask&BoatPaintSessions.POLE)!=0);
         motor.putBoolean("CanisterInstalled",(mask&BoatPaintSessions.CANISTER)!=0);
         motor.putBoolean("IceBreakerInstalled",(mask&BoatPaintSessions.BREAKER)!=0);
+        motor.putBoolean("RadioInstalled",(mask&BoatPaintSessions.RADIO)!=0);
         return item;
     }
     private void preview(GuiGraphics g){
@@ -162,7 +163,8 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
             case 0 -> EngineItems.ENGINE.get();
             case 1 -> EngineItems.POLE_LIGHT.get();
             case 2 -> EngineItems.FUEL_CANISTER.get();
-            default -> EngineItems.ICE_BREAKER.get();
+            case 3 -> EngineItems.ICE_BREAKER.get();
+            default -> EngineItems.BOAT_RADIO.get();
         });
     }
     @Override protected void renderBg(GuiGraphics g,float tick,int mx,int my){
@@ -204,8 +206,8 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
                 g.drawString(font,String.valueOf(req.get(i).getValue()),sx+9,sy+9,0xFFECE9DF,false);
         }
         // Four real attachment slots with a subdued icon when vacant.
-        for(int i=0;i<4;i++){
-            int sx=x+249+i*48,sy=y+246;
+        for(int i=0;i<5;i++){
+            int sx=x+245+i*39,sy=y+246;
             boolean installed=!menu.attachmentItem(i).isEmpty();
             panel(g,sx-2,sy-2,22,22,installed?0xFF407C56:0xFF705E49,0xFFC7B49B);
             if(menu.attachmentItem(i).isEmpty()){

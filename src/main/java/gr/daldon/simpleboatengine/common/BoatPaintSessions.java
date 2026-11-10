@@ -17,7 +17,7 @@ import java.util.Map;
 public final class BoatPaintSessions {
     private BoatPaintSessions() {}
     public static final int PREVIEW=0, APPLY=1, CANCEL=2;
-    public static final int ENGINE=1, POLE=2, CANISTER=4, BREAKER=8;
+    public static final int ENGINE=1, POLE=2, CANISTER=4, BREAKER=8, RADIO=16;
 
     private static int mask(ItemStack stack) {
         CompoundTag data=motor(stack);
@@ -26,6 +26,7 @@ public final class BoatPaintSessions {
         if(data.getBoolean("PoleLightInstalled")) mask |= POLE;
         if(data.getBoolean("CanisterInstalled")) mask |= CANISTER;
         if(data.getBoolean("IceBreakerInstalled")) mask |= BREAKER;
+        if(data.getBoolean("RadioInstalled")) mask |= RADIO;
         return mask;
     }
     public static int attachmentMask(ItemStack boat){return mask(boat);}
@@ -95,7 +96,7 @@ public final class BoatPaintSessions {
         }
         BoatPaint.setName(proposed,name==null?"":name);
         if(nameColor>=0 && nameColor<16) BoatPaint.setNameColor(proposed,nameColor);
-        if(attachments<0 || attachments>15)return false;
+        if(attachments<0 || attachments>31)return false;
         if((attachments&(POLE|CANISTER))!=0 && (attachments&ENGINE)==0){
             tell(player,"Engine required for pole light or reserve fuel canister.");
             return false;
