@@ -36,10 +36,7 @@ public final class BoatRadioMenu extends AbstractContainerMenu {
             int index=i;
             addSlot(new Slot(discs,i,24+(i%3)*22,26+(i/3)*23){
                 @Override public boolean mayPlace(ItemStack item){
-                    return item.getItem() instanceof RecordItem ||
-                        item.is(net.minecraft.tags.ItemTags.MUSIC_DISCS) ||
-                        net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(item.getItem())
-                            .getNamespace().equals("etched");
+                    return EtchedSupport.isPlayable(item);
                 }
                 @Override public int getMaxStackSize(){return 1;}
                 @Override public void setChanged(){
@@ -72,8 +69,7 @@ public final class BoatRadioMenu extends AbstractContainerMenu {
         if(index<9){
             if(!moveItemStackTo(item,9,45,true))return ItemStack.EMPTY;
         }else{
-            if(!(item.getItem() instanceof RecordItem) &&
-                !item.is(net.minecraft.tags.ItemTags.MUSIC_DISCS))return ItemStack.EMPTY;
+            if(!EtchedSupport.isPlayable(item))return ItemStack.EMPTY;
             if(!moveItemStackTo(item,0,9,false))return ItemStack.EMPTY;
         }
         if(item.isEmpty())slot.set(ItemStack.EMPTY);else slot.setChanged();
