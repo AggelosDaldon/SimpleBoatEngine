@@ -24,7 +24,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Synced engine controls, precise hatch interaction and click-to-board handling. */
 public final class MotorPackets {
-    private static final String VERSION = "3";
+    private static final String VERSION = "4";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(SimpleBoatEngine.ID, "motor"),
         () -> VERSION, VERSION::equals, VERSION::equals);
@@ -71,6 +71,12 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(RadioControl.class, 13, NetworkDirection.PLAY_TO_SERVER)
             .encoder(RadioControl::write).decoder(RadioControl::read)
             .consumerMainThread(RadioControl::receive).add();
+        CHANNEL.messageBuilder(BindNavigationTool.class, 14, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(BindNavigationTool::write).decoder(BindNavigationTool::read)
+            .consumerMainThread(BindNavigationTool::receive).add();
+        CHANNEL.messageBuilder(SetMainBoat.class, 15, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(SetMainBoat::write).decoder(SetMainBoat::read)
+            .consumerMainThread(SetMainBoat::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {

@@ -81,6 +81,13 @@ jobs:
             assets/daldonsboatadditions/textures/entity/mounted_boat_radio.png; do
             unzip -l "$JAR" "$ASSET" | grep -F "$ASSET"
           done
+      - name: Verify navigation packet registration
+        run: |
+          JAR=$(find build/libs -maxdepth 1 -name 'daldons-boat-additions-forge-1.20.1-*.jar' -print -quit)
+          javap -classpath "$JAR" -c gr.daldon.simpleboatengine.common.MotorPackets |
+            sed -n '/public static void initialize()/,/public static void sendStatus(/p' > packet-registration.txt
+          grep -F 'class gr/daldon/simpleboatengine/common/MotorPackets$BindNavigationTool' packet-registration.txt
+          grep -F 'class gr/daldon/simpleboatengine/common/MotorPackets$SetMainBoat' packet-registration.txt
       - name: Upload standalone JAR
         uses: actions/upload-artifact@v4
         with:

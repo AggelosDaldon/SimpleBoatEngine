@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-/** Hatch (27), front main cargo (54), back main cargo (54). */
+/** Hatch (27), two main cargo pages (54 each), and nine radio slots. */
 public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
     public static final int RADIO_PAGE = 3;
     private static final int CARGO_SLOTS = ParkedBoatInventory.CARGO_SLOTS;
@@ -46,7 +46,10 @@ public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
         for (int i=0;i<ParkedBoatInventory.RADIO_SLOTS;i++) {
             addSlot(new Slot(source,CARGO_SLOTS+i,8+i*18,19) {
                 @Override public boolean isActive() { return page()==RADIO_PAGE && hasRadio(); }
-                @Override public boolean mayPlace(ItemStack stack) { return false; }
+                @Override public boolean mayPlace(ItemStack stack) {
+                    return isActive() && EtchedSupport.isPlayable(stack);
+                }
+                @Override public int getMaxStackSize() { return 1; }
                 @Override public boolean mayPickup(Player player) {
                     return isActive() && stillValid(player);
                 }
@@ -81,9 +84,16 @@ public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
         if(index<BOAT_SLOTS){
             if(!moveItemStackTo(stack,BOAT_SLOTS,slots.size(),true))return ItemStack.EMPTY;
         } else {
-            if (page()==RADIO_PAGE) return ItemStack.EMPTY;
-            int start=page.get()==0?0:27+(page.get()-1)*54;
-            int end=page.get()==0?27:start+54;
+            int start;
+            int end;
+            if (page()==RADIO_PAGE) {
+                if (!hasRadio() || !EtchedSupport.isPlayable(stack)) return ItemStack.EMPTY;
+                start = CARGO_SLOTS;
+                end = BOAT_SLOTS;
+            } else {
+                start = page()==0 ? 0 : 27+(page()-1)*54;
+                end = page()==0 ? 27 : start+54;
+            }
             if(!moveItemStackTo(stack,start,end,false))return ItemStack.EMPTY;
         }
         if(stack.isEmpty())slot.set(ItemStack.EMPTY);

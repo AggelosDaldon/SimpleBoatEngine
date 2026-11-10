@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = SimpleBoatEngine.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class BoatGuideItem extends WrittenBookItem {
-    private static final int GUIDE_REVISION = 2;
+    private static final int GUIDE_REVISION = 3;
     private static final String AUTHOR = "AggelosDaldon";
     private static final String GIVEN_KEY = "DaldonsBoatGuideGiven";
     private static final String[][] CHAPTERS = {
@@ -38,7 +38,7 @@ public final class BoatGuideItem extends WrittenBookItem {
         {"Pole Light", "Fit this light to illuminate the boat's surroundings. It turns on automatically at dusk and off at dawn. The light works even when the engine is removed."},
         {"Ice Breaker", "Fit it to a fishing boat to clear ice ahead of the bow. A Silk Touch Ice Breaker collects the ice into the boat's storage."},
         {"Boat Radio", "Right-click the fitted radio to open it. Insert up to nine discs, select a track and press Play. Use Stop to end playback or Next to advance."},
-        {"Radio inventory", "Use Boat Inventory > Radio Inventory at the Marine Workshop to remove discs from a parked boat. If you remove the radio itself, its discs stay inside the item."},
+        {"Radio inventory", "Use Boat Inventory > Radio Inventory at the Marine Workshop to add or remove discs on a parked boat. If you remove the radio itself, its discs stay inside the item."},
         {"Recovery Hook", "Use the hook on an unoccupied fishing boat to recover it with its cargo and gear. The hook can also move a parked boat between parking stands."},
         {"Boat Tracker", "Right-click a fishing boat with a Compass to turn it into a Boat Tracker. The needle points to the boat's last known position in your dimension."},
         {"Boat Logbook", "Right-click a fishing boat with a Book to create a logbook. Use the logbook on more boats to add pages. Open it in the air to see previews and stats."},
