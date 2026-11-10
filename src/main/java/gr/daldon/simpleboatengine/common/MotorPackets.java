@@ -184,7 +184,7 @@ public final class MotorPackets {
                 if (player == null || !(player.containerMenu instanceof BoatCargoMenu menu)
                     || menu.boatId() != msg.boatId()
                     || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
-                    || player.distanceToSqr(boat) > 49 || !boat.isAlive()) return;
+                    || !menu.stillValid(player)) return;
                 menu.setStartRow(msg.firstRow());
             });
             context.get().setPacketHandled(true);

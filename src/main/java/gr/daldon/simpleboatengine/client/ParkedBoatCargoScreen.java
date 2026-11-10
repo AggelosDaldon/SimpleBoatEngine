@@ -25,9 +25,15 @@ public final class ParkedBoatCargoScreen extends BoatStorageScreen<ParkedBoatCar
     }
 
     private void select(int page, int row) {
-        MotorPackets.CHANNEL.sendToServer(new MotorPackets.SelectParkedCargo(menu.standPos(), page, row));
+        requestView(viewKey(page, row), () ->
+            MotorPackets.CHANNEL.sendToServer(new MotorPackets.SelectParkedCargo(menu.standPos(), page, row)));
     }
 
+    private static int viewKey(int page, int row) {
+        return page * (BoatCargoMenu.MAX_START_ROW + 1) + (page == ParkedBoatCargoMenu.MAIN_PAGE ? row : 0);
+    }
+
+    @Override protected int view() { return viewKey(menu.page(), firstRow()); }
     @Override protected Component storageTitle() { return Component.literal(TABS[menu.page()]); }
     @Override protected int visibleStorageSlots() {
         return switch (menu.page()) {

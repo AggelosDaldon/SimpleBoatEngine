@@ -15,6 +15,7 @@ public final class BoatCargoScreen extends BoatStorageScreen<BoatCargoMenu> {
     @Override protected boolean canScrollStorage() { return !menu.isHatch(); }
     @Override protected int firstRow() { return menu.startRow(); }
     @Override protected void requestRow(int row) {
-        MotorPackets.CHANNEL.sendToServer(new MotorPackets.ScrollCargo(menu.boatId(), row));
+        requestView(row, () ->
+            MotorPackets.CHANNEL.sendToServer(new MotorPackets.ScrollCargo(menu.boatId(), row)));
     }
 }

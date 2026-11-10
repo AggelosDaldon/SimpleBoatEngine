@@ -7,6 +7,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 
 /** The shared cargo background, grid and scrollbar for live and parked boats. */
 abstract class BoatStorageScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
@@ -16,6 +18,8 @@ abstract class BoatStorageScreen<T extends AbstractContainerMenu> extends Abstra
     private static final int THUMB_HEIGHT = 11;
     private Button up;
     private Button down;
+    private int pendingView;
+    private int pendingTicks;
 
     BoatStorageScreen(T menu, Inventory inventory, Component title, int width) {
         super(menu, inventory, title);
@@ -32,6 +36,30 @@ abstract class BoatStorageScreen<T extends AbstractContainerMenu> extends Abstra
     protected abstract boolean canScrollStorage();
     protected abstract int firstRow();
     protected abstract void requestRow(int row);
+
+    protected int view() { return firstRow(); }
+
+    protected final void requestView(int target, Runnable send) {
+        if (target == view() || changingView()) return;
+        pendingView = target;
+        pendingTicks = 40;
+        send.run();
+    }
+
+    private boolean changingView() {
+        return pendingTicks > 0 && view() != pendingView;
+    }
+
+    @Override protected void containerTick() {
+        super.containerTick();
+        if (!changingView()) pendingTicks = 0;
+        else pendingTicks--;
+    }
+
+    @Override protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType clickType) {
+        // Wait for the server's new slot contents before acting on a different row or tab.
+        if (!changingView()) super.slotClicked(slot, slotId, mouseButton, clickType);
+    }
 
     @Override protected void init() {
         super.init();
