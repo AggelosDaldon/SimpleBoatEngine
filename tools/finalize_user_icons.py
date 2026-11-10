@@ -52,5 +52,5 @@ for name in ("boat_builder","boat_customizer"):
     item_model.write_text(json.dumps({
         "parent":"minecraft:item/generated",
         "textures":{"layer0":"simpleboatengine:item/"+name+"_icon"}
-    },indent=2)+"\\n")
+    },indent=2)+"\n")
 print("Installed both supplied 256x256 workbench inventory icons.")
