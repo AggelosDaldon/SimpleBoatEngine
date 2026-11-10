@@ -28,7 +28,7 @@ public final class EngineItems {
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     // Historical registry id retained so existing worlds and inventories still load.
     public static final RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket",
-        () -> new EngineItem(new Item.Properties().stacksTo(1)));
+        () -> new SteelFuelCanisterItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> FUEL_CANISTER = ITEMS.register("fuel_canister",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ICE_BREAKER = ITEMS.register("ice_breaker",
