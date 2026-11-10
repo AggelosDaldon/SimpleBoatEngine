@@ -10,6 +10,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +26,9 @@ public final class BoatLogbookScreen extends Screen {
     private Button back;
     private Button next;
     private Button main;
+    private float previewYaw = 32f;
+    private float previewPitch = -38f;
+    private boolean rotatingPreview;
 
     private BoatLogbookScreen(InteractionHand hand) {
         super(Component.translatable("item.daldonsboatadditions.boat_logbook"));
@@ -71,6 +75,32 @@ public final class BoatLogbookScreen extends Screen {
         }
     }
 
+    @Override public boolean mouseClicked(double x, double y, int button) {
+        if (button == 0 && x >= left + 16 && x < left + BOOK_WIDTH - 16 && y >= top + 51 && y < top + 132
+                && !ItemStack.of(pages().getCompound(page).getCompound("Preview")).isEmpty()) {
+            rotatingPreview = true;
+            return true;
+        }
+        return super.mouseClicked(x, y, button);
+    }
+
+    @Override public boolean mouseDragged(double x, double y, int button, double dx, double dy) {
+        if (button == 0 && rotatingPreview) {
+            previewYaw = Mth.wrapDegrees(previewYaw + (float) dx * .8f);
+            previewPitch = Mth.clamp(previewPitch - (float) dy * .65f, -80f, 45f);
+            return true;
+        }
+        return super.mouseDragged(x, y, button, dx, dy);
+    }
+
+    @Override public boolean mouseReleased(double x, double y, int button) {
+        if (button == 0 && rotatingPreview) {
+            rotatingPreview = false;
+            return true;
+        }
+        return super.mouseReleased(x, y, button);
+    }
+
     @Override public boolean isPauseScreen() { return false; }
 
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float partial) {
@@ -103,7 +133,11 @@ public final class BoatLogbookScreen extends Screen {
             Component name = boat.isEmpty() ? Component.translatable("screen.daldonsboatadditions.unknown_boat")
                 : boat.getHoverName();
             graphics.drawString(font, name, center - font.width(name) / 2, top + 40, INK, false);
-            if (!boat.isEmpty()) renderBoat(graphics, boat, center, top + 100);
+            if (!boat.isEmpty()) {
+                renderBoat(graphics, boat, center, top + 97);
+                Component hint = Component.translatable("screen.daldonsboatadditions.logbook_rotate");
+                graphics.drawString(font, hint, center - font.width(hint) / 2, top + 132, 0xFF695D4C, false);
+            }
             graphics.drawString(font, Component.translatable("screen.daldonsboatadditions.distance",
                 Long.toString(record.getLong("Distance"))), left + 28, top + 143, INK, false);
             graphics.drawString(font, Component.translatable("screen.daldonsboatadditions.fish",
@@ -116,13 +150,15 @@ public final class BoatLogbookScreen extends Screen {
 
     private void renderBoat(GuiGraphics graphics, ItemStack boat, int x, int y) {
         graphics.flush();
+        graphics.enableScissor(left + 16, top + 51, left + BOOK_WIDTH - 16, top + 132);
         graphics.pose().pushPose();
         graphics.pose().translate(x, y + 4, 250);
-        graphics.pose().mulPose(Axis.XP.rotationDegrees(-38f));
-        graphics.pose().mulPose(Axis.YP.rotationDegrees(32f));
+        graphics.pose().mulPose(Axis.XP.rotationDegrees(previewPitch));
+        graphics.pose().mulPose(Axis.YP.rotationDegrees(previewYaw));
         graphics.pose().scale(23f, -23f, 23f);
         BoatItemVisuals.drawBoat(boat, graphics.pose(), graphics.bufferSource(), LightTexture.FULL_BRIGHT);
         graphics.flush();
         graphics.pose().popPose();
+        graphics.disableScissor();
     }
 }

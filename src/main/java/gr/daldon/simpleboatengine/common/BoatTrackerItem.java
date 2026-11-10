@@ -30,7 +30,15 @@ public final class BoatTrackerItem extends Item {
     private static void refresh(ItemStack stack, BoatNavigationData data) {
         CompoundTag tag = stack.getTag();
         if (tag == null || !tag.hasUUID("Boat")) return;
-        GlobalPos position = data.target(tag.getUUID("Boat"));
+        UUID id = tag.getUUID("Boat");
+        Component name = data.targetName(id);
+        if (name != null) {
+            String serialized = Component.Serializer.toJson(name);
+            if (!serialized.equals(tag.getString("TargetName"))) tag.putString("TargetName", serialized);
+        } else {
+            tag.remove("TargetName");
+        }
+        GlobalPos position = data.target(id);
         if (position == null) return;
         String dimension = position.dimension().location().toString();
         long packedPos = position.pos().asLong();
@@ -57,6 +65,13 @@ public final class BoatTrackerItem extends Item {
         if (position == null) {
             lines.add(Component.translatable("tooltip.daldonsboatadditions.tracker_unbound").withStyle(ChatFormatting.GRAY));
         } else {
+            try {
+                Component name = Component.Serializer.fromJson(stack.getTag().getString("TargetName"));
+                if (name != null) lines.add(Component.translatable("tooltip.daldonsboatadditions.tracker_boat", name)
+                    .withStyle(ChatFormatting.AQUA));
+            } catch (com.google.gson.JsonParseException ignored) {
+                // Older or externally edited item data can lack a readable name.
+            }
             BlockPos pos = position.pos();
             lines.add(Component.translatable("tooltip.daldonsboatadditions.tracker_position",
                 pos.getX(), pos.getY(), pos.getZ(), position.dimension().location().toString()).withStyle(ChatFormatting.GRAY));

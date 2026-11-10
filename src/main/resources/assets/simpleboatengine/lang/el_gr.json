@@ -52,5 +52,7 @@
   "screen.simpleboatengine.fish": "Ψάρια που πιάστηκαν: %s",
   "screen.simpleboatengine.set_main": "Ορισμός ως κύρια",
   "screen.simpleboatengine.main_boat": "Κύρια βάρκα",
-  "message.simpleboatengine.main_boat": "Ορίστηκε η κύρια βάρκα."
+  "message.simpleboatengine.main_boat": "Ορίστηκε η κύρια βάρκα.",
+  "tooltip.simpleboatengine.tracker_boat": "Βάρκα: %s",
+  "screen.simpleboatengine.logbook_rotate": "Σύρε για περιστροφή"
 }

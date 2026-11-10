@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.Registries;
@@ -158,6 +159,11 @@ public final class BoatNavigationData extends SavedData {
     GlobalPos target(UUID id) {
         Entry entry = entries.get(id);
         return entry == null ? null : entry.location;
+    }
+
+    Component targetName(UUID id) {
+        Entry entry = entries.get(id);
+        return entry == null || entry.preview.isEmpty() ? null : entry.preview.getHoverName();
     }
 
     CompoundTag logPage(UUID id) {

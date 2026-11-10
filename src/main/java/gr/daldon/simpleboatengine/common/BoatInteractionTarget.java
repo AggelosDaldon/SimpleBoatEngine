@@ -22,18 +22,18 @@ public final class BoatInteractionTarget {
         return shape.contains(start) || shape.clip(start, end).isPresent();
     }
 
-    /** Exact five-part white hatch at the bow, not the surrounding blue deck. */
+    /** Bow hatch, including the lip and handle, with a small margin around the model. */
     public static boolean aimedAtHatch(BlueFishingBoat boat, Vec3 eye, Vec3 view, double reach) {
         return target(boat, eye, view, reach,
-            new AABB(-0.38, BoatMounts.HULL_Y + 13.2 / 16.0,
-                -1.98, 0.38, BoatMounts.HULL_Y + 15.0 / 16.0, -1.34));
+            new AABB(-.39, BoatMounts.HULL_Y + .79, -2.01,
+                .39, BoatMounts.HULL_Y + .95, -1.32));
     }
 
     /** The custom 'storage 2' access area immediately behind the raised bow deck. */
     public static boolean aimedAtStorage2(BlueFishingBoat boat, Vec3 eye, Vec3 view, double reach) {
         return target(boat, eye, view, reach,
-            new AABB(-6.26 / 16.0, BoatMounts.HULL_Y + 6.4 / 16.0,
-                -20.0 / 16.0, 6.06 / 16.0, BoatMounts.HULL_Y + 11.7 / 16.0, -7.4 / 16.0));
+            new AABB(-.46, BoatMounts.HULL_Y + .36, -1.31,
+                .45, BoatMounts.HULL_Y + .76, -.40));
     }
 
     public static boolean aimedAtRadio(BlueFishingBoat boat,Vec3 eye,Vec3 view,double reach){

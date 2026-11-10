@@ -140,11 +140,12 @@ public final class MotorPackets {
             ctx.get().enqueueWork(() -> {
                 if (player == null || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
                     || player.distanceToSqr(boat) > 40.0 || !boat.isAlive()
-                    || !(msg.hatch()
-                        ? BoatInteractionTarget.aimedAtHatch(boat, player.getEyePosition(),
-                            player.getViewVector(1f),5.5)
-                        : BoatInteractionTarget.aimedAtStorage2(boat, player.getEyePosition(),
-                            player.getViewVector(1f),5.5))) return;
+                    || !player.getMainHandItem().isEmpty()) return;
+                // A passenger already has access to both compartments. Their client selects the part,
+                // since mounted look/boat transforms can reach the server in different ticks.
+                if (player.getVehicle() != boat && !(msg.hatch()
+                    ? BoatInteractionTarget.aimedAtHatch(boat, player.getEyePosition(), player.getViewVector(1f), 5.5)
+                    : BoatInteractionTarget.aimedAtStorage2(boat, player.getEyePosition(), player.getViewVector(1f), 5.5))) return;
                 if(msg.hatch())boat.openHatch(player);
                 else boat.openCargo(player);
             });

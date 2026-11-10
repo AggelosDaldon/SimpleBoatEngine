@@ -56,5 +56,7 @@
   "screen.simpleboatengine.fish": "Fish caught: %s",
   "screen.simpleboatengine.set_main": "Set as Main Boat",
   "screen.simpleboatengine.main_boat": "Main Boat",
-  "message.simpleboatengine.main_boat": "Main boat selected."
+  "message.simpleboatengine.main_boat": "Main boat selected.",
+  "tooltip.simpleboatengine.tracker_boat": "Tracking: %s",
+  "screen.simpleboatengine.logbook_rotate": "Drag to rotate"
 }
