@@ -54,6 +54,15 @@ public final class SkiffBoatItem extends EngineItem {
     }
 
     @Override
+    public void inventoryTick(ItemStack stack, Level level, net.minecraft.world.entity.Entity carrier,
+                              int slot, boolean selected) {
+        if (level instanceof net.minecraft.server.level.ServerLevel server && level.getGameTime() % 10 == 0
+                && BoatNavigationData.packedId(stack) != null) {
+            BoatNavigationData.get(server).observePacked(stack, server, carrier.blockPosition(), false);
+        }
+    }
+
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack held = player.getItemInHand(hand);
         HitResult hit = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);

@@ -54,6 +54,9 @@ public final class BoatStandBlock extends BaseEntityBlock {
             !(level.getBlockEntity(pos) instanceof BoatStandBlockEntity station))
             return InteractionResult.PASS;
         ItemStack held = server.getItemInHand(hand);
+        if (level instanceof net.minecraft.server.level.ServerLevel serverLevel
+                && BoatNavigationEvents.bindParked(player, hand, station, serverLevel))
+            return InteractionResult.CONSUME;
         if(held.is(EngineItems.BOAT_RECOVERY_KIT.get())) {
             if(station.hasPreview())return InteractionResult.CONSUME;
             // Recover directly into the player's inventory; the hook stays reusable.

@@ -48,6 +48,26 @@ public final class MotorControls {
         Minecraft game = Minecraft.getInstance();
         if (game.player == null || game.level == null || game.screen != null) return;
         var held = game.player.getMainHandItem();
+        if (gr.daldon.simpleboatengine.common.BoatNavigationEvents.isNavigationTool(game.player.getItemInHand(event.getHand()))) {
+            BlueFishingBoat target = null;
+            double closest = Double.POSITIVE_INFINITY;
+            for (Entity entity : game.level.entitiesForRendering()) {
+                if (entity instanceof BlueFishingBoat boat && boat.distanceToSqr(game.player) < closest
+                        && BoatInteractionTarget.aimedAtNavigationHull(boat, game.player)) {
+                    closest = boat.distanceToSqr(game.player);
+                    target = boat;
+                }
+            }
+            if (target != null) {
+                if (!useHeld) {
+                    useHeld = true;
+                    MotorPackets.CHANNEL.sendToServer(new MotorPackets.BindNavigationTool(target.getId(), event.getHand()));
+                    event.setSwingHand(true);
+                }
+                event.setCanceled(true);
+                return;
+            }
+        }
 
         Vec3 eye = game.player.getEyePosition();
         Vec3 look = game.player.getViewVector(1f);

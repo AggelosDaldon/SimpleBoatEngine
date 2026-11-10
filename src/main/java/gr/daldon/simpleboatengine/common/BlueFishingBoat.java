@@ -37,6 +37,8 @@ public final class BlueFishingBoat extends SkiffBoat {
     private final SimpleContainer radioDiscs = new SimpleContainer(9);
     private int radioIndex=-1, radioTicks=0;
     private boolean cargoDropped;
+    private net.minecraft.world.phys.Vec3 lastNavigationPosition;
+    private Level lastNavigationLevel;
     private static final String PACKED_BOAT = "PackedFishingBoat";
 
     public BlueFishingBoat(EntityType<? extends Boat> type, Level level) {
@@ -53,7 +55,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         return paintedItem();
     }
 
-    private ItemStack paintedItem() {
+    ItemStack paintedHull() {
         ItemStack stack = new ItemStack(getDropItem());
         BoatPaint.setHull(stack, getHullPaint());
         BoatPaint.setFloor(stack, getFloorPaint());
@@ -63,6 +65,11 @@ public final class BlueFishingBoat extends SkiffBoat {
         BoatPaint.setNameColor(stack, getNameColor());
         BoatPaint.setNameGlow(stack, nameGlows());
         BoatPaint.setWoodStyle(stack, getHullStyle());
+        return stack;
+    }
+
+    private ItemStack paintedItem() {
+        ItemStack stack = paintedHull();
         // Store the entire entity, including both chests, engine, fuel, light,
         // dyes and custom boat name. Never split cargo into separate drops.
         CompoundTag snapshot = new CompoundTag();
@@ -249,7 +256,18 @@ public final class BlueFishingBoat extends SkiffBoat {
     }
     @Override public void tick(){
         super.tick();
-        if(!level().isClientSide && radioIndex>=0 && --radioTicks<=0)nextRadio();
+        if (level() instanceof net.minecraft.server.level.ServerLevel level) {
+            if (radioIndex >= 0 && --radioTicks <= 0) nextRadio();
+            var position = position();
+            double distance = 0;
+            if (lastNavigationLevel == level && lastNavigationPosition != null) {
+                distance = Math.hypot(position.x - lastNavigationPosition.x, position.z - lastNavigationPosition.z);
+                if (distance > 16 || distance < .001) distance = 0;
+            }
+            lastNavigationPosition = position;
+            lastNavigationLevel = level;
+            BoatNavigationData.get(level).observeBoat(this, level, distance, tickCount % 20 == 0);
+        }
     }
     /** Dedicated 27-slot chest below the white bow hatch. */
     public void openHatch(ServerPlayer player) {

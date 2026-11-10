@@ -3,9 +3,11 @@ package gr.daldon.simpleboatengine.common;
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.client.ClientMotorState;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.network.chat.Component;
+import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,7 +24,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Synced engine controls, precise hatch interaction and click-to-board handling. */
 public final class MotorPackets {
-    private static final String VERSION = "2";
+    private static final String VERSION = "3";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(SimpleBoatEngine.ID, "motor"),
         () -> VERSION, VERSION::equals, VERSION::equals);
@@ -406,6 +408,38 @@ public final class MotorPackets {
             ctx.get().setPacketHandled(true);
         }
     }
+    public record SetMainBoat(UUID boat, InteractionHand hand) {
+        static void write(SetMainBoat message, FriendlyByteBuf out) {
+            out.writeUUID(message.boat);
+            out.writeEnum(message.hand);
+        }
+        static SetMainBoat read(FriendlyByteBuf in) {
+            return new SetMainBoat(in.readUUID(), in.readEnum(InteractionHand.class));
+        }
+        static void receive(SetMainBoat message, Supplier<NetworkEvent.Context> context) {
+            ServerPlayer player = context.get().getSender();
+            if (player != null) BoatLogbookItem.selectMain(player, message.hand, message.boat);
+            context.get().setPacketHandled(true);
+        }
+    }
+
+    public record BindNavigationTool(int boatId, InteractionHand hand) {
+        static void write(BindNavigationTool message, FriendlyByteBuf out) {
+            out.writeVarInt(message.boatId);
+            out.writeEnum(message.hand);
+        }
+        static BindNavigationTool read(FriendlyByteBuf in) {
+            return new BindNavigationTool(in.readVarInt(), in.readEnum(InteractionHand.class));
+        }
+        static void receive(BindNavigationTool message, Supplier<NetworkEvent.Context> context) {
+            ServerPlayer player = context.get().getSender();
+            if (player != null && player.level().getEntity(message.boatId) instanceof BlueFishingBoat boat
+                    && BoatInteractionTarget.aimedAtNavigationHull(boat, player))
+                BoatNavigationEvents.bindAfloat(player, message.hand, boat);
+            context.get().setPacketHandled(true);
+        }
+    }
+
     public record OpenRadio(int boatId){
         static void write(OpenRadio message,FriendlyByteBuf buffer){
             buffer.writeVarInt(message.boatId);

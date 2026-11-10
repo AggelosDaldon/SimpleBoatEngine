@@ -28,6 +28,7 @@ jobs:
           python3 tools/generate_boat_radio_mount.py
           python3 tools/generate_model_inventory_icons.py
           python3 tools/finalize_user_icons.py
+          python3 tools/generate_boat_navigation_icons.py
           python3 tools/migrate_namespace.py
       - name: Verify shipwright and marine assets
         run: |

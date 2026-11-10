@@ -41,6 +41,13 @@ public final class BoatInteractionTarget {
             new AABB(-.65, BoatMounts.HULL_Y + .79, -1.14,
                      -.23, BoatMounts.HULL_Y + 1.24, -.74));
     }
+    public static boolean aimedAtNavigationHull(BlueFishingBoat boat, net.minecraft.world.entity.player.Player player) {
+        if (!boat.isAlive() || player.distanceToSqr(boat) > 56.25) return false;
+        Vec3 eye = player.getEyePosition();
+        double reach = Math.min(5, eye.distanceTo(player.pick(5, 1f, false).getLocation()));
+        return aimedAtHull(boat, eye, player.getViewVector(1f), reach);
+    }
+
     /** Extended clickable shape; vanilla boat pick box stops well before the bow. */
     public static boolean aimedAtHull(BlueFishingBoat boat, Vec3 eye, Vec3 view, double reach) {
         return target(boat, eye, view, reach,

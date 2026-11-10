@@ -41,5 +41,20 @@
   "item.simpleboatengine.boat_radio": "Boat Radio",
   "item.simpleboatengine.boat_guide": "Boat Guide",
   "tooltip.simpleboatengine.attachments": "Attachments",
-  "tooltip.simpleboatengine.radio_empty": "No records inside"
+  "tooltip.simpleboatengine.radio_empty": "No records inside",
+  "item.simpleboatengine.boat_tracker": "Boat Tracker",
+  "item.simpleboatengine.boat_logbook": "Boat Logbook",
+  "tooltip.simpleboatengine.tracker_unbound": "Right-click a fishing boat to link it.",
+  "tooltip.simpleboatengine.tracker_position": "Last known: %s, %s, %s (%s)",
+  "message.simpleboatengine.tracker_linked": "Tracker linked to this boat.",
+  "message.simpleboatengine.logbook_added": "Boat added to the logbook.",
+  "message.simpleboatengine.logbook_duplicate": "This boat already has a page.",
+  "message.simpleboatengine.logbook_full": "This logbook is full.",
+  "screen.simpleboatengine.logbook_empty": "Use this logbook on a fishing boat to add its page.",
+  "screen.simpleboatengine.unknown_boat": "Unknown boat",
+  "screen.simpleboatengine.distance": "Blocks travelled: %s",
+  "screen.simpleboatengine.fish": "Fish caught: %s",
+  "screen.simpleboatengine.set_main": "Set as Main Boat",
+  "screen.simpleboatengine.main_boat": "Main Boat",
+  "message.simpleboatengine.main_boat": "Main boat selected."
 }

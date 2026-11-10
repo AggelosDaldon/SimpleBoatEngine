@@ -23,6 +23,12 @@ public final class BoatRecoveryItem extends Item {
         if(boat.isEmpty())kit.getOrCreateTag().remove(STORED);
         else kit.getOrCreateTag().put(STORED,boat.save(new CompoundTag()));
     }
+    @Override public void inventoryTick(ItemStack stack, net.minecraft.world.level.Level level,
+                                       net.minecraft.world.entity.Entity carrier, int slot, boolean selected) {
+        if (level instanceof net.minecraft.server.level.ServerLevel server && loaded(stack) && level.getGameTime() % 10 == 0)
+            BoatNavigationData.get(server).observePacked(boat(stack), server, carrier.blockPosition(), false);
+    }
+
     @Override public InteractionResult useOn(UseOnContext context) {
         var level=context.getLevel();
         var pos=context.getClickedPos();

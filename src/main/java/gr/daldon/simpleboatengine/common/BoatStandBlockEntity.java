@@ -33,6 +33,13 @@ public final class BoatStandBlockEntity extends BoatCustomizerBlockEntity {
         previewOwner=null;
         setChanged();
     }
+    @Override public void setChanged() {
+        super.setChanged();
+        if (level instanceof net.minecraft.server.level.ServerLevel server && !hasPreview()
+                && BoatNavigationData.packedId(getItem(0)) != null)
+            BoatNavigationData.get(server).observePacked(getItem(0), server, getBlockPos(), false);
+    }
+
     @Override protected void saveAdditional(net.minecraft.nbt.CompoundTag tag) {
         super.saveAdditional(tag);
         if(previewOwner!=null) {

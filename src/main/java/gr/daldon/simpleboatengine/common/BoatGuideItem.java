@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = SimpleBoatEngine.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class BoatGuideItem extends WrittenBookItem {
+    private static final int GUIDE_REVISION = 2;
     private static final String AUTHOR = "AggelosDaldon";
     private static final String GIVEN_KEY = "DaldonsBoatGuideGiven";
     private static final String[][] CHAPTERS = {
@@ -39,6 +40,10 @@ public final class BoatGuideItem extends WrittenBookItem {
         {"Boat Radio", "Right-click the fitted radio to open it. Insert up to nine discs, select a track and press Play. Use Stop to end playback or Next to advance."},
         {"Radio inventory", "Use Boat Inventory > Radio Inventory at the Marine Workshop to remove discs from a parked boat. If you remove the radio itself, its discs stay inside the item."},
         {"Recovery Hook", "Use the hook on an unoccupied fishing boat to recover it with its cargo and gear. The hook can also move a parked boat between parking stands."},
+        {"Boat Tracker", "Right-click a fishing boat with a Compass to turn it into a Boat Tracker. The needle points to the boat's last known position in your dimension."},
+        {"Boat Logbook", "Right-click a fishing boat with a Book to create a logbook. Use the logbook on more boats to add pages. Open it in the air to see previews and stats."},
+        {"Fish caught", "The logbook counts fish reeled in within five blocks of the nearest fishing boat, even from shore. Set a Main Boat on its page to prioritize it within range."},
+        {"Modded fishing", "Vanilla fish and tagged fish from compatible fishing mods, including Aquaculture 2, count when caught. Junk and treasure do not count."},
         {"Lift Buoys", "Orange, yellow and white buoys work the same way. Place one on a water source above a compatible fishing trap. Right-click the buoy to raise or lower the trap."},
     };
 
@@ -65,11 +70,12 @@ public final class BoatGuideItem extends WrittenBookItem {
         tag.putString("author", AUTHOR);
         tag.put("pages", pages);
         tag.putBoolean("resolved", true);
+        tag.putInt("GuideRevision", GUIDE_REVISION);
     }
 
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack book = player.getItemInHand(hand);
-        if (!book.hasTag() || !book.getTag().contains("pages")) writePages(book);
+        if (!book.hasTag() || book.getTag().getInt("GuideRevision") < GUIDE_REVISION) writePages(book);
         book.getOrCreateTag().putString("author", AUTHOR);
         if (level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> BoatGuideScreen.open(book));
