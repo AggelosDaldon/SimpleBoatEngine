@@ -42,6 +42,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     private BoatCustomizerMenu(int id,Inventory inv,BoatCustomizerBlockEntity station,BlockPos pos) {
         super(EngineMenus.CUSTOMIZER.get(),id);
         table=station;blockPos=pos;editor=inv.player;
+        attachmentInputs.addListener(this::slotsChanged);
         stands=station==null?List.of():List.copyOf(station.nearbyStands());
         selected.set(0);
         addDataSlot(selected);
