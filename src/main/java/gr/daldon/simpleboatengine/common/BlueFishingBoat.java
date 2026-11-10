@@ -235,8 +235,9 @@ public final class BlueFishingBoat extends SkiffBoat {
         if(level() instanceof net.minecraft.server.level.ServerLevel server)
             for(ServerPlayer listener:server.players())
                 if(listener.distanceToSqr(this)<=64*64)
-                    listener.displayClientMessage(Component.literal(
-                        "Now playing: "+BoatRadioTrackNames.track(disc)),true);
+                    listener.displayClientMessage(Component.literal("Now playing: ").withStyle(net.minecraft.ChatFormatting.AQUA)
+                        .append(Component.literal(BoatRadioTrackNames.track(disc))
+                            .withStyle(net.minecraft.ChatFormatting.GOLD)),true);
         syncRadio();
     }
     public void nextRadio(){

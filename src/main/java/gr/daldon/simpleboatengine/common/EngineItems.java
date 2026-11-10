@@ -24,6 +24,8 @@ public final class EngineItems {
     public static final DeferredRegister<CreativeModeTab> TABS =
         DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SimpleBoatEngine.ID);
 
+    public static final RegistryObject<Item> BOAT_GUIDE = ITEMS.register("boat_guide",
+        () -> new BoatGuideItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENGINE = ITEMS.register("engine",
         () -> new EngineItem(new Item.Properties().stacksTo(1)));
     // Historical registry id retained so existing worlds and inventories still load.
@@ -99,6 +101,7 @@ public final class EngineItems {
             .title(Component.translatable("itemGroup.simpleboatengine"))
             .icon(() -> new ItemStack(ENGINE.get()))
             .displayItems((parameters, output) -> {
+                output.accept(BoatGuideItem.create());
                 output.accept(ENGINE.get());
                 output.accept(FUEL_BUCKET.get());
                 ItemStack filledCanister=new ItemStack(FUEL_BUCKET.get());

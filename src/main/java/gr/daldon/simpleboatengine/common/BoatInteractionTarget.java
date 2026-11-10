@@ -38,8 +38,8 @@ public final class BoatInteractionTarget {
 
     public static boolean aimedAtRadio(BlueFishingBoat boat,Vec3 eye,Vec3 view,double reach){
         return target(boat,eye,view,reach,
-            new AABB(.12,BoatMounts.HULL_Y+.50,-2.25,
-                     .99,BoatMounts.HULL_Y+1.50,-1.54));
+            new AABB(-.65, BoatMounts.HULL_Y + .79, -1.14,
+                     -.23, BoatMounts.HULL_Y + 1.24, -.74));
     }
     /** Extended clickable shape; vanilla boat pick box stops well before the bow. */
     public static boolean aimedAtHull(BlueFishingBoat boat, Vec3 eye, Vec3 view, double reach) {

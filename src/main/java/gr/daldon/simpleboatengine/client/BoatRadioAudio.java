@@ -3,14 +3,12 @@ package gr.daldon.simpleboatengine.client;
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.common.BlueFishingBoat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -57,16 +55,7 @@ public final class BoatRadioAudio {
             ACTIVE.put(boat.getUUID(),next);
             game.getSoundManager().play(next);
         }
-        Iterator<Map.Entry<UUID,RecordSound>> it=ACTIVE.entrySet().iterator();
-        while(it.hasNext()){
-            RecordSound value=it.next().getValue();
-            if(value.finished){it.remove();continue;}
-            if(game.level.random.nextInt(55)==0){
-                double x=value.boat.getX()+.68,z=value.boat.getZ()-1.65;
-                game.level.addParticle(ParticleTypes.NOTE,x,
-                    value.boat.getY()+1.10,z,0,0.02,0);
-            }
-        }
+        ACTIVE.values().removeIf(sound -> sound.finished);
     }
     private static final class RecordSound extends AbstractTickableSoundInstance {
         private final BlueFishingBoat boat;
@@ -76,14 +65,19 @@ public final class BoatRadioAudio {
             super(source,SoundSource.RECORDS,SoundInstance.createUnseededRandom());
             this.boat=boat;this.serial=serial;
             looping=false;delay=0;volume=1.0f;pitch=1f;
-            x=boat.getX();y=boat.getY()+1;z=boat.getZ();
+            updatePosition();
         }
         void finish(){finished=true;stop();}
         @Override public void tick(){
             if(finished || !boat.isAlive()){finish();return;}
-            x=boat.getX()+.55;
-            y=boat.getY()+.85;
-            z=boat.getZ()-1.60;
+            updatePosition();
+        }
+        private void updatePosition() {
+            double yaw = Math.toRadians(180f - boat.getYRot());
+            double localX = -.44, localZ = -.94;
+            x = boat.getX() + localX * Math.cos(yaw) + localZ * Math.sin(yaw);
+            y = boat.getY() + gr.daldon.simpleboatengine.common.BoatMounts.HULL_Y + 1.0;
+            z = boat.getZ() - localX * Math.sin(yaw) + localZ * Math.cos(yaw);
         }
     }
 }

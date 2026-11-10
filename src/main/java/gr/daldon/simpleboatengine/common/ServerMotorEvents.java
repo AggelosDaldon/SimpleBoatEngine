@@ -53,9 +53,7 @@ public final class ServerMotorEvents {
         if (held.is(EngineItems.POLE_LIGHT.get())) {
             if (!boat.level().isClientSide) {
                 CompoundTag data = MotorData.writable(boat);
-                if (!MotorData.installed(boat)) {
-                    notify(event.getEntity(), "Install a boat engine before fitting the pole light.");
-                } else if (data.getBoolean("PoleLightInstalled")) {
+                if (data.getBoolean("PoleLightInstalled")) {
                     notify(event.getEntity(), "This boat already has a pole light.");
                 } else {
                     data.putBoolean("PoleLightInstalled", true);
@@ -71,9 +69,7 @@ public final class ServerMotorEvents {
         if (held.is(EngineItems.FUEL_CANISTER.get())) {
             if (!boat.level().isClientSide) {
                 CompoundTag data = MotorData.writable(boat);
-                if (!data.getBoolean("Installed")) {
-                    notify(event.getEntity(), "Install an engine before fitting the red fuel canister.");
-                } else if (data.getBoolean("CanisterInstalled")) {
+                if (data.getBoolean("CanisterInstalled")) {
                     notify(event.getEntity(), "This boat already has a red fuel canister.");
                 } else {
                     data.putBoolean("CanisterInstalled",true);
@@ -93,8 +89,6 @@ public final class ServerMotorEvents {
             data.putBoolean("Running", false);
             data.putInt("Throttle", 0);
             data.putFloat("Fuel", 0f);
-            data.putBoolean("PoleLightInstalled", false);
-            data.putBoolean("CanisterInstalled", false);
             if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
             notify(event.getEntity(), "Motor installed! Point at the motor to refuel and switch it on.");
             click(boat);
@@ -185,9 +179,9 @@ public final class ServerMotorEvents {
         if (event.phase != TickEvent.Phase.END || !(event.level instanceof ServerLevel level)) return;
         for (Entity entity : level.getAllEntities()) {
             if (!(entity instanceof Boat boat))continue;
-            if(!MotorData.installed(boat) &&
-                !MotorData.writable(boat).getBoolean("RadioInstalled"))continue;
-            CompoundTag data = MotorData.writable(boat);
+            CompoundTag data = MotorData.read(boat);
+            if (!(data.getBoolean("Installed") || data.getBoolean("RadioInstalled")
+                || data.getBoolean("PoleLightInstalled") || data.getBoolean("CanisterInstalled"))) continue;
             Vec3 here = boat.position();
 
             if (!data.getBoolean("Running")) {
@@ -220,7 +214,7 @@ public final class ServerMotorEvents {
             }
 
             if (level.getGameTime() % 5L == 0L) {
-                if(data.getBoolean("Installed"))BoatPoleLights.update(level, boat, data);
+                BoatPoleLights.update(level, boat, data);
                 for (ServerPlayer player : level.players()) {
                     if (player.distanceToSqr(boat) <= 64.0 * 64.0) {
                         MotorPackets.sendStatus(boat, player);

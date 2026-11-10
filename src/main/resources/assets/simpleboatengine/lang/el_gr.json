@@ -34,5 +34,6 @@
   "block.simpleboatengine.boat_recovery": "Βάση Ανάκτησης Βάρκας",
   "block.simpleboatengine.boat_builder": "Εργαστήριο Κατασκευής Σκαφών",
   "item.simpleboatengine.boat_builder": "Boat Builder",
-  "item.simpleboatengine.boat_radio": "Boat Radio"
+  "item.simpleboatengine.boat_radio": "Boat Radio",
+  "item.simpleboatengine.boat_guide": "Οδηγός Βάρκας"
 }

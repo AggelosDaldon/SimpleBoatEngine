@@ -38,5 +38,6 @@
   "block.simpleboatengine.boat_recovery": "Boat Recovery Crate",
   "block.simpleboatengine.boat_builder": "Boat Builder",
   "item.simpleboatengine.boat_builder": "Boat Builder",
-  "item.simpleboatengine.boat_radio": "Boat Radio"
+  "item.simpleboatengine.boat_radio": "Boat Radio",
+  "item.simpleboatengine.boat_guide": "Boat Guide"
 }

@@ -52,6 +52,9 @@ public final class BoatBuilderRecipes {
         out.add(b(new ItemStack(EngineItems.BOAT_RADIO.get()),
             Items.NOTE_BLOCK,1,Items.REDSTONE,3,Items.IRON_INGOT,4,
             Items.OAK_PLANKS,6));
+        out.add(b(new ItemStack(EngineItems.BOAT_STAND.get()),
+            Items.SPRUCE_PLANKS,3,Items.STRIPPED_SPRUCE_LOG,4,Items.RED_DYE,1));
+        out.add(b(BoatGuideItem.create(), Items.BOOK,1,Items.BLUE_DYE,1));
         out.add(b(new ItemStack(EngineItems.LIFT_BUOY.get()),
             Items.ORANGE_DYE,2,Items.IRON_INGOT,3,Items.CHAIN,2));
         out.add(b(new ItemStack(EngineItems.YELLOW_LIFT_BUOY.get()),

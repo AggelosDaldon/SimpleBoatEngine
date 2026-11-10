@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.RecordItem;
 
 /** Nine-disc radio playlist, stored directly on the boat and in packed boat NBT. */
 public final class BoatRadioMenu extends AbstractContainerMenu {
@@ -34,7 +33,7 @@ public final class BoatRadioMenu extends AbstractContainerMenu {
         addDataSlot(playing);
         for(int i=0;i<9;i++){
             int index=i;
-            addSlot(new Slot(discs,i,24+(i%3)*22,26+(i/3)*23){
+            addSlot(new Slot(discs,i,recordX(i),recordY(i)){
                 @Override public boolean mayPlace(ItemStack item){
                     return EtchedSupport.isPlayable(item);
                 }
@@ -47,10 +46,15 @@ public final class BoatRadioMenu extends AbstractContainerMenu {
             });
         }
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)
-            addSlot(new Slot(inv,9+row*9+col,68+col*18,167+row*18));
+            addSlot(new Slot(inv,9+row*9+col,inventoryX(col),inventoryY(row)));
         for(int col=0;col<9;col++)
-            addSlot(new Slot(inv,col,68+col*18,225));
+            addSlot(new Slot(inv,col,inventoryX(col),inventoryY(3)));
     }
+    public static int recordX(int index) { return 26 + (index % 3) * 22; }
+    public static int recordY(int index) { return 44 + (index / 3) * 22; }
+    public static int inventoryX(int column) { return 72 + column * 18; }
+    public static int inventoryY(int row) { return 201 + row * 18 + (row == 3 ? 3 : 0); }
+
     public int boatId(){return boatId;}
     public ItemStack disc(int i){return discs.getItem(i);}
     public int current(){return playing.get();}
