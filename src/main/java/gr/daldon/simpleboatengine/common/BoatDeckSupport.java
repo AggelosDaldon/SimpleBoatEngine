@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
  * only a small central AABB, so it cannot act as the long bow/stern floor.
  * Supports players on client and server without altering water buoyancy bounds.
  */
-@Mod.EventBusSubscriber(modid = SimpleBoatEngine.ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = SimpleBoatEngine.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class BoatDeckSupport {
     // Client and integrated server tick on different threads in singleplayer.
     private static final Map<Player, Track> TRACKED = Collections.synchronizedMap(new WeakHashMap<>());
