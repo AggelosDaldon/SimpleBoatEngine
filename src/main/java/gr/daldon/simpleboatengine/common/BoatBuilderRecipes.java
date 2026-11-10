@@ -40,6 +40,12 @@ public final class BoatBuilderRecipes {
             Items.IRON_INGOT,4,Items.CHAIN,2));
         out.add(b(new ItemStack(EngineItems.FUEL_BUCKET.get()),
             Items.BUCKET,1,Items.IRON_INGOT,4));
+        out.add(b(new ItemStack(EngineItems.LIFT_BUOY.get()),
+            Items.ORANGE_DYE,2,Items.IRON_INGOT,3,Items.CHAIN,2));
+        out.add(b(new ItemStack(EngineItems.YELLOW_LIFT_BUOY.get()),
+            Items.YELLOW_DYE,2,Items.IRON_INGOT,3,Items.CHAIN,2));
+        out.add(b(new ItemStack(EngineItems.WHITE_LIFT_BUOY.get()),
+            Items.WHITE_DYE,2,Items.IRON_INGOT,3,Items.CHAIN,2));
         return List.copyOf(out);
     }
 }
