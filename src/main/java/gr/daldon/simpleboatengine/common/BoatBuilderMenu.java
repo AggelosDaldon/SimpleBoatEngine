@@ -26,8 +26,8 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
     public BoatBuilderMenu(int id,Inventory inv,BlockPos pos){
         super(EngineMenus.BOAT_BUILDER.get(),id);
         this.pos=pos;selected.set(0);addDataSlot(selected);
-        for(int i=0;i<12;i++)addSlot(new Slot(ingredients,i,27+(i%6)*23,82+(i/6)*25));
-        addSlot(new Slot(output,0,88,44){
+        for(int i=0;i<12;i++)addSlot(new Slot(ingredients,i,193+(i%6)*29,198+(i/6)*27));
+        addSlot(new Slot(output,0,409,213){
             @Override public boolean mayPlace(ItemStack stack){return false;}
             @Override public boolean mayPickup(Player player){return canCraft();}
             @Override public void onTake(Player player,ItemStack taken){
@@ -41,25 +41,42 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
         });
         updateOutput();
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)
-            addSlot(new Slot(inv,9+col+row*9,17+col*18,153+row*18));
-        for(int col=0;col<9;col++)addSlot(new Slot(inv,col,17+col*18,211));
+            addSlot(new Slot(inv,9+col+row*9,142+col*18,276+row*18));
+        for(int col=0;col<9;col++)addSlot(new Slot(inv,col,142+col*18,334));
     }
     public int selection(){return selected.get();}
     public BlockPos position(){return pos;}
     public BoatBuilderRecipes.Blueprint recipe(){return blueprints.get(Math.floorMod(selected.get(),blueprints.size()));}
-    public void change(int direction){
-        int start=isBoatTab()?0:10;
-        int size=(isBoatTab()?Math.min(10,blueprints.size()):blueprints.size()-start);
-        if(size<=0)return;
-        selected.set(start+Math.floorMod(selected.get()-start+Integer.signum(direction),size));
-        updateOutput();
-        broadcastChanges();
+    public int category(){
+        return selection()<10?0:selection()<blueprints.size()-3?1:2;
     }
+    public int categoryStart(int category){
+        return switch(category){case 0->0;case 1->10;default->blueprints.size()-3;};
+    }
+    public int categoryEnd(int category){
+        return switch(category){case 0->10;case 1->blueprints.size()-3;default->blueprints.size();};
+    }
+    public int categorySize(){return categoryEnd(category())-categoryStart(category());}
+    public ItemStack entry(int offset){
+        int id=categoryStart(category())+offset;
+        return offset>=0 && id<categoryEnd(category())
+            ? blueprints.get(id).result():ItemStack.EMPTY;
+    }
+    public void changeCategory(int direction){
+        int next=Math.floorMod(category()+Integer.signum(direction),3);
+        selected.set(categoryStart(next));updateOutput();broadcastChanges();
+    }
+    public void selectVisible(int offset){
+        int id=categoryStart(category())+offset;
+        if(offset<0||id>=categoryEnd(category()))return;
+        selected.set(id);updateOutput();broadcastChanges();
+    }
+    public void change(int direction){changeCategory(direction);}
     public ItemStack input(int i){return ingredients.getItem(i);}
-    public boolean isBoatTab(){return selection()<10;}
-    public void selectTab(boolean boat){
-        int next=boat?0:Math.min(10,blueprints.size()-1);
-        selected.set(next);updateOutput();broadcastChanges();
+    public BlockPos position(){return pos;}
+    public int selection(){return selected.get();}
+    public BoatBuilderRecipes.Blueprint recipe(){
+        return blueprints.get(Math.floorMod(selected.get(),blueprints.size()));
     }
     private void updateOutput(){
         ItemStack result=canCraft()?recipe().result().copy():ItemStack.EMPTY;
