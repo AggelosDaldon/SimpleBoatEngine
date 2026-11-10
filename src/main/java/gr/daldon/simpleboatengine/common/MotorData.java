@@ -59,6 +59,11 @@ public final class MotorData {
         output.putBoolean("PoleLightInstalled", stored.getBoolean("PoleLightInstalled"));
         output.putBoolean("IceBreakerInstalled", stored.getBoolean("IceBreakerInstalled"));
         output.putBoolean("IceBreakerSilk", stored.getBoolean("IceBreakerSilk"));
+        output.putBoolean("RadioInstalled",stored.getBoolean("RadioInstalled"));
+        output.putBoolean("RadioPlaying",stored.getBoolean("RadioPlaying"));
+        output.putString("RadioSound",stored.getString("RadioSound"));
+        output.putString("RadioTrackName",stored.getString("RadioTrackName"));
+        output.putInt("RadioSerial",stored.getInt("RadioSerial"));
         return output;
     }
 }
