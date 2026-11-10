@@ -99,10 +99,13 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
                 g.renderFakeItem(new ItemStack(required.get(i).getKey()),bx,by);
                 g.fill(bx,by,bx+16,by+16,0x99C09A91);
             }
-            if(needed && required.get(i).getValue()>1)
-                g.drawString(font,""+required.get(i).getValue(),
-                    bx+17-font.width(""+required.get(i).getValue()),by+10,
-                    0xFFFFFFFF,false);
+            // Stack counts of deposited inputs are rendered by Minecraft once.
+            // Draw the recipe requirement only for vacant ghost slots.
+            if(needed && menu.input(i).isEmpty() && required.get(i).getValue()>1){
+                String count=String.valueOf(required.get(i).getValue());
+                g.drawString(font,count,bx+16-font.width(count),by+9,
+                    0xFFF3E7CB,false);
+            }
         }
         panel(g,x+407,y+211,20,20,0xFFE7D3B5);
         for(int i=0;i<36;i++){
@@ -118,9 +121,9 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
         g.drawString(font,"PREVIEW",65,55,ink,false);
         ItemStack selection=menu.recipe().result();
         g.renderFakeItem(selection,84,77);
-        g.drawString(font,"INFO",24,135,0xFFFFD44A,false);
-        lineWrapped(g,details(),24,147,135,0xFFFFD44A);
-        g.drawString(font,"AVAILABLE",275,19,ink,false);
+        g.drawString(font,"INFO",24,135,0xFFFFD64A,false);
+        lineWrapped(g,details(),24,147,135,0xFF654112);
+        g.drawString(font,"AVAILABLE",275,19,0xFF382419,false);
         g.drawString(font,"MATERIALS",193,184,ink,false);
         g.drawString(font,"OUTPUT",399,184,ink,false);
         g.drawString(font,selection.getHoverName(),19,205,0xFFE9D0AA,false);

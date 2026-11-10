@@ -219,13 +219,13 @@ public final class BlueFishingBoat extends SkiffBoat {
             if(id!=null)sound=id.toString();
         }
         data.putString("RadioSound",sound);
-        data.putString("RadioTrackName",disc.getHoverName().getString());
+        data.putString("RadioTrackName",BoatRadioTrackNames.track(disc));
         data.putInt("RadioSerial",data.getInt("RadioSerial")+1);
         if(level() instanceof net.minecraft.server.level.ServerLevel server)
             for(ServerPlayer listener:server.players())
                 if(listener.distanceToSqr(this)<=64*64)
                     listener.displayClientMessage(Component.literal(
-                        "Now playing: "+disc.getHoverName().getString()),true);
+                        "Now playing: "+BoatRadioTrackNames.track(disc)),true);
         syncRadio();
     }
     public void nextRadio(){
@@ -338,7 +338,7 @@ public final class BlueFishingBoat extends SkiffBoat {
             cargoDropped = true;
             Containers.dropContents(level(), blockPosition(), cargo);
             Containers.dropContents(level(), blockPosition(), hatchCargo);
-            Containers.dropContents(level(), blockPosition(), radioDiscs);
+            // Radio records are kept with the packed boat/radio, not scattered.
         }
         super.remove(reason);
     }

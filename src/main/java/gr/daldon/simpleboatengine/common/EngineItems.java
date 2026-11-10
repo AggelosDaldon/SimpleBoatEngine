@@ -101,6 +101,10 @@ public final class EngineItems {
             .displayItems((parameters, output) -> {
                 output.accept(ENGINE.get());
                 output.accept(FUEL_BUCKET.get());
+                ItemStack filledCanister=new ItemStack(FUEL_BUCKET.get());
+                SteelFuelCanisterItem.fuel(filledCanister,SteelFuelCanisterItem.CAPACITY);
+                filledCanister.setHoverName(Component.literal("Filled Steel Fuel Canister"));
+                output.accept(filledCanister);
                 output.accept(FUEL_CANISTER.get());
                 output.accept(POLE_LIGHT.get());
                 output.accept(ICE_BREAKER.get());

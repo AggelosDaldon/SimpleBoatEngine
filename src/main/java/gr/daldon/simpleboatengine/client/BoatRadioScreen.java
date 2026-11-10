@@ -1,6 +1,7 @@
 package gr.daldon.simpleboatengine.client;
 
 import gr.daldon.simpleboatengine.common.BoatRadioMenu;
+import gr.daldon.simpleboatengine.common.BoatRadioTrackNames;
 import gr.daldon.simpleboatengine.common.MotorPackets;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -30,21 +31,21 @@ public final class BoatRadioScreen extends AbstractContainerScreen<BoatRadioMenu
         panel(g,x,y,350,260,0xFF866345);
         for(int i=8;i<258;i+=18)
             g.fill(x+3,y+i,x+347,y+i+1,0x4F36291F);
-        panel(g,x+12,y+12,112,104,0xFFB89C77);
+        panel(g,x+12,y+12,112,104,0xFFB5A88E);
         for(int i=0;i<9;i++){
             int sx=x+24+(i%3)*22,sy=y+26+(i/3)*23;
             panel(g,sx-1,sy-1,18,18,0xFFDDCA9F);
         }
-        panel(g,x+136,y+12,200,104,0xFFC7A984);
+        panel(g,x+136,y+12,200,104,0xFFD4C5A5);
         for(int i=0;i<9;i++){
             int ty=y+20+i*10;
-            if(i==selected)g.fill(x+141,ty-1,x+328,ty+10,0xFF7A6958);
+            if(i==selected)g.fill(x+141,ty-1,x+328,ty+10,0xFFB4C9C4);
             if(i+1==menu.current())g.fill(x+141,ty,x+145,ty+8,0xFF70A070);
         }
         button(g,"START",x+14,y+124,96,26,selected==menu.current()-1);
         button(g,"STOP",x+127,y+124,96,26,false);
         button(g,"NEXT",x+240,y+124,96,26,false);
-        panel(g,x+59,y+161,230,95,0xFFAF906F);
+        panel(g,x+59,y+161,230,95,0xFFC5AA83);
         for(int i=0;i<36;i++){
             int sx=x+68+(i%9)*18,sy=y+(i<27?167+(i/9)*18:225);
             g.fill(sx-1,sy-1,sx+17,sy+17,0xFF594332);
@@ -59,12 +60,12 @@ public final class BoatRadioScreen extends AbstractContainerScreen<BoatRadioMenu
         text(g,"PLAYLIST",154,14,0xFF30251B);
         for(int i=0;i<9;i++){
             String name=menu.disc(i).isEmpty()?"-- Empty --":
-                menu.disc(i).getHoverName().getString();
+                BoatRadioTrackNames.track(menu.disc(i));
             if(name.length()>28)name=name.substring(0,25)+"...";
             text(g,(i+1)+". "+name,149,20+i*10,
                 i+1==menu.current()?0xFF1F5233:0xFF3C2C25);
         }
-        text(g,"INVENTORY",66,154,0xFF30251B);
+        // The inventory grid is self-explanatory; no overlapping label.
     }
     private void action(int type){
         MotorPackets.CHANNEL.sendToServer(

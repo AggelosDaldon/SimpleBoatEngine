@@ -26,15 +26,14 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
     public BoatBuilderMenu(int id,Inventory inv,BlockPos pos){
         super(EngineMenus.BOAT_BUILDER.get(),id);
         this.pos=pos;selected.set(0);addDataSlot(selected);
+        ingredients.addListener(this::slotsChanged);
         for(int i=0;i<12;i++)addSlot(new Slot(ingredients,i,193+(i%6)*29,198+(i/6)*27));
         addSlot(new Slot(output,0,409,213){
             @Override public boolean mayPlace(ItemStack stack){return false;}
             @Override public boolean mayPickup(Player player){return canCraft();}
             @Override public void onTake(Player player,ItemStack taken){
                 if(!canCraft())return;
-                int index=0;
-                for(var entry:recipe().cost().entrySet())
-                    ingredients.removeItem(index++,entry.getValue());
+                consumeRecipe();
                 updateOutput();
                 super.onTake(player,taken);
             }
@@ -82,12 +81,26 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
         super.slotsChanged(inventory);
     }
     public boolean canCraft(){
-        int slot=0;
+        // Any arrangement is valid. A stack may contain more than the recipe needs.
         for(var entry:recipe().cost().entrySet()){
-            ItemStack stack=input(slot++);
-            if(!stack.is(entry.getKey()) || stack.getCount()<entry.getValue())return false;
+            int count=0;
+            for(int i=0;i<12;i++)
+                if(input(i).is(entry.getKey()))count+=input(i).getCount();
+            if(count<entry.getValue())return false;
         }
         return true;
+    }
+    private void consumeRecipe(){
+        for(var entry:recipe().cost().entrySet()){
+            int remaining=entry.getValue();
+            for(int i=0;i<12 && remaining>0;i++){
+                ItemStack stack=input(i);
+                if(!stack.is(entry.getKey()))continue;
+                int used=Math.min(remaining,stack.getCount());
+                ingredients.removeItem(i,used);
+                remaining-=used;
+            }
+        }
     }
     @Override public ItemStack quickMoveStack(Player player,int index){
         if(index<0 || index>=slots.size())return ItemStack.EMPTY;

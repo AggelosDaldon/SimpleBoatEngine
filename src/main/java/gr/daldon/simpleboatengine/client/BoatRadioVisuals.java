@@ -13,7 +13,7 @@ public final class BoatRadioVisuals {
     private BoatRadioVisuals(){}
     public static void draw(PoseStack pose,MultiBufferSource buffers,int light,float offset){
         pose.pushPose();
-        pose.translate(.68,BoatMounts.HULL_Y+4.95/16.0+offset,-1.65);
+        pose.translate(.54,BoatMounts.HULL_Y+10.5/16.0+offset,-1.91);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.scale(.80f,.80f,.80f);
         pose.translate(-.5,0,-.5);

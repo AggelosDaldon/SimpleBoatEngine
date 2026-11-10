@@ -117,7 +117,14 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         if(lastStand!=menu.standIndex()){lastStand=menu.standIndex();resetDraft();nameDye=BoatPaint.nameColor(menu.boatItem());}
         mask=0;
         for(int i=0;i<BoatCustomizerMenu.ATTACHMENT_SLOTS;i++)
-            if(!menu.attachmentItem(i).isEmpty())mask|=1<<i;
+            if(!menu.attachmentItem(i).isEmpty()){
+                var equipment=menu.attachmentItem(i);
+                if(equipment.is(EngineItems.ENGINE.get()))mask|=BoatPaintSessions.ENGINE;
+                else if(equipment.is(EngineItems.POLE_LIGHT.get()))mask|=BoatPaintSessions.POLE;
+                else if(equipment.is(EngineItems.FUEL_CANISTER.get()))mask|=BoatPaintSessions.CANISTER;
+                else if(equipment.is(EngineItems.ICE_BREAKER.get()))mask|=BoatPaintSessions.BREAKER;
+                else if(equipment.is(EngineItems.BOAT_RADIO.get()))mask|=BoatPaintSessions.RADIO;
+            }
 
         if(applyButton!=null){applyButton.active=valid();applyButton.visible=valid();}
     }
