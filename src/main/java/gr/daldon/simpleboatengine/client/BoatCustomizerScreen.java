@@ -115,6 +115,9 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
     @Override protected void containerTick(){
         super.containerTick();
         if(lastStand!=menu.standIndex()){lastStand=menu.standIndex();resetDraft();}
+        mask=0;
+        for(int i=0;i<BoatCustomizerMenu.ATTACHMENT_SLOTS;i++)
+            if(!menu.attachmentItem(i).isEmpty())mask|=1<<i;
 
         if(applyButton!=null){applyButton.active=valid();applyButton.visible=valid();}
     }
@@ -189,6 +192,10 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         for(int i=0;i<BoatCustomizerMenu.MATERIAL_SLOTS;i++){
             int sx=x+17+(i%8)*25,sy=y+227+(i/8)*24;
             panel(g,sx-1,sy-1,18,18,0xFF685746,0xFFB2A38B);
+            if(i<req.size() && (menu.materialItem(i).isEmpty()
+                || !menu.materialItem(i).is(req.get(i).getKey())
+                || menu.materialItem(i).getCount()<req.get(i).getValue()))
+                g.fill(sx,sy,sx+16,sy+16,0xAAAC2222);
             if(i<req.size() && menu.materialItem(i).isEmpty()){
                 g.renderFakeItem(new ItemStack(req.get(i).getKey()),sx,sy);
                 g.fill(sx,sy,sx+16,sy+16,0xAAB7A790);
@@ -199,7 +206,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         // Four real attachment slots with a subdued icon when vacant.
         for(int i=0;i<4;i++){
             int sx=x+249+i*48,sy=y+246;
-            boolean installed=(mask&(1<<i))!=0;
+            boolean installed=!menu.attachmentItem(i).isEmpty();
             panel(g,sx-2,sy-2,22,22,installed?0xFF407C56:0xFF705E49,0xFFC7B49B);
             if(menu.attachmentItem(i).isEmpty()){
                 g.renderFakeItem(equipment(i),sx,sy);
