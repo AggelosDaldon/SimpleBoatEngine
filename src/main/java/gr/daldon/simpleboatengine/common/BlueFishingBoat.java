@@ -181,7 +181,7 @@ public final class BlueFishingBoat extends SkiffBoat {
             net.minecraft.sounds.SoundEvents.BARREL_OPEN,
             net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
         player.openMenu(new SimpleMenuProvider(
-            (id, inventory, owner) -> new BarrelHatchMenu(id, inventory, hatchCargo),
+            (id, inventory, owner) -> new BarrelHatchMenu(id, inventory, hatchCargo, this),
             Component.literal("Bow hatch - 27 slots")));
     }
 
