@@ -25,6 +25,9 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     public static final int MATERIAL_SLOTS=16;
     public static final int ATTACHMENT_SLOTS=4;
     private final SimpleContainer attachmentInputs=new SimpleContainer(ATTACHMENT_SLOTS);
+    private final Player editor;
+    private boolean loadingAttachments;
+    private int lastSyncedMask=-1;
 
     public BoatCustomizerMenu(int id, Inventory inv, FriendlyByteBuf packet) {
         this(id,inv,packet.readBlockPos());
@@ -38,7 +41,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     }
     private BoatCustomizerMenu(int id,Inventory inv,BoatCustomizerBlockEntity station,BlockPos pos) {
         super(EngineMenus.CUSTOMIZER.get(),id);
-        table=station;blockPos=pos;
+        table=station;blockPos=pos;editor=inv.player;
         stands=station==null?List.of():List.copyOf(station.nearbyStands());
         selected.set(0);
         addDataSlot(selected);
@@ -61,6 +64,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
                 addSlot(new Slot(inv,col+row*9+9,21+col*20,279+row*19));
         for(int col=0;col<9;col++)
             addSlot(new Slot(inv,col,21+col*20,337));
+        loadAttachmentSlots();
     }
     public BlockPos getBlockPos(){return blockPos;}
     public int standCount(){return stands.size();}
@@ -75,6 +79,7 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     public void selectRelative(int delta){
         if(!stands.isEmpty()){
             selected.set(Math.floorMod(standIndex()+Integer.signum(delta),stands.size()));
+            loadAttachmentSlots();
             broadcastChanges();
         }
     }
@@ -95,19 +100,63 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
             default -> EngineItems.ICE_BREAKER.get();
         };
     }
-    public ItemStack attachmentItem(int i){return attachmentInputs.getItem(i);}
-    public boolean hasAttachmentInputs(int oldMask,int newMask){
-        for(int i=0;i<ATTACHMENT_SLOTS;i++)
-            if((newMask&(1<<i))!=0 && (oldMask&(1<<i))==0
-                && !attachmentInputs.getItem(i).is(attachmentType(i)))return false;
-        return true;
+
+    /**
+     * Equipment slots are actual item slots.  Removing an installed item gives
+     * it back to the cursor; depositing one installs it immediately. No Apply
+     * action, no duplicated virtual copies, and no on/off toggles.
+     */
+    private void loadAttachmentSlots(){
+        if(editor.level().isClientSide)return;
+        loadingAttachments=true;
+        try{
+            ItemStack boat=boatItem();
+            int mask=BoatPaintSessions.attachmentMask(boat);
+            for(int i=0;i<ATTACHMENT_SLOTS;i++){
+                ItemStack equipped=(mask&(1<<i))!=0
+                    ? new ItemStack(attachmentType(i)):ItemStack.EMPTY;
+                if(i==3 && !equipped.isEmpty() &&
+                    BoatPaintSessions.motor(boat).getBoolean("IceBreakerSilk"))
+                    equipped.enchant(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,1);
+                attachmentInputs.setItem(i,equipped);
+            }
+            lastSyncedMask=mask;
+        }finally{loadingAttachments=false;}
     }
-    public void consumeAttachmentInputs(int oldMask,int newMask){
+    private void saveAttachmentSlots(){
+        if(loadingAttachments||editor.level().isClientSide)return;
+        BoatStandBlockEntity stand=selectedStand();
+        if(stand==null||stand.getItem(0).isEmpty()||stand.hasPreview())return;
+        int next=0;
         for(int i=0;i<ATTACHMENT_SLOTS;i++)
-            if((newMask&(1<<i))!=0 && (oldMask&(1<<i))==0)
-                attachmentInputs.removeItem(i,1);
+            if(!attachmentInputs.getItem(i).isEmpty())next|=1<<i;
+        if(next==lastSyncedMask)return;
+        ItemStack boat=stand.getItem(0).copy();
+        var motor=BoatPaintSessions.writableMotor(boat);
+        motor.putBoolean("Installed",(next&1)!=0);
+        motor.putBoolean("PoleLightInstalled",(next&2)!=0);
+        motor.putBoolean("CanisterInstalled",(next&4)!=0);
+        motor.putBoolean("IceBreakerInstalled",(next&8)!=0);
+        if((next&1)==0){
+            motor.putBoolean("Running",false);motor.putInt("Throttle",0);
+        }
+        if((next&8)!=0)
+            motor.putBoolean("IceBreakerSilk",
+                net.minecraft.world.item.enchantment.EnchantmentHelper
+                    .getItemEnchantmentLevel(
+                        net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH,
+                        attachmentInputs.getItem(3))>0);
+        stand.setItem(0,boat);
+        lastSyncedMask=next;
         broadcastChanges();
     }
+    @Override public void slotsChanged(net.minecraft.world.Container source){
+        if(source==attachmentInputs)saveAttachmentSlots();
+        super.slotsChanged(source);
+    }
+    public ItemStack attachmentItem(int i){return attachmentInputs.getItem(i);}
+    public boolean hasAttachmentInputs(int oldMask,int newMask){return oldMask==newMask;}
+    public void consumeAttachmentInputs(int oldMask,int newMask){}
     public int materialSlotCount(){return MATERIAL_SLOTS;}
     public ItemStack materialItem(int i){return materials.getItem(i);}
     public boolean hasMaterials(Map<Item,Integer> cost){
@@ -149,10 +198,9 @@ public final class BoatCustomizerMenu extends AbstractContainerMenu {
     }
     @Override public void removed(Player player){
         super.removed(player);
-        // No materials are stored globally at the painting table.
-        for(int i=0;i<MATERIAL_SLOTS+ATTACHMENT_SLOTS;i++){
-            ItemStack stack=i<MATERIAL_SLOTS ? materials.removeItemNoUpdate(i)
-                : attachmentInputs.removeItemNoUpdate(i-MATERIAL_SLOTS);
+        // Installed equipment stays on the boat. Only return unused paint.
+        for(int i=0;i<MATERIAL_SLOTS;i++){
+            ItemStack stack=materials.removeItemNoUpdate(i);
             if(stack.isEmpty())continue;
             if(!player.getInventory().add(stack))player.drop(stack,false);
         }
