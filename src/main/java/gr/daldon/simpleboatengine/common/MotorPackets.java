@@ -192,9 +192,10 @@ public final class MotorPackets {
                    || !menu.position().equals(msg.pos)
                    || player.distanceToSqr(msg.pos.getX()+.5,
                        msg.pos.getY()+.5,msg.pos.getZ()+.5)>64)return;
-                if(msg.craft==2)menu.selectTab(true);
-                else if(msg.craft==3)menu.selectTab(false);
-                else if(Math.abs(msg.delta)==1)menu.change(msg.delta);
+                if(msg.craft==4)menu.selectVisible(msg.delta);
+                else if(msg.craft==2)menu.changeCategory(-1);
+                else if(msg.craft==3)menu.changeCategory(1);
+                else if(Math.abs(msg.delta)==1)menu.changeCategory(msg.delta);
             });
             ctx.get().setPacketHandled(true);
         }
