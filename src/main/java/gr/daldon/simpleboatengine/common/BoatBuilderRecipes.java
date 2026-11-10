@@ -39,7 +39,7 @@ public final class BoatBuilderRecipes {
         out.add(b(new ItemStack(EngineItems.BOAT_RECOVERY_KIT.get()),
             Items.IRON_INGOT,4,Items.CHAIN,2));
         out.add(b(new ItemStack(EngineItems.FUEL_BUCKET.get()),
-            Items.BUCKET,1,Items.REDSTONE,2,Items.COAL,2));
+            Items.BUCKET,1,Items.IRON_INGOT,4));
         return List.copyOf(out);
     }
 }
