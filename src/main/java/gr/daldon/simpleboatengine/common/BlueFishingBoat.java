@@ -255,7 +255,7 @@ public final class BlueFishingBoat extends SkiffBoat {
     @Override
     protected Vec3 seatPosition(int seat) {
         // Named Blockbench pieces: drivers_seat (center rear), passenger_seat (port).
-        if (seat == 0) return new Vec3(0, 0, 30.40 / 16.0);
+        if (seat == 0) return new Vec3(0, 0, 31.10 / 16.0);
         return new Vec3(-9.1 / 16.0, 0, 13.3 / 16.0);
     }
 }
