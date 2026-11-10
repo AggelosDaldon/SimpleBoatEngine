@@ -167,7 +167,9 @@ public final class ServerMotorEvents {
     public static void onWorldTick(TickEvent.LevelTickEvent event) {
         if (event.phase != TickEvent.Phase.END || !(event.level instanceof ServerLevel level)) return;
         for (Entity entity : level.getAllEntities()) {
-            if (!(entity instanceof Boat boat) || !MotorData.installed(boat)) continue;
+            if (!(entity instanceof Boat boat))continue;
+            if(!MotorData.installed(boat) &&
+                !MotorData.writable(boat).getBoolean("RadioInstalled"))continue;
             CompoundTag data = MotorData.writable(boat);
             Vec3 here = boat.position();
 
@@ -201,7 +203,7 @@ public final class ServerMotorEvents {
             }
 
             if (level.getGameTime() % 5L == 0L) {
-                BoatPoleLights.update(level, boat, data);
+                if(data.getBoolean("Installed"))BoatPoleLights.update(level, boat, data);
                 for (ServerPlayer player : level.players()) {
                     if (player.distanceToSqr(boat) <= 64.0 * 64.0) {
                         MotorPackets.sendStatus(boat, player);
