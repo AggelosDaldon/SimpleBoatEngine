@@ -63,6 +63,12 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(BuilderAction.class, 11, NetworkDirection.PLAY_TO_SERVER)
             .encoder(BuilderAction::write).decoder(BuilderAction::read)
             .consumerMainThread(BuilderAction::receive).add();
+        CHANNEL.messageBuilder(OpenRadio.class, 12, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(OpenRadio::write).decoder(OpenRadio::read)
+            .consumerMainThread(OpenRadio::receive).add();
+        CHANNEL.messageBuilder(RadioControl.class, 13, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(RadioControl::write).decoder(RadioControl::read)
+            .consumerMainThread(RadioControl::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -400,4 +406,57 @@ public final class MotorPackets {
             ctx.get().setPacketHandled(true);
         }
     }
+    public record OpenRadio(int boatId){
+        static void write(OpenRadio message,FriendlyByteBuf buffer){
+            buffer.writeVarInt(message.boatId);
+        }
+        static OpenRadio read(FriendlyByteBuf buffer){
+            return new OpenRadio(buffer.readVarInt());
+        }
+        static void receive(OpenRadio message,Supplier<NetworkEvent.Context> ctx){
+            ServerPlayer player=ctx.get().getSender();
+            ctx.get().enqueueWork(()->{
+                if(player==null ||
+                   !(player.level().getEntity(message.boatId()) instanceof BlueFishingBoat boat) ||
+                   !boat.isAlive() || player.distanceToSqr(boat)>49 ||
+                   !MotorData.writable(boat).getBoolean("RadioInstalled") ||
+                   !BoatInteractionTarget.aimedAtRadio(boat,player.getEyePosition(),
+                       player.getViewVector(1f),5.5))return;
+                net.minecraftforge.network.NetworkHooks.openScreen(player,
+                    new net.minecraft.world.SimpleMenuProvider(
+                        (id,inv,owner)->new BoatRadioMenu(id,inv,boat),
+                        Component.literal("Boat Radio")),
+                    out->out.writeVarInt(boat.getId()));
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+    public record RadioControl(int boatId,int action,int slot){
+        static void write(RadioControl message,FriendlyByteBuf buffer){
+            buffer.writeVarInt(message.boatId);
+            buffer.writeVarInt(message.action);
+            buffer.writeVarInt(message.slot);
+        }
+        static RadioControl read(FriendlyByteBuf buffer){
+            return new RadioControl(buffer.readVarInt(),buffer.readVarInt(),buffer.readVarInt());
+        }
+        static void receive(RadioControl message,Supplier<NetworkEvent.Context> ctx){
+            ServerPlayer player=ctx.get().getSender();
+            ctx.get().enqueueWork(()->{
+                if(player==null || !(player.containerMenu instanceof BoatRadioMenu menu) ||
+                   menu.boatId()!=message.boatId() ||
+                   !(player.level().getEntity(message.boatId()) instanceof BlueFishingBoat boat) ||
+                   player.distanceToSqr(boat)>64)return;
+                switch(message.action()){
+                    case 0 -> boat.startRadio(message.slot());
+                    case 1 -> boat.stopRadio();
+                    case 2 -> boat.nextRadio();
+                    default -> {}
+                }
+                menu.broadcastChanges();
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
 }
