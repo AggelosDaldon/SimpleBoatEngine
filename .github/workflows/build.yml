@@ -1,4 +1,4 @@
-name: Build Simple Boat Engine
+name: Build Daldons Boat Additions
 on:
   push:
   pull_request:
@@ -59,7 +59,7 @@ jobs:
         run: gradle --no-daemon build --stacktrace
       - name: Verify resource pack metadata is packaged
         run: |
-          JAR=$(find build/libs -maxdepth 1 -name 'simple-boat-engine-forge-1.20.1-*.jar' -print -quit)
+          JAR=$(find build/libs -maxdepth 1 -name 'daldons-boat-additions-forge-1.20.1-*.jar' -print -quit)
           test -n "$JAR"
           unzip -p "$JAR" pack.mcmeta
           for ASSET in \
@@ -77,5 +77,5 @@ jobs:
       - name: Upload standalone JAR
         uses: actions/upload-artifact@v4
         with:
-          name: simple-boat-engine-forge-1.20.1
+          name: daldons-boat-additions-forge-1.20.1
           path: build/libs/*.jar
