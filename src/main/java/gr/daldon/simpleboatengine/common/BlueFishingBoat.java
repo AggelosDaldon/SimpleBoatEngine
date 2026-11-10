@@ -34,6 +34,8 @@ public final class BlueFishingBoat extends SkiffBoat {
         SynchedEntityData.defineId(BlueFishingBoat.class, EntityDataSerializers.COMPOUND_TAG);
     private final SimpleContainer cargo = new SimpleContainer(108);
     private final SimpleContainer hatchCargo = new SimpleContainer(27);
+    private final SimpleContainer radioDiscs = new SimpleContainer(9);
+    private int radioIndex=-1, radioTicks=0;
     private boolean cargoDropped;
     private static final String PACKED_BOAT = "PackedFishingBoat";
 
@@ -175,6 +177,58 @@ public final class BlueFishingBoat extends SkiffBoat {
         return false;
     }
 
+    public SimpleContainer radioDiscs(){return radioDiscs;}
+    public int radioIndex(){return radioIndex;}
+    public boolean radioPlaying(){return radioIndex>=0;}
+    private static boolean playable(ItemStack stack){
+        return stack.getItem() instanceof net.minecraft.world.item.RecordItem;
+    }
+    private void syncRadio(){
+        if(!(level() instanceof net.minecraft.server.level.ServerLevel server))return;
+        for(ServerPlayer listener:server.players())
+            if(listener.distanceToSqr(this)<64*64)
+                MotorPackets.sendStatus(this,listener);
+    }
+    public void stopRadio(){
+        radioIndex=-1;radioTicks=0;
+        var data=MotorData.writable(this);
+        data.putBoolean("RadioPlaying",false);
+        data.putString("RadioSound","");
+        data.putString("RadioTrackName","");
+        data.putInt("RadioSerial",data.getInt("RadioSerial")+1);
+        syncRadio();
+    }
+    public void startRadio(int index){
+        if(index<0 || index>=radioDiscs.getContainerSize())return;
+        ItemStack disc=radioDiscs.getItem(index);
+        if(!(disc.getItem() instanceof net.minecraft.world.item.RecordItem record))return;
+        radioIndex=index;
+        radioTicks=Math.max(40,record.getLengthInTicks());
+        var data=MotorData.writable(this);
+        data.putBoolean("RadioPlaying",true);
+        data.putString("RadioSound",
+            net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS
+                .getKey(record.getSound()).toString());
+        data.putString("RadioTrackName",disc.getHoverName().getString());
+        data.putInt("RadioSerial",data.getInt("RadioSerial")+1);
+        if(level() instanceof net.minecraft.server.level.ServerLevel server)
+            for(ServerPlayer listener:server.players())
+                if(listener.distanceToSqr(this)<=64*64)
+                    listener.displayClientMessage(Component.literal(
+                        "Now playing: "+disc.getHoverName().getString()),true);
+        syncRadio();
+    }
+    public void nextRadio(){
+        if(radioIndex<0)return;
+        for(int i=radioIndex+1;i<9;i++){
+            if(playable(radioDiscs.getItem(i))){startRadio(i);return;}
+        }
+        stopRadio();
+    }
+    @Override public void tick(){
+        super.tick();
+        if(!level().isClientSide && radioIndex>=0 && --radioTicks<=0)nextRadio();
+    }
     /** Dedicated 27-slot chest below the white bow hatch. */
     public void openHatch(ServerPlayer player) {
         level().playSound(null,blockPosition(),
@@ -223,6 +277,17 @@ public final class BlueFishingBoat extends SkiffBoat {
             hatchList.add(entry);
         }
         tag.put("FishingBoatHatchCargo", hatchList);
+        ListTag discs=new ListTag();
+        for(int i=0;i<radioDiscs.getContainerSize();i++){
+            ItemStack item=radioDiscs.getItem(i);
+            if(item.isEmpty())continue;
+            CompoundTag entry=new CompoundTag();
+            entry.putByte("Slot",(byte)i);
+            item.save(entry);discs.add(entry);
+        }
+        tag.put("FishingBoatRadioDiscs",discs);
+        tag.putInt("FishingBoatRadioIndex",radioIndex);
+        tag.putInt("FishingBoatRadioTicks",radioTicks);
     }
 
     @Override
@@ -234,6 +299,15 @@ public final class BlueFishingBoat extends SkiffBoat {
         entityData.set(CUSTOMIZATION, tag.getCompound("FishingBoatCustomization").copy());
         cargo.clearContent();
         hatchCargo.clearContent();
+        radioDiscs.clearContent();
+        radioIndex=-1;radioTicks=0;
+        for(Tag value:tag.getList("FishingBoatRadioDiscs",Tag.TAG_COMPOUND)){
+            CompoundTag entry=(CompoundTag)value;
+            int index=entry.getByte("Slot")&255;
+            if(index<9)radioDiscs.setItem(index,ItemStack.of(entry));
+        }
+        // Do not resume an unsynchronised playing sound on world reload.
+        MotorData.writable(this).putBoolean("RadioPlaying",false);
         for (Tag value : tag.getList("FishingBoatHatchCargo", Tag.TAG_COMPOUND)) {
             CompoundTag entry = (CompoundTag) value;
             int slot = entry.getByte("Slot") & 255;
@@ -254,6 +328,7 @@ public final class BlueFishingBoat extends SkiffBoat {
             cargoDropped = true;
             Containers.dropContents(level(), blockPosition(), cargo);
             Containers.dropContents(level(), blockPosition(), hatchCargo);
+            Containers.dropContents(level(), blockPosition(), radioDiscs);
         }
         super.remove(reason);
     }
