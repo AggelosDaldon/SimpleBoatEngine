@@ -92,8 +92,12 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
         for(int i=0;i<12;i++){
             int bx=x+193+(i%6)*29,by=y+198+(i/6)*27;
             boolean needed=i<required.size();
-            boolean valid=needed && menu.input(i).is(required.get(i).getKey())
-                && menu.input(i).getCount()>=required.get(i).getValue();
+            int supplied=0;
+            if(needed)
+                for(int slot=0;slot<12;slot++)
+                    if(menu.input(slot).is(required.get(i).getKey()))
+                        supplied+=menu.input(slot).getCount();
+            boolean valid=needed && supplied>=required.get(i).getValue();
             panel(g,bx-1,by-1,19,19,needed&&!valid?0xFF9A3434:0xFF8E8068);
             if(needed && menu.input(i).isEmpty()){
                 g.renderFakeItem(new ItemStack(required.get(i).getKey()),bx,by);
