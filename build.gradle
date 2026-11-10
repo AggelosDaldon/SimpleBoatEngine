@@ -4,10 +4,10 @@ plugins {
 }
 
 group = 'gr.daldon.simpleboatengine'
-version = '0.4.5'
+version = '0.5.0'
 
 base {
-    archivesName = 'simple-boat-engine-forge-1.20.1'
+    archivesName = 'daldons-boat-additions-forge-1.20.1'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -19,7 +19,7 @@ legacyForge {
         server { server() }
     }
     mods {
-        simpleboatengine {
+        daldonsboatadditions {
             sourceSet sourceSets.main
         }
     }
@@ -31,7 +31,7 @@ tasks.withType(JavaCompile).configureEach {
 
 jar {
     manifest {
-        attributes 'Specification-Title': 'Simple Boat Engine',
+        attributes 'Specification-Title': 'Daldons Boat Additions',
                    'Specification-Vendor': 'AggelosDaldon',
                    'Implementation-Title': project.name,
                    'Implementation-Version': project.version
