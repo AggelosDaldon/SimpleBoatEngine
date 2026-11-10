@@ -47,10 +47,12 @@ jobs:
                   assert icon.size==(256,256), path
           assert 'modId="daldonsboatadditions"' in Path(
               'src/main/resources/META-INF/mods.toml').read_text()
+          offenders=[]
           for path in Path('src/main/java').rglob('*.java'):
               source=path.read_text()
-              assert 'modid = SimpleBoatEngine.ID' not in source, path
-              assert 'modid=SimpleBoatEngine.ID' not in source, path
+              if 'modid = SimpleBoatEngine.ID' in source or 'modid=SimpleBoatEngine.ID' in source:
+                  offenders.append(str(path))
+          assert not offenders, '\\n'.join(offenders)
           print("Textures, model directions and mod identity verified")
           PY
       - name: Compile Forge 1.20.1
