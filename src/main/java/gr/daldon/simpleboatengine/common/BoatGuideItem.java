@@ -36,7 +36,8 @@ public final class BoatGuideItem extends WrittenBookItem {
         {"Refueling", "Switch the motor off and right-click it with the Steel Fuel Canister. Fit the red Auxiliary Fuel Canister to increase the boat's capacity from 3,000 to 6,000."},
         {"Pole Light", "Fit this light to illuminate the boat's surroundings. It turns on automatically at dusk and off at dawn. The light works even when the engine is removed."},
         {"Ice Breaker", "Fit it to a fishing boat to clear ice ahead of the bow. A Silk Touch Ice Breaker collects the ice into the boat's storage."},
-        {"Boat Radio", "Right-click the fitted radio with an empty hand. Insert up to nine discs, select a track and press Play. Use Stop to end playback or Next to advance."},
+        {"Boat Radio", "Right-click the fitted radio to open it. Insert up to nine discs, select a track and press Play. Use Stop to end playback or Next to advance."},
+        {"Radio inventory", "Use Boat Inventory > Radio Inventory at the Marine Workshop to remove discs from a parked boat. If you remove the radio itself, its discs stay inside the item."},
         {"Recovery Hook", "Use the hook on an unoccupied fishing boat to recover it with its cargo and gear. The hook can also move a parked boat between parking stands."},
         {"Lift Buoys", "Orange, yellow and white buoys work the same way. Place one on a water source above a compatible fishing trap. Right-click the buoy to raise or lower the trap."},
     };
