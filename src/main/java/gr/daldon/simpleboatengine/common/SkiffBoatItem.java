@@ -12,7 +12,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.EntityType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.enchantment.Enchantments;
 
 /** Places the larger test hull on water without replacing vanilla boat items. */
 public final class SkiffBoatItem extends EngineItem {
@@ -32,6 +37,30 @@ public final class SkiffBoatItem extends EngineItem {
     }
 
     public int getHullStyle() { return style; }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack boat) {
+        int mask = BoatPaintSessions.attachmentMask(boat);
+        if (mask == 0) return Optional.empty();
+        List<ItemStack> attachments = new ArrayList<>();
+        for (int type = 0; type < BoatCustomizerMenu.ATTACHMENT_SLOTS; type++) {
+            if ((mask & (1 << type)) == 0) continue;
+            ItemStack attachment = new ItemStack(BoatCustomizerMenu.attachmentType(type));
+            if (type == 3 && BoatPaintSessions.motor(boat).getBoolean("IceBreakerSilk"))
+                attachment.enchant(Enchantments.SILK_TOUCH, 1);
+            attachments.add(attachment);
+        }
+        return Optional.of(new BoatAttachmentTooltip(List.copyOf(attachments)));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, net.minecraft.world.entity.Entity carrier,
+                              int slot, boolean selected) {
+        if (level instanceof net.minecraft.server.level.ServerLevel server && level.getGameTime() % 10 == 0
+                && BoatNavigationData.packedId(stack) != null) {
+            BoatNavigationData.get(server).observePacked(stack, server, carrier.blockPosition(), false);
+        }
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {

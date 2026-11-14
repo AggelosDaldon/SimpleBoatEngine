@@ -54,25 +54,24 @@ public final class BoatItemVisuals {
             pose.scale(1.5f,1.5f,1.5f);
             MotorMesh.drawFishing(pose,buffers,0f,light);
             pose.popPose();
-
-            if(engine.getBoolean("CanisterInstalled")) {
-                pose.pushPose();
-                pose.translate(.59,.10+4.95/16.0+offset,.70);
-                pose.mulPose(Axis.YP.rotationDegrees(-90));
-                pose.scale(1.3f,1.3f,1.3f);
-                CanisterMesh.draw(pose,buffers,light);
-                pose.popPose();
-            }
-            if(engine.getBoolean("PoleLightInstalled")) {
-                pose.pushPose();
-                pose.translate(-.935,.10+14.25/16.0+offset,2.09);
-                pose.scale(1.3f,1.3f,1.3f);
-                PoleLightMesh.draw(pose,buffers,false,light);
-                pose.popPose();
-            }
+        }
+        if(engine.getBoolean("CanisterInstalled")) {
+            pose.pushPose();
+            pose.translate(.59,.10+4.95/16.0+offset,.70);
+            pose.mulPose(Axis.YP.rotationDegrees(-90));
+            pose.scale(1.3f,1.3f,1.3f);
+            CanisterMesh.draw(pose,buffers,light);
+            pose.popPose();
+        }
+        if(engine.getBoolean("PoleLightInstalled")) {
+            pose.pushPose();
+            pose.translate(-.935,.10+14.25/16.0+offset,2.09);
+            pose.scale(1.3f,1.3f,1.3f);
+            PoleLightMesh.draw(pose,buffers,false,light);
+            pose.popPose();
         }
         if(engine.getBoolean("RadioInstalled"))
-            BoatRadioVisuals.draw(pose,buffers,light,offset);
+            BoatRadioVisuals.draw(pose,buffers,light);
         if(engine.getBoolean("IceBreakerInstalled")) {
             pose.pushPose();
             pose.translate(0,offset,0);

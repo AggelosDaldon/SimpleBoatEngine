@@ -47,7 +47,7 @@ def generate(source_name, class_name, texture_name):
                 channels.append(6)
             elif "stripe" in name:
                 channels.append(3)
-            elif "hatch lid" in name:
+            elif "hatch" in name:
                 channels.append(4)
             elif "seat" in name:
                 channels.append(5)

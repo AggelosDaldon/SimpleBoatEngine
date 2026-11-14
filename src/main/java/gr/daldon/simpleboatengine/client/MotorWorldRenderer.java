@@ -33,27 +33,30 @@ public final class MotorWorldRenderer {
         for (Entity entity : game.level.entitiesForRendering()) {
             if (!(entity instanceof Boat boat)) continue;
             var status = ClientMotorState.get(boat);
-            if (status == null || !status.getBoolean("Installed")) continue;
+            if (status == null || !(status.getBoolean("Installed")
+                || status.getBoolean("CanisterInstalled") || status.getBoolean("PoleLightInstalled"))) continue;
             pose.pushPose();
             pose.translate(Mth.lerp(tick, boat.xOld, boat.getX()) - camera.x,
                 Mth.lerp(tick, boat.yOld, boat.getY()) - camera.y,
                 Mth.lerp(tick, boat.zOld, boat.getZ()) - camera.z);
             pose.mulPose(com.mojang.math.Axis.YP.rotationDegrees(
                 180f - Mth.rotLerp(tick, boat.yRotO, boat.getYRot())));
-            var motor = BoatMounts.motor(boat);
-            pose.pushPose();
-            pose.translate(motor.x(), motor.y(), motor.z());
-            pose.scale(1.5f, 1.5f, 1.5f);
-            int throttle = Math.max(0, Math.min(10, status.getInt("Throttle")));
-            float angle = status.getBoolean("Running")
-                ? (boat.tickCount + tick) * (0.12f + throttle * 0.048f) : 0f;
-            if (boat instanceof gr.daldon.simpleboatengine.common.BlueFishingBoat)
-                MotorMesh.drawFishing(pose, buffers, angle,
-                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
-            else
-                MotorMesh.draw(pose, buffers, angle,
-                    LevelRenderer.getLightColor(game.level, boat.blockPosition()));
-            pose.popPose();
+            if (status.getBoolean("Installed")) {
+                var motor = BoatMounts.motor(boat);
+                pose.pushPose();
+                pose.translate(motor.x(), motor.y(), motor.z());
+                pose.scale(1.5f, 1.5f, 1.5f);
+                int throttle = Math.max(0, Math.min(10, status.getInt("Throttle")));
+                float angle = status.getBoolean("Running")
+                    ? (boat.tickCount + tick) * (0.12f + throttle * 0.048f) : 0f;
+                if (boat instanceof gr.daldon.simpleboatengine.common.BlueFishingBoat)
+                    MotorMesh.drawFishing(pose, buffers, angle,
+                        LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+                else
+                    MotorMesh.draw(pose, buffers, angle,
+                        LevelRenderer.getLightColor(game.level, boat.blockPosition()));
+                pose.popPose();
+            }
 
             if (status.getBoolean("CanisterInstalled")) {
                 pose.pushPose();

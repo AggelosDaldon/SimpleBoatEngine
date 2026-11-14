@@ -56,6 +56,10 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
         if(id.contains("engine"))return "Powers the fishing boat. Install it in the Marine Workshop.";
         if(id.contains("light"))return "Adds a navigation light to your fishing boat.";
         if(id.contains("buoy"))return "A floating marker. Click to lift or lower the connected fishing trap.";
+        if(id.contains("boat_guide"))return "A pocket guide to boats, fuel, tools and attachments.";
+        if(id.contains("boat_stand"))return "Parks fishing boats within reach of the Marine Workshop.";
+        if(id.contains("boat_radio"))return "Plays up to nine records from its onboard playlist.";
+        if(id.contains("boat_recovery_kit"))return "Packs an empty fishing boat with its equipment and cargo.";
         if(id.contains("boat"))return "A customizable fishing boat with storage and room for attachments.";
         if(id.contains("canister"))return "An auxiliary fuel tank for longer voyages.";
         return "Craft this marine part with the required materials below.";
@@ -90,7 +94,7 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
         // the exact item and count are deposited into the corresponding slot.
         var required=new ArrayList<>(menu.recipe().cost().entrySet());
         for(int i=0;i<12;i++){
-            int bx=x+193+(i%6)*29,by=y+198+(i/6)*27;
+            int bx=x+193+(i%6)*29,by=y+213+(i/6)*22;
             boolean needed=i<required.size();
             int supplied=0;
             if(needed)
@@ -101,14 +105,7 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
             panel(g,bx-1,by-1,19,19,needed&&!valid?0xFF9A3434:0xFF8E8068);
             if(needed && menu.input(i).isEmpty()){
                 g.renderFakeItem(new ItemStack(required.get(i).getKey()),bx,by);
-                g.fill(bx,by,bx+16,by+16,0x99C09A91);
-            }
-            // Stack counts of deposited inputs are rendered by Minecraft once.
-            // Draw the recipe requirement only for vacant ghost slots.
-            if(needed && menu.input(i).isEmpty() && required.get(i).getValue()>1){
-                String count=String.valueOf(required.get(i).getValue());
-                g.drawString(font,count,bx+16-font.width(count),by+9,
-                    0xFFF3E7CB,false);
+
             }
         }
         panel(g,x+407,y+211,20,20,0xFFE7D3B5);
@@ -128,8 +125,19 @@ public final class BoatBuilderScreen extends AbstractContainerScreen<BoatBuilder
         g.drawString(font,"INFO",24,135,0xFFFFD64A,false);
         lineWrapped(g,details(),24,147,135,0xFF654112);
         g.drawString(font,"AVAILABLE",275,19,0xFF382419,false);
-        g.drawString(font,"MATERIALS",193,184,ink,false);
-        g.drawString(font,"OUTPUT",399,184,ink,false);
+        g.drawString(font,"MATERIALS NEEDED",193,196,ink,false);
+        g.drawString(font,"OUTPUT",399,196,ink,false);
+        var required = new ArrayList<>(menu.recipe().cost().entrySet());
+        g.pose().pushPose();
+        g.pose().translate(0, 0, 250);
+        for (int i = 0; i < required.size(); i++) {
+            if (!menu.input(i).isEmpty()) continue;
+            int x = 193 + (i % 6) * 29;
+            int y = 213 + (i / 6) * 22;
+            String count = Integer.toString(required.get(i).getValue());
+            g.drawString(font, count, x + 17 - font.width(count), y + 8, 0xFFFFFFFF, true);
+        }
+        g.pose().popPose();
         g.drawString(font,selection.getHoverName(),19,205,0xFFE9D0AA,false);
     }
     private double ux(double x){return (x-shiftX)/uiScale;}

@@ -72,13 +72,12 @@ public final class BoatPoleLights {
             worldZ);
     }
 
-    /** Called by the self-cleaning block; the boat must still be close and installed. */
+    /** Called by the self-cleaning block; the boat and its fitted lamp must still be close. */
     public static boolean shouldKeep(ServerLevel level, BlockPos pos) {
         if (!MotorData.isDark(level.getDayTime())) return false;
         AABB nearby = new AABB(pos).inflate(3.0);
         return !level.getEntitiesOfClass(Boat.class, nearby, boat ->
-            MotorData.installed(boat)
-                && positions(boat, MotorData.read(boat)).contains(pos)).isEmpty();
+            positions(boat, MotorData.read(boat)).contains(pos)).isEmpty();
     }
 
     /** Only touches our own invisible light block, restoring its previous air/water. */

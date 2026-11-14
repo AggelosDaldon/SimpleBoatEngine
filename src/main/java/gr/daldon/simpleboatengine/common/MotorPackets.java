@@ -3,9 +3,11 @@ package gr.daldon.simpleboatengine.common;
 import gr.daldon.simpleboatengine.SimpleBoatEngine;
 import gr.daldon.simpleboatengine.client.ClientMotorState;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.network.chat.Component;
+import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,7 +24,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Synced engine controls, precise hatch interaction and click-to-board handling. */
 public final class MotorPackets {
-    private static final String VERSION = "1";
+    private static final String VERSION = "5";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(SimpleBoatEngine.ID, "motor"),
         () -> VERSION, VERSION::equals, VERSION::equals);
@@ -57,9 +59,9 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(OpenParkedCargo.class, 9, NetworkDirection.PLAY_TO_SERVER)
             .encoder(OpenParkedCargo::write).decoder(OpenParkedCargo::read)
             .consumerMainThread(OpenParkedCargo::receive).add();
-        CHANNEL.messageBuilder(CycleParkedCargo.class, 10, NetworkDirection.PLAY_TO_SERVER)
-            .encoder(CycleParkedCargo::write).decoder(CycleParkedCargo::read)
-            .consumerMainThread(CycleParkedCargo::receive).add();
+        CHANNEL.messageBuilder(SelectParkedCargo.class, 10, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(SelectParkedCargo::write).decoder(SelectParkedCargo::read)
+            .consumerMainThread(SelectParkedCargo::receive).add();
         CHANNEL.messageBuilder(BuilderAction.class, 11, NetworkDirection.PLAY_TO_SERVER)
             .encoder(BuilderAction::write).decoder(BuilderAction::read)
             .consumerMainThread(BuilderAction::receive).add();
@@ -69,6 +71,12 @@ public final class MotorPackets {
         CHANNEL.messageBuilder(RadioControl.class, 13, NetworkDirection.PLAY_TO_SERVER)
             .encoder(RadioControl::write).decoder(RadioControl::read)
             .consumerMainThread(RadioControl::receive).add();
+        CHANNEL.messageBuilder(BindNavigationTool.class, 14, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(BindNavigationTool::write).decoder(BindNavigationTool::read)
+            .consumerMainThread(BindNavigationTool::receive).add();
+        CHANNEL.messageBuilder(SetMainBoat.class, 15, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(SetMainBoat::write).decoder(SetMainBoat::read)
+            .consumerMainThread(SetMainBoat::receive).add();
     }
 
     public static void sendStatus(Boat boat, ServerPlayer player) {
@@ -132,11 +140,12 @@ public final class MotorPackets {
             ctx.get().enqueueWork(() -> {
                 if (player == null || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
                     || player.distanceToSqr(boat) > 40.0 || !boat.isAlive()
-                    || !(msg.hatch()
-                        ? BoatInteractionTarget.aimedAtHatch(boat, player.getEyePosition(),
-                            player.getViewVector(1f),5.5)
-                        : BoatInteractionTarget.aimedAtStorage2(boat, player.getEyePosition(),
-                            player.getViewVector(1f),5.5))) return;
+                    || !player.getMainHandItem().isEmpty()) return;
+                // A passenger already has access to both compartments. Their client selects the part,
+                // since mounted look/boat transforms can reach the server in different ticks.
+                if (player.getVehicle() != boat && !(msg.hatch()
+                    ? BoatInteractionTarget.aimedAtHatch(boat, player.getEyePosition(), player.getViewVector(1f), 5.5)
+                    : BoatInteractionTarget.aimedAtStorage2(boat, player.getEyePosition(), player.getViewVector(1f), 5.5))) return;
                 if(msg.hatch())boat.openHatch(player);
                 else boat.openCargo(player);
             });
@@ -176,7 +185,7 @@ public final class MotorPackets {
                 if (player == null || !(player.containerMenu instanceof BoatCargoMenu menu)
                     || menu.boatId() != msg.boatId()
                     || !(player.level().getEntity(msg.boatId()) instanceof BlueFishingBoat boat)
-                    || player.distanceToSqr(boat) > 49 || !boat.isAlive()) return;
+                    || !menu.stillValid(player)) return;
                 menu.setStartRow(msg.firstRow());
             });
             context.get().setPacketHandled(true);
@@ -277,33 +286,40 @@ public final class MotorPackets {
             ctx.get().enqueueWork(()->{
                 if(player==null || !(player.containerMenu instanceof BoatCustomizerMenu menu)
                     || !menu.getBlockPos().equals(msg.table)
+                    || !menu.stillValid(player)
                     || !msg.stand.equals(menu.selectedStandPos())
+                    || msg.stand.distSqr(msg.table) > 100
                     || player.distanceToSqr(msg.table.getX()+.5,msg.table.getY()+.5,msg.table.getZ()+.5)>64
                     || !(player.level().getBlockEntity(msg.stand) instanceof BoatStandBlockEntity stand)
                     || stand.getItem(0).isEmpty()
                     || stand.previewLockedFor(player.getUUID()))return;
+                // Inventory edits must target the committed boat, so leaving the paint preview
+                // restores its original before opening the cargo.
+                stand.cancelPreview(player.getUUID());
                 net.minecraftforge.network.NetworkHooks.openScreen(player,
                     new net.minecraft.world.SimpleMenuProvider(
-                        (id,inv,owner)->new ParkedBoatCargoMenu(id,inv,stand),
+                        (id,inv,owner)->new ParkedBoatCargoMenu(id,inv,stand,menu.table()),
                         Component.literal("Parked boat inventory")),
                     buf->buf.writeBlockPos(msg.stand));
             });
             ctx.get().setPacketHandled(true);
         }
     }
-    public record CycleParkedCargo(BlockPos stand,int delta) {
-        static void write(CycleParkedCargo msg,FriendlyByteBuf out){
-            out.writeBlockPos(msg.stand);out.writeVarInt(msg.delta);
+    public record SelectParkedCargo(BlockPos stand, int page, int firstRow) {
+        static void write(SelectParkedCargo msg,FriendlyByteBuf out){
+            out.writeBlockPos(msg.stand);
+            out.writeVarInt(msg.page);
+            out.writeVarInt(msg.firstRow);
         }
-        static CycleParkedCargo read(FriendlyByteBuf in){
-            return new CycleParkedCargo(in.readBlockPos(),in.readVarInt());
+        static SelectParkedCargo read(FriendlyByteBuf in){
+            return new SelectParkedCargo(in.readBlockPos(), in.readVarInt(), in.readVarInt());
         }
-        static void receive(CycleParkedCargo msg,Supplier<NetworkEvent.Context> ctx){
+        static void receive(SelectParkedCargo msg,Supplier<NetworkEvent.Context> ctx){
             ServerPlayer player=ctx.get().getSender();
             ctx.get().enqueueWork(()->{
                 if(player==null || !(player.containerMenu instanceof ParkedBoatCargoMenu menu)
-                    || !menu.standPos().equals(msg.stand))return;
-                menu.switchPage(msg.delta);
+                    || !menu.standPos().equals(msg.stand) || !menu.stillValid(player))return;
+                menu.selectPage(msg.page, msg.firstRow);
             });
             ctx.get().setPacketHandled(true);
         }
@@ -406,6 +422,38 @@ public final class MotorPackets {
             ctx.get().setPacketHandled(true);
         }
     }
+    public record SetMainBoat(UUID boat, InteractionHand hand) {
+        static void write(SetMainBoat message, FriendlyByteBuf out) {
+            out.writeUUID(message.boat);
+            out.writeEnum(message.hand);
+        }
+        static SetMainBoat read(FriendlyByteBuf in) {
+            return new SetMainBoat(in.readUUID(), in.readEnum(InteractionHand.class));
+        }
+        static void receive(SetMainBoat message, Supplier<NetworkEvent.Context> context) {
+            ServerPlayer player = context.get().getSender();
+            if (player != null) BoatLogbookItem.selectMain(player, message.hand, message.boat);
+            context.get().setPacketHandled(true);
+        }
+    }
+
+    public record BindNavigationTool(int boatId, InteractionHand hand) {
+        static void write(BindNavigationTool message, FriendlyByteBuf out) {
+            out.writeVarInt(message.boatId);
+            out.writeEnum(message.hand);
+        }
+        static BindNavigationTool read(FriendlyByteBuf in) {
+            return new BindNavigationTool(in.readVarInt(), in.readEnum(InteractionHand.class));
+        }
+        static void receive(BindNavigationTool message, Supplier<NetworkEvent.Context> context) {
+            ServerPlayer player = context.get().getSender();
+            if (player != null && player.level().getEntity(message.boatId) instanceof BlueFishingBoat boat
+                    && BoatInteractionTarget.aimedAtNavigationHull(boat, player))
+                BoatNavigationEvents.bindAfloat(player, message.hand, boat);
+            context.get().setPacketHandled(true);
+        }
+    }
+
     public record OpenRadio(int boatId){
         static void write(OpenRadio message,FriendlyByteBuf buffer){
             buffer.writeVarInt(message.boatId);

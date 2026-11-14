@@ -11,62 +11,115 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-/** Hatch (27), front main cargo (54), back main cargo (54). */
+/** Three tabs backed by the parked boat's hatch, full main hold and radio. */
 public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
+    public static final int HATCH_PAGE = 0;
+    public static final int MAIN_PAGE = 1;
+    public static final int RADIO_PAGE = 2;
+    private static final int HATCH_SLOTS = 27;
+    private static final int MAIN_VISIBLE = BoatCargoMenu.COLUMNS * BoatCargoMenu.MAIN_ROWS_VISIBLE;
+    private static final int RADIO_FIRST = HATCH_SLOTS + MAIN_VISIBLE;
+    private static final int PLAYER_FIRST = RADIO_FIRST + ParkedBoatInventory.RADIO_SLOTS;
+
     private final BlockPos standPos;
     private final Container cargo;
-    private final DataSlot page=DataSlot.standalone();
-    public ParkedBoatCargoMenu(int id,Inventory inv,FriendlyByteBuf packet){
-        this(id,inv,packet.readBlockPos());
+    private final DataSlot page = DataSlot.standalone();
+    private final DataSlot startRow = DataSlot.standalone();
+    private final DataSlot installedRadio = DataSlot.standalone();
+
+    public ParkedBoatCargoMenu(int id, Inventory inv, FriendlyByteBuf packet) {
+        this(id, inv, packet.readBlockPos(),
+            new SimpleContainer(ParkedBoatInventory.CARGO_SLOTS + ParkedBoatInventory.RADIO_SLOTS));
     }
-    private ParkedBoatCargoMenu(int id,Inventory inv,BlockPos pos){
-        this(id,inv,pos,inv.player.level().getBlockEntity(pos)
-            instanceof BoatStandBlockEntity stand ? new ParkedBoatInventory(stand)
-            : new SimpleContainer(135));
+
+    public ParkedBoatCargoMenu(int id, Inventory inv, BoatStandBlockEntity stand,
+                               BoatCustomizerBlockEntity workbench) {
+        this(id, inv, stand.getBlockPos(), new ParkedBoatInventory(stand, workbench));
     }
-    public ParkedBoatCargoMenu(int id,Inventory inv,BoatStandBlockEntity stand){
-        this(id,inv,stand.getBlockPos(),new ParkedBoatInventory(stand));
-    }
-    private ParkedBoatCargoMenu(int id,Inventory inv,BlockPos pos,Container source){
-        super(EngineMenus.PARKED_CARGO.get(),id);
-        standPos=pos;cargo=source;page.set(0);addDataSlot(page);
-        for(int i=0;i<135;i++){
-            final int slot=i;
-            int relative=i<27?i:i-27;
-            int x=8+(relative%9)*18;
-            int y=19+((relative/9)%6)*18;
-            addSlot(new Slot(source,slot,x,y){
-                @Override public boolean isActive(){
-                    return slot<27 ? page.get()==0 : page.get()==1+(slot-27)/54;
+
+    private ParkedBoatCargoMenu(int id, Inventory inv, BlockPos pos, Container source) {
+        super(EngineMenus.PARKED_CARGO.get(), id);
+        standPos = pos;
+        cargo = source;
+        addDataSlot(page);
+        addDataSlot(startRow);
+        addDataSlot(installedRadio);
+
+        addCargoSlots(HATCH_PAGE, 0, HATCH_SLOTS);
+        addCargoSlots(MAIN_PAGE, HATCH_SLOTS, MAIN_VISIBLE);
+        for (int i = 0; i < ParkedBoatInventory.RADIO_SLOTS; i++) {
+            addSlot(new Slot(source, ParkedBoatInventory.CARGO_SLOTS + i, 8 + i * 18, 18) {
+                @Override public boolean isActive() { return page() == RADIO_PAGE && hasRadio(); }
+                @Override public boolean mayPlace(ItemStack stack) {
+                    return isActive() && EtchedSupport.isPlayable(stack);
+                }
+                @Override public int getMaxStackSize() { return 1; }
+                @Override public boolean mayPickup(Player player) {
+                    return isActive() && stillValid(player);
                 }
             });
         }
-        for(int row=0;row<3;row++)
-            for(int col=0;col<9;col++)
-                addSlot(new Slot(inv,col+row*9+9,8+col*18,140+row*18));
-        for(int col=0;col<9;col++)
-            addSlot(new Slot(inv,col,8+col*18,198));
+        for (int row = 0; row < 3; row++)
+            for (int col = 0; col < BoatCargoMenu.COLUMNS; col++)
+                addSlot(new Slot(inv, col + row * BoatCargoMenu.COLUMNS + 9, 8 + col * 18, 140 + row * 18));
+        for (int col = 0; col < BoatCargoMenu.COLUMNS; col++)
+            addSlot(new Slot(inv, col, 8 + col * 18, 198));
     }
-    public int page(){return page.get();}
-    public void switchPage(int delta){
-        page.set(Math.floorMod(page.get()+Integer.signum(delta),3));
+
+    private void addCargoSlots(int tab, int first, int count) {
+        for (int i = 0; i < count; i++) {
+            int x = 8 + (i % BoatCargoMenu.COLUMNS) * 18;
+            int y = 18 + (i / BoatCargoMenu.COLUMNS) * 18;
+            addSlot(new BoatCargoSlot(cargo, first + i, x, y,
+                    () -> tab == MAIN_PAGE && cargo instanceof ParkedBoatInventory
+                        ? startRow() * BoatCargoMenu.COLUMNS : 0) {
+                @Override public boolean isActive() { return page() == tab; }
+                @Override public boolean mayPlace(ItemStack stack) { return isActive(); }
+                @Override public boolean mayPickup(Player player) { return isActive() && stillValid(player); }
+            });
+        }
+    }
+
+    public int page() { return page.get(); }
+    public int startRow() { return startRow.get(); }
+    public boolean hasRadio() {
+        return cargo instanceof ParkedBoatInventory parked ? parked.hasRadio() : installedRadio.get() != 0;
+    }
+    @Override public void broadcastChanges() {
+        if (cargo instanceof ParkedBoatInventory parked) installedRadio.set(parked.hasRadio() ? 1 : 0);
+        super.broadcastChanges();
+    }
+    public void selectPage(int selected, int row) {
+        if (selected < HATCH_PAGE || selected > RADIO_PAGE) return;
+        page.set(selected);
+        if (selected == MAIN_PAGE) startRow.set(Math.max(0, Math.min(BoatCargoMenu.MAX_START_ROW, row)));
         broadcastChanges();
     }
-    public BlockPos standPos(){return standPos;}
-    @Override public boolean stillValid(Player player){return cargo.stillValid(player);}
-    @Override public ItemStack quickMoveStack(Player player,int index){
-        if(index<0 || index>=slots.size())return ItemStack.EMPTY;
-        Slot slot=slots.get(index);
-        if(!slot.hasItem() || !slot.isActive())return ItemStack.EMPTY;
-        ItemStack stack=slot.getItem(),copy=stack.copy();
-        if(index<135){
-            if(!moveItemStackTo(stack,135,171,true))return ItemStack.EMPTY;
+    public BlockPos standPos() { return standPos; }
+    @Override public boolean stillValid(Player player) { return cargo.stillValid(player); }
+
+    @Override public ItemStack quickMoveStack(Player player, int index) {
+        if (!stillValid(player) || index < 0 || index >= slots.size()) return ItemStack.EMPTY;
+        Slot slot = slots.get(index);
+        if (!slot.hasItem() || !slot.isActive()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem(), copy = stack.copy();
+        if (index < PLAYER_FIRST) {
+            if (!moveItemStackTo(stack, PLAYER_FIRST, slots.size(), true)) return ItemStack.EMPTY;
         } else {
-            int start=page.get()==0?0:27+(page.get()-1)*54;
-            int end=page.get()==0?27:start+54;
-            if(!moveItemStackTo(stack,start,end,false))return ItemStack.EMPTY;
+            if (page() == RADIO_PAGE && (!hasRadio() || !EtchedSupport.isPlayable(stack))) return ItemStack.EMPTY;
+            int start = switch (page()) {
+                case MAIN_PAGE -> HATCH_SLOTS;
+                case RADIO_PAGE -> RADIO_FIRST;
+                default -> 0;
+            };
+            int end = switch (page()) {
+                case MAIN_PAGE -> RADIO_FIRST;
+                case RADIO_PAGE -> PLAYER_FIRST;
+                default -> HATCH_SLOTS;
+            };
+            if (!moveItemStackTo(stack, start, end, false)) return ItemStack.EMPTY;
         }
-        if(stack.isEmpty())slot.set(ItemStack.EMPTY);
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
         else slot.setChanged();
         return copy;
     }

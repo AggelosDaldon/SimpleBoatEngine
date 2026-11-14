@@ -38,7 +38,7 @@ public final class SkiffBoatRenderer extends EntityRenderer<SkiffBoat> {
         if (boat instanceof BlueFishingBoat radioBoat) {
             var state=ClientMotorState.get(radioBoat);
             if(state!=null && state.getBoolean("RadioInstalled"))
-                BoatRadioVisuals.draw(pose,buffers,light,0f);
+                BoatRadioVisuals.draw(pose,buffers,light);
         }
         if (boat instanceof BlueFishingBoat blue && !blue.getBoatName().isBlank()) {
             // Match the two angled name plates near the v2 prow.

@@ -9,5 +9,5 @@
     "B": { "item": "minecraft:barrel" },
     "P": { "item": "minecraft:spruce_planks" }
   },
-  "result": { "item": "simpleboatengine:boat_customizer" }
+  "result": { "item": "daldonsboatadditions:boat_customizer" }
 }

@@ -207,10 +207,7 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
                 g.fill(sx,sy,sx+16,sy+16,0xAAAC2222);
             if(i<req.size() && menu.materialItem(i).isEmpty()){
                 g.renderFakeItem(new ItemStack(req.get(i).getKey()),sx,sy);
-                g.fill(sx,sy,sx+16,sy+16,0xAAB7A790);
             }
-            if(i<req.size() && req.get(i).getValue()>1)
-                g.drawString(font,String.valueOf(req.get(i).getValue()),sx+9,sy+9,0xFFECE9DF,false);
         }
         // Four real attachment slots with a subdued icon when vacant.
         for(int i=0;i<5;i++){
@@ -239,6 +236,17 @@ public final class BoatCustomizerScreen extends AbstractContainerScreen<BoatCust
         g.drawString(font,"NAME",242,181,ink,false);
         g.drawString(font,"COLOUR",396,181,ink,false);
         g.drawString(font,"NEEDED MATERIALS",19,216,ink,false);
+        List<Map.Entry<Item,Integer>> requirements = required();
+        g.pose().pushPose();
+        g.pose().translate(0, 0, 250);
+        for (int i = 0; i < requirements.size(); i++) {
+            if (!menu.materialItem(i).isEmpty()) continue;
+            int x = 17 + (i % 8) * 25;
+            int y = 227 + (i / 8) * 24;
+            String count = Integer.toString(requirements.get(i).getValue());
+            g.drawString(font, count, x + 17 - font.width(count), y + 8, 0xFFFFFFFF, true);
+        }
+        g.pose().popPose();
         g.drawString(font,"ATTACHMENTS",240,229,ink,false);
 
         

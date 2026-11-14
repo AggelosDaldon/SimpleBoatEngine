@@ -37,6 +37,8 @@ public final class BlueFishingBoat extends SkiffBoat {
     private final SimpleContainer radioDiscs = new SimpleContainer(9);
     private int radioIndex=-1, radioTicks=0;
     private boolean cargoDropped;
+    private net.minecraft.world.phys.Vec3 lastNavigationPosition;
+    private Level lastNavigationLevel;
     private static final String PACKED_BOAT = "PackedFishingBoat";
 
     public BlueFishingBoat(EntityType<? extends Boat> type, Level level) {
@@ -53,7 +55,7 @@ public final class BlueFishingBoat extends SkiffBoat {
         return paintedItem();
     }
 
-    private ItemStack paintedItem() {
+    ItemStack paintedHull() {
         ItemStack stack = new ItemStack(getDropItem());
         BoatPaint.setHull(stack, getHullPaint());
         BoatPaint.setFloor(stack, getFloorPaint());
@@ -63,6 +65,11 @@ public final class BlueFishingBoat extends SkiffBoat {
         BoatPaint.setNameColor(stack, getNameColor());
         BoatPaint.setNameGlow(stack, nameGlows());
         BoatPaint.setWoodStyle(stack, getHullStyle());
+        return stack;
+    }
+
+    private ItemStack paintedItem() {
+        ItemStack stack = paintedHull();
         // Store the entire entity, including both chests, engine, fuel, light,
         // dyes and custom boat name. Never split cargo into separate drops.
         CompoundTag snapshot = new CompoundTag();
@@ -235,8 +242,9 @@ public final class BlueFishingBoat extends SkiffBoat {
         if(level() instanceof net.minecraft.server.level.ServerLevel server)
             for(ServerPlayer listener:server.players())
                 if(listener.distanceToSqr(this)<=64*64)
-                    listener.displayClientMessage(Component.literal(
-                        "Now playing: "+BoatRadioTrackNames.track(disc)),true);
+                    listener.displayClientMessage(Component.literal("Now playing: ").withStyle(net.minecraft.ChatFormatting.AQUA)
+                        .append(Component.literal(BoatRadioTrackNames.track(disc))
+                            .withStyle(net.minecraft.ChatFormatting.GOLD)),true);
         syncRadio();
     }
     public void nextRadio(){
@@ -248,27 +256,38 @@ public final class BlueFishingBoat extends SkiffBoat {
     }
     @Override public void tick(){
         super.tick();
-        if(!level().isClientSide && radioIndex>=0 && --radioTicks<=0)nextRadio();
+        if (level() instanceof net.minecraft.server.level.ServerLevel level) {
+            if (radioIndex >= 0 && --radioTicks <= 0) nextRadio();
+            var position = position();
+            double distance = 0;
+            if (lastNavigationLevel == level && lastNavigationPosition != null) {
+                distance = Math.hypot(position.x - lastNavigationPosition.x, position.z - lastNavigationPosition.z);
+                if (distance > 16 || distance < .001) distance = 0;
+            }
+            lastNavigationPosition = position;
+            lastNavigationLevel = level;
+            BoatNavigationData.get(level).observeBoat(this, level, distance, tickCount % 20 == 0);
+        }
     }
-    /** Dedicated 27-slot chest below the white bow hatch. */
     public void openHatch(ServerPlayer player) {
-        level().playSound(null,blockPosition(),
-            net.minecraft.sounds.SoundEvents.BARREL_OPEN,
-            net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
-        player.openMenu(new SimpleMenuProvider(
-            (id, inventory, owner) -> new BarrelHatchMenu(id, inventory, hatchCargo, this),
-            Component.literal("Bow hatch - 27 slots")));
+        openStorage(player, true);
     }
 
-    /** Separate 108-slot storage under the marked STORAGE 2 panel. */
     public void openCargo(ServerPlayer player) {
-        level().playSound(null,blockPosition(),
+        openStorage(player, false);
+    }
+
+    private void openStorage(ServerPlayer player, boolean hatch) {
+        level().playSound(null, blockPosition(),
             net.minecraft.sounds.SoundEvents.BARREL_OPEN,
-            net.minecraft.sounds.SoundSource.BLOCKS,.8f,.95f);
+            net.minecraft.sounds.SoundSource.BLOCKS, .8f, .95f);
         net.minecraftforge.network.NetworkHooks.openScreen(player, new SimpleMenuProvider(
-            (id, inventory, owner) -> new BoatCargoMenu(id, inventory, this, cargo),
-            Component.translatable("container.simpleboatengine.fishing_boat")),
-            buf -> buf.writeVarInt(getId()));
+            (id, inventory, owner) -> new BoatCargoMenu(id, inventory, this, hatch ? hatchCargo : cargo, hatch),
+            Component.literal(hatch ? BoatCargoMenu.HATCH_TITLE : BoatCargoMenu.MAIN_TITLE)),
+            buf -> {
+                buf.writeVarInt(getId());
+                buf.writeBoolean(hatch);
+            });
     }
 
     @Override

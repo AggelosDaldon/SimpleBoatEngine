@@ -47,11 +47,35 @@ public final class MotorControls {
         if (!event.isUseItem()) return;
         Minecraft game = Minecraft.getInstance();
         if (game.player == null || game.level == null || game.screen != null) return;
+        if (event.getHand() == InteractionHand.MAIN_HAND && useMountedStorage(game)) {
+            event.setCanceled(true);
+            return;
+        }
         var held = game.player.getMainHandItem();
+        if (gr.daldon.simpleboatengine.common.BoatNavigationEvents.isNavigationTool(game.player.getItemInHand(event.getHand()))) {
+            BlueFishingBoat target = null;
+            double closest = Double.POSITIVE_INFINITY;
+            for (Entity entity : game.level.entitiesForRendering()) {
+                if (entity instanceof BlueFishingBoat boat && boat.distanceToSqr(game.player) < closest
+                        && BoatInteractionTarget.aimedAtNavigationHull(boat, game.player)) {
+                    closest = boat.distanceToSqr(game.player);
+                    target = boat;
+                }
+            }
+            if (target != null) {
+                if (!useHeld) {
+                    useHeld = true;
+                    MotorPackets.CHANNEL.sendToServer(new MotorPackets.BindNavigationTool(target.getId(), event.getHand()));
+                    event.setSwingHand(true);
+                }
+                event.setCanceled(true);
+                return;
+            }
+        }
 
         Vec3 eye = game.player.getEyePosition();
         Vec3 look = game.player.getViewVector(1f);
-        if (event.getHand() == InteractionHand.MAIN_HAND && held.isEmpty()) {
+        if (event.getHand() == InteractionHand.MAIN_HAND) {
             for (Entity entity : game.level.entitiesForRendering()) {
                 if (!(entity instanceof BlueFishingBoat boat)) continue;
                 var radioState=ClientMotorState.get(boat);
@@ -64,6 +88,7 @@ public final class MotorControls {
                     event.setCanceled(true);
                     return;
                 }
+                if (!held.isEmpty()) continue;
                 boolean hatch=BoatInteractionTarget.aimedAtHatch(boat, eye, look, 5.5);
                 boolean cabinet=BoatInteractionTarget.aimedAtStorage2(boat, eye, look, 5.5);
                 if (hatch || cabinet) {
@@ -101,6 +126,20 @@ public final class MotorControls {
         }
     }
 
+    private static boolean useMountedStorage(Minecraft game) {
+        if (!(game.player.getVehicle() instanceof BlueFishingBoat boat)
+                || !game.player.getMainHandItem().isEmpty()) return false;
+        Vec3 eye = game.player.getEyePosition();
+        Vec3 look = game.player.getViewVector(1f);
+        boolean hatch = BoatInteractionTarget.aimedAtHatch(boat, eye, look, 5.5);
+        if (!hatch && !BoatInteractionTarget.aimedAtStorage2(boat, eye, look, 5.5)) return false;
+        if (!useHeld) {
+            useHeld = true;
+            MotorPackets.CHANNEL.sendToServer(new MotorPackets.OpenCargo(boat.getId(), hatch));
+        }
+        return true;
+    }
+
     @SubscribeEvent
     public static void mouseWheel(InputEvent.MouseScrollingEvent event) {
         Minecraft game = Minecraft.getInstance();
@@ -134,6 +173,8 @@ public final class MotorControls {
         if (!game.options.keyUse.isDown()) useHeld = false;
         if (game.level == null || game.player == null || game.isPaused()) return;
         if (!(game.player.getVehicle() instanceof Boat boat)) return;
+        // Vanilla can skip its normal use callback while the player is rowing.
+        if (game.screen == null && game.options.keyUse.isDown() && !useHeld) useMountedStorage(game);
         while (UP.consumeClick()) change(boat, 1);
         while (DOWN.consumeClick()) change(boat, -1);
 

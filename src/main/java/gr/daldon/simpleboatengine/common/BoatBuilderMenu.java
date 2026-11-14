@@ -27,7 +27,7 @@ public final class BoatBuilderMenu extends AbstractContainerMenu {
         super(EngineMenus.BOAT_BUILDER.get(),id);
         this.pos=pos;selected.set(0);addDataSlot(selected);
         ingredients.addListener(this::slotsChanged);
-        for(int i=0;i<12;i++)addSlot(new Slot(ingredients,i,193+(i%6)*29,198+(i/6)*27));
+        for(int i=0;i<12;i++)addSlot(new Slot(ingredients,i,193+(i%6)*29,213+(i/6)*22));
         addSlot(new Slot(output,0,409,213){
             @Override public boolean mayPlace(ItemStack stack){return false;}
             @Override public boolean mayPickup(Player player){return canCraft();}
