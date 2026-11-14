@@ -32,8 +32,9 @@ public final class ParkedBoatCargoMenu extends AbstractContainerMenu {
             new SimpleContainer(ParkedBoatInventory.CARGO_SLOTS + ParkedBoatInventory.RADIO_SLOTS));
     }
 
-    public ParkedBoatCargoMenu(int id, Inventory inv, BoatStandBlockEntity stand) {
-        this(id, inv, stand.getBlockPos(), new ParkedBoatInventory(stand));
+    public ParkedBoatCargoMenu(int id, Inventory inv, BoatStandBlockEntity stand,
+                               BoatCustomizerBlockEntity workbench) {
+        this(id, inv, stand.getBlockPos(), new ParkedBoatInventory(stand, workbench));
     }
 
     private ParkedBoatCargoMenu(int id, Inventory inv, BlockPos pos, Container source) {

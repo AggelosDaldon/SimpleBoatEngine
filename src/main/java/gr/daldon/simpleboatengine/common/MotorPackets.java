@@ -286,14 +286,19 @@ public final class MotorPackets {
             ctx.get().enqueueWork(()->{
                 if(player==null || !(player.containerMenu instanceof BoatCustomizerMenu menu)
                     || !menu.getBlockPos().equals(msg.table)
+                    || !menu.stillValid(player)
                     || !msg.stand.equals(menu.selectedStandPos())
+                    || msg.stand.distSqr(msg.table) > 100
                     || player.distanceToSqr(msg.table.getX()+.5,msg.table.getY()+.5,msg.table.getZ()+.5)>64
                     || !(player.level().getBlockEntity(msg.stand) instanceof BoatStandBlockEntity stand)
                     || stand.getItem(0).isEmpty()
                     || stand.previewLockedFor(player.getUUID()))return;
+                // Inventory edits must target the committed boat, so leaving the paint preview
+                // restores its original before opening the cargo.
+                stand.cancelPreview(player.getUUID());
                 net.minecraftforge.network.NetworkHooks.openScreen(player,
                     new net.minecraft.world.SimpleMenuProvider(
-                        (id,inv,owner)->new ParkedBoatCargoMenu(id,inv,stand),
+                        (id,inv,owner)->new ParkedBoatCargoMenu(id,inv,stand,menu.table()),
                         Component.literal("Parked boat inventory")),
                     buf->buf.writeBlockPos(msg.stand));
             });

@@ -14,10 +14,12 @@ public final class ParkedBoatInventory implements Container {
     static final int CARGO_SLOTS = 135;
     static final int RADIO_SLOTS = 9;
     private final BoatStandBlockEntity stand;
+    private final BoatCustomizerBlockEntity workbench;
     private ItemStack loadedBoat;
     private final NonNullList<ItemStack> items=NonNullList.withSize(CARGO_SLOTS + RADIO_SLOTS, ItemStack.EMPTY);
-    public ParkedBoatInventory(BoatStandBlockEntity stand){
+    public ParkedBoatInventory(BoatStandBlockEntity stand, BoatCustomizerBlockEntity workbench){
         this.stand=stand;
+        this.workbench=workbench;
     }
     private void refresh() {
         ItemStack boat=stand.getItem(0);
@@ -93,9 +95,11 @@ public final class ParkedBoatInventory implements Container {
     }
     @Override public boolean stillValid(Player p){
         return !stand.getItem(0).isEmpty() && !stand.hasPreview() && stand.getLevel()!=null
+            && p.level() == stand.getLevel()
             && stand.getLevel().getBlockEntity(stand.getBlockPos())==stand
-            && p.distanceToSqr(stand.getBlockPos().getX()+.5,
-                stand.getBlockPos().getY()+.5,stand.getBlockPos().getZ()+.5)<=100;
+            && workbench.getLevel() == stand.getLevel()
+            && workbench.stillValid(p)
+            && stand.getBlockPos().distSqr(workbench.getBlockPos()) <= 100;
     }
     @Override public void clearContent(){
         refresh();
